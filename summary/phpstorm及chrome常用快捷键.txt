@@ -1,0 +1,32 @@
+phpstor快捷键:
+shift + space: 向下新起一行.
+ctrl + alt: 向上新起一行
+shift + alt + l: 代码格式化(也可只对选中部分)
+f3 / shift + f3:　上／下一个
+alt + 左右方向键: 标签左右切换
+shift + f6: 修改文件名
+ctrl + space: 代码提示(输入法可能冲突)(ctrl + shift + i 预览智能完成后的样子)
+shift + scroll: 横向移动屏幕
+shift + left click: 关闭被点击的标签
+ctrl + shift + u: 变化大小写
+shift + ctrl up/down: 光标所在行的上下移动
+/** + enter : 智能注释
+f12: 文件定位
+ctrl + shift + f12:　隐藏边栏
+ctrl + q : 快速查看函数文档
+ctrl + shift + i 查看定义
+
+好用的插件:
+power mode II(特效)
+translator 翻译好用
+key prompt 快捷键提示
+
+chrome快捷键:
+
+ctrl+ shift + t : 打开上次关闭的页面
+ctrl + t: 新标签栏
+ctrl+click link: 链接都会在新的标签打开
+shift +　click + link: 新的窗口
+alt + enter: 输入的搜索栏内容在新标签打开
+alt + home: 主页
+

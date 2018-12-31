@@ -1,0 +1,19 @@
+#############常用核心函数###############
+
+字符串:
+explode();
+implode()/别名:join();
+strlen();		获取字符串长度
+pre_replace()		替换字串  $0表示全部的匹配字串,$n?表示第n个匹配的字串
+str_replace()		子字串替换	str_ireplace()	/忽略大小写
+htmlspecialchars();
+htmlspecialchars_decode();
+substr_count();		计算字符串出现的次数
+strpos()		查找字串首次出现的位置.    stripos()	忽略大小写	strrpos() / strripos()
+strrev()		反转字符串
+strtr()			替换字串的字
+str_split()		将字串转换为数组
+substr_replace()	子字串替换
+strtoupper() / strtolower()
+count_char()		计算字串出现
+str_pad()		补齐字串长度
