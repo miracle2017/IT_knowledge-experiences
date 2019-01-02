@@ -30,3 +30,5 @@ shift +　click + link: 新的窗口
 alt + enter: 输入的搜索栏内容在新标签打开
 alt + home: 主页
 
+
+
