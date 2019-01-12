@@ -21,3 +21,36 @@ str_pad()			补齐字串长度
 
 数组:
 array_slice();		获取数组的某一部分
+array_splice();		去除数组某一部分并用其他代替
+array_walk();		对数组每个成员递归应用函数
+array_map();		对数组每个元素都应用到回调函数
+array_combine();	将一数组作为一个键,另一数组作值返回新数组
+array_count_value();计算值所出现的次数
+array_replace();	前面传入的数组参数如和后面的数组参数有相同则被替换
+array_column();		取出数组的某一类值
+array_keys();		返回数组的键值
+array_values();		返回数组所有的值
+array_search();		查找给定值返回首个键名
+array_push();		向数组末尾压入一个或多个值
+array_pop();		数组弹出最后一个值
+array_shift();		移除数组开头第一个值
+array_unshift();	向数组开头压入一个或多个值
+array_fill();		用给定值填充数组value至给定长度
+array_fill_key();	用给定的数组填充key(value值一致)
+array_filter();		用回调函数过滤值
+asort();
+arsort():
+ksort();			
+krsort();
+range();			根据范围产生数组
+extract();			提取数组中变量
+
+时间:
+strtotime();		将给定时间转换为时间戳
+getdate();			获取一个日期信息数组
+date();				
+time();				
+
+
+其他:
+PHP_EOF				换行,依据不同平台换行
