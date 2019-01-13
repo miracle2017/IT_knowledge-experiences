@@ -6,6 +6,7 @@ implode()/别名:join();
 strlen();			获取字符串长度
 mb_strlen();		获取字符串长度(可将中文字符按照一个算)
 pre_replace()		替换字串  $0表示全部的匹配字串,$n?表示第n个匹配的字串
+pre_match();			
 str_replace()		子字串替换	str_ireplace()	/忽略大小写
 htmlspecialchars();
 htmlspecialchars_decode();
