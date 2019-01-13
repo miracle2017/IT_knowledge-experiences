@@ -51,6 +51,16 @@ getdate();			获取一个日期信息数组
 date();				
 time();				
 
+文件:
+file_get_content(); 将文件读入一个字符串
+file_put_content();	写入数据到文件中
+
+错误处理:
+error_get_last();	返回最近一次的错误
+
+错误追踪:
+
 
 其他:
+eval();				将字符串code作为php代码执行
 PHP_EOF				换行,依据不同平台换行
