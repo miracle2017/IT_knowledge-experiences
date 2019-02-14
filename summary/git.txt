@@ -1,0 +1,3 @@
+git裸仓: 就是没有工作目录的仓库; 即是没有实际源文件,只是包含版本历史记录的仓库.
+git init --bare myproject mybare.git    //获取myproject项目的版本历史记录即不包含实际源码生成一个mybare.git裸仓.(该命令
+的整体效果如执行 cp -Rf my_project/.git my_project.git ,即是复制一份myproject项目下的.git文件.

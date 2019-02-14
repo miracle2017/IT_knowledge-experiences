@@ -9,6 +9,8 @@ Linux下的编辑器基本操作:
 i 进入插入,模式
 esc + :(冒号) 进入命令行模式
 wq保存并退出
+u： 撤销
+ctrl + r： 反撤销
 
 su root:服务器上切换用户, su(switch user)
 
