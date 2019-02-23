@@ -1,0 +1,13 @@
+MySQL:
+创建数据库:   CREATE DATABASE RUNOOB
+删除数据库:   DROP DATABASE RUNOOB
+创建数据表:   CREATE TABLE table_name (column_name1 column_type1, column_name2 column_type2,)
+删除数据表:   DROP TABLE table_name
+插入数据:     INSERT INTO table_name ( field1, field2,...fieldN ) VALUES  ( value1,value2,...valueN )
+更新数据:     UPDATE table_name SET field1=new-value1, field2=new-value2   [WHERE Clause]
+删除数据:     DELETE FROM table_name [WHERE Clause]
+
+ASC升序 / DESC 降序
+
+mysqli_multi_query()   :执行多条语句
+

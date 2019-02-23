@@ -1,0 +1,69 @@
+strlen() ：返回字符串的长度
+strpos（被查找的字符串， 要查找的字符串）：查找字符串在目标字符串中的位置，返回数字
+count()  ：返回数组的长度
+foreach（ $array as $x=>$x_value): 遍历数组
+foreach（ $array as $value): 遍历数组
+sort() - 对数组进行升序排列
+rsort() - 对数组进行降序排列
+asort() - 根据关联数组的值，对数组进行升序排列
+ksort() - 根据关联数组的键，对数组进行升序排列
+arsort() - 根据关联数组的值，对数组进行降序排列
+krsort() - 根据关联数组的键，对数组进行降序排列
+
+魔术变量：
+__LINE__    返回第几行
+__FILE__    返回文件的完整路径和文件名
+__DIR__     返回文件所在的目录
+__FUNCTION__   返回函数名字
+
+PHP_EOL： 换行符
+
+序列化和反序列化:(将对象转换为字符串为序列化,将字符串转换为对象为反序列化)
+json_encode（）  :编码成json
+json_decode（$json,[true时返回数组/false时返回对象]）:将json数据反编成数组或者对象
+serialize()
+unserialize()
+htmlspecialchars（）:将一些预定义的字符转换为 HTML 实体
+
+date（format，timestamp）： 返回格式化的时间，如果没有填写timestamp则默认使用当前时间
+var timestamp = mktime(hour,minute,second,month,day,year,is_dst)  //产生时间戳
+
+include 'filename'    错误后产生警告错误,后续代码继续执行
+require 'filename'    错误之后产生致命错误,后续代码无法继续执行
+move_uploaded_file($_FILES["file"]["tmp_name"],"upload/" . $_FILES["file"]["name"])  :保存到上传文件,文件上传会先放在一个临时文件夹下,当文本执行完后,文件就会消失,所以将文件移出来.
+
+session：
+session_start()
+$_SESSION['key'] = value    存储
+unset（$_SESSION['key']）   删除某个session
+session_destory()           删除所有的session
+
+错误处理:
+die("info")  结束当前的脚本,并输出一条info信息.相当于exit()的别名
+exit(0)  结束当前的脚本不会有什么信息输出
+
+数据库(面向过程的写法)
+$conn = mysqli_connect(servername, username, password, dbname)
+mysqli_query($conn, sql语句)
+mysqli_close($conn)
+
+rand(min, max)  返回一个在min<= result <=max的随机数字
+
+array_flip（array_flip($array)）  "翻翻法"去除数字数组的重复值,
+
+shuffle（$array） 重新赋值键值为0-n
+
+
+php规范:
+常量: 每个字母都要大写,单词间用下划线
+类名: 首字母大写驼峰式
+方法名: 首字母小写驼峰式
+
+使用4个空格代替tab键
+php的关键字都用小写,常量true, false, null也必须都用小写
+类或方法的花括号自成一行, 控制结构的开始花括号不自成一行同时与关键字空一格,结束花括号要自成一行.
+elseif代替else if
+
+
+可变变量: $$a, $a{$a[1]} {$a$a}[1]
+花括号的使用: $array->$key[1]  {$array->$key}[1]  $array->{$key[1]} $array->{$key}[1]

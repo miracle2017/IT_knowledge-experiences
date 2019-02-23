@@ -1,0 +1,6 @@
+ctrl + shitf + f: 全局文件搜索关键字
+ctrl + o: 打开文件
+shift + enter: 控制台进入多行模式
+shift + ? : 打开通用设置
+ctrl + shift + d: 切换dock side的位置
+ctrl + space: 展示智能提示
