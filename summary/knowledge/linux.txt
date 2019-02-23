@@ -1,11 +1,20 @@
 ﻿基本指令:
+man 命令: 查看某个命令的在线文档
 pwd -LP: 显示出当前文件路径(完整的) 后面不加参数时是有些会是不完整的。
 sync : 关机或者重启,首先要执行此命令将内存的数据存储到磁盘中
 cd:
    cd ..返回前一个目录
-man 命令: 查看某个命令的在线文档
+cp [-r] /home/a/目标文件  /home/b   带-r为复制目录
+scp 安全复制,可以跨服务器
+mv ./a.txt ../b/    复制文件也用于重命名
+rm 删除文件
+chmod -R 777 文件名    修改文件权限
+chown -R git:git    修改文件的所属者
+mysql -uroot -p  登录mysql数据库
+service nginx restart  重启nginx
+service php-fpm restart  重启php
 
-Linux下的编辑器基本操作:
+Linux下的vi编辑器基本操作:
 i 进入插入,模式
 esc + :(冒号) 进入命令行模式
 wq保存并退出
@@ -16,3 +25,5 @@ su root:服务器上切换用户, su(switch user)
 
 useradd 用户名  ：Linux下添加一个用户同时会在home下生成一个用户名的目录
 userdel -r 用户名  ：删除Linux用户，包含home下的用户目录， 不加-r 则只是删除用户名不会删除home下的用户目录
+
+
