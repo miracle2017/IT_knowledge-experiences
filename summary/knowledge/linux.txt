@@ -13,6 +13,7 @@ chown -R git:git    修改文件的所属者
 mysql -uroot -p  登录mysql数据库
 service nginx restart  重启nginx
 service php-fpm restart  重启php
+crontab    定时任务
 
 Linux下的vi编辑器基本操作:
 i 进入插入,模式
