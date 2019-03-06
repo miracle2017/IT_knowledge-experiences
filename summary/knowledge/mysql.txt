@@ -1,4 +1,7 @@
 ﻿FROM_UNIXTIME('时间戳字段', '%Y-%m-%d');     格式化时间戳为时间格式
 
 函数:
+count()高级用法: 如下:
+select count(IF(status=1, 1, NULL) as total, count(IF(status=0, 1, NUll) as open from table_name; (该句获取status为1的数量和status为0的数量)
 
+IF 用法: IF(表达式1, expr2, expr3); 表达式1为true 返回expr2; 否则返回expr3.  表达式中可用的条件运算符: "=、<、<=、>、>=、!="
