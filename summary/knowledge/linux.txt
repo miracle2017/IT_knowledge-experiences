@@ -27,4 +27,9 @@ su root:服务器上切换用户, su(switch user)
 useradd 用户名  ：Linux下添加一个用户同时会在home下生成一个用户名的目录
 userdel -r 用户名  ：删除Linux用户，包含home下的用户目录， 不加-r 则只是删除用户名不会删除home下的用户目录
 
+[nginx]
+重新加nginx配置文件(不停服)
+/usr/local/nginx/sbin/nginx -t  :检测配置文件的语法正确性(很总要)
+/usr/local/nginx/sbin/nginx -s reload  :重新加加载配置文件(-s有stop的意思)
+
 
