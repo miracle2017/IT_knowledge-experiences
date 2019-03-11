@@ -1,0 +1,38 @@
+nginx支持pathinfo的配置:
+ server {
+        server_name www.baidu.com;
+        root /home/wwwroot/baidu;
+        index index.php index.html index.htm;
+
+        location / {
+            if (!-e $request_filename) {
+              rewrite  ^/index.php(.*)$  /index.php?s=$1  last;
+              rewrite  ^(.*)$  /index.php?s=$1  last;
+              break;
+            }
+         }
+
+        location ~ ^(.+\.php)(.*)$ {
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.php;
+
+            ###支持pathinfo的实现 开始
+            ##增加 fastcgi_split_path_info指令，将URI匹配成PHP脚本的URI和pathinfo两个变量
+            ##即$fastcgi_script_name 和$fastcgi_path_info
+            fastcgi_split_path_info  ^(.+\.php)(.*)$;
+            ##PHP中要能读取到pathinfo这个变量
+            ##就要通过fastcgi_param指令将fastcgi_split_path_info指令匹配到的pathinfo部分赋值给PATH_INFO
+            ##这样PHP中$_SERVER['PATH_INFO']才会存在值
+            fastcgi_param PATH_INFO $fastcgi_path_info;
+            #在将这个请求的URI匹配完毕后，检查这个绝对地址的PHP脚本文件是否存在
+            if (!-e $document_root$fastcgi_script_name) {
+                ##此处直接返回404错误
+                return 404;
+            }
+            ###支持pathinfo的实现 结束
+
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            fastcgi_param  PHP_VALUE        open_basedir=$document_root:/tmp/:/proc/;
+            include        fastcgi_params;
+        }
+    }

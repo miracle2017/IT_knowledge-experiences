@@ -11,3 +11,9 @@ git rm --cached [-r] 文件名   删除已经追踪的文件,然后在进行git 
 
 将本地密钥推送到服务器上:ssh-copy-id -i ~/.ssh/id_rsa.pub git@111.22.180.99
 
+添加远端地址并推送：
+git remote add origin https://github.com/miracle2017/test.git
+git push -u origin master（由于第一仓库是空的，所以要加- u，之后就不用）
+
+删除远端origin关联： git remote rm origin
+
