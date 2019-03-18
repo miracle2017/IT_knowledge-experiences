@@ -9,7 +9,7 @@ git clone --bare myproject mybare.git    //获取myproject项目的版本历史�
 
 git rm --cached [-r] 文件名   删除已经追踪的文件,然后在进行git commit,git push操作后就可以将文件忽略
 
-将本地密钥推送到服务器上:ssh-copy-id -i ~/.ssh/id_rsa.pub git@111.22.180.99
+将本地密钥推送到服务器上: ssh-copy-id -i ~/.ssh/id_rsa.pub git@111.22.180.99
 
 添加远端地址并推送：
 git remote add origin https://github.com/miracle2017/test.git

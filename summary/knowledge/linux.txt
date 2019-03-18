@@ -14,6 +14,8 @@ mysql -uroot -p  登录mysql数据库
 service nginx restart  重启nginx
 service php-fpm restart  重启php
 crontab    定时任务
+free [-m|-g] 查看运行内存，-m以M为单位, -g以G为单位
+top 查看进程
 
 Linux下的vi编辑器基本操作:
 i 进入插入,模式
