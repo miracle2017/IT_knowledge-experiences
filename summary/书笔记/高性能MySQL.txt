@@ -5,6 +5,7 @@
 第六章(查询性能优化):
     使用select *时, 要先看下是否有必要取出全部的列,而有一些是没有用. 多表关联时返回全部的列
 
+    *使用percona toolkit的pt-query-advisor能够解析查询日志,分析查询模式然后给出所有可能潜在的问题查询,并给出足够详细的建议
 
 
 
@@ -14,4 +15,4 @@
 
 书中推荐的工具：
 percona toolkit是非常优秀的高级命令工具合集
-删除冗余索引和重复索引的工具：common_schema, percona toolkit的pt-duplicate-key-checker
+删除冗余索引和重复索引的工具：common_schema, percona toolkit的pt-duplicate-key-checker, pt-query-advisor

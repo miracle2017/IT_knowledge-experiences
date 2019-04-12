@@ -17,7 +17,9 @@ crontab    定时任务
 free [-h|-m|-g] 查看运行内存，-h方便人阅读自动调整单位, -m以M为单位, -g以G为单位
 top 查看进程 （按下1看cpu情况， 默认以cpu列排序,shift + < > 左右切换排序的列
 du -sh: 当前文件夹的大小, -h为自动调整人便于阅读的单位
+chatter [-R] (+|-|=)(A|S|a|c|D|d|I|i|j|s|T|t|u): 对文件属性的更改
 lscpu: 查看系统的一些信息
+ll /proc/进程id : 查看进程具体信息
 
 ctrl + z： 挂起
 ctrl + c： 终端
