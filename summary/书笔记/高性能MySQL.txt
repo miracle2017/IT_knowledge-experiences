@@ -10,11 +10,18 @@
 第八章：（优化服务器设置）
     一个省时间和避免麻烦的好方法是使用默认配置，除非你知道默认值会有什么问题。默认配置时经过最多实际测试的。对配置项做一些不必要的修改可能会遇到一些意料之外的bug。
 
+    innodb最重要的配置项:
+        innodb_buffer_pool_size
+        innodb_log_file_size
 
+第十五章:　（备份与恢复）
 
 
 
 书中推荐的工具：
 *percona toolkit是非常优秀的高级命令工具合集
 *innotop 强大的mysql监控管理工具
+开源监控工具:
+    nagios: 也许是开源中最流行的问题检测和告警系统
+    zabbix
 删除冗余索引和重复索引的工具：common_schema, percona toolkit的pt-duplicate-key-checker, pt-query-advisor

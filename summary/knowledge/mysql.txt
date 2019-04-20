@@ -14,6 +14,7 @@
 
 
 mysql命令行:
+    show （full)　progresslist 显示当前连接到mysql的连接或线程的清单, full将完整的显示每个查询的全文
     @为会话(session)变量, @@为系统变量.
     show variables [like "要查找的变量名,%为通配符"]
     show gloal|session variables    显示全部的全局或会话变量
@@ -21,3 +22,5 @@ mysql命令行:
 		
 	show [gloal] status [like "要查找的变量名,%为通配符"]  查看服务器运行状态
 	help content
+
+	show status like "table_locks_waited" 显示有多少锁需要等待
