@@ -16,4 +16,5 @@
 
 书中推荐的工具：
 *percona toolkit是非常优秀的高级命令工具合集
+*innotop 强大的mysql监控管理工具
 删除冗余索引和重复索引的工具：common_schema, percona toolkit的pt-duplicate-key-checker, pt-query-advisor
