@@ -20,3 +20,4 @@ mysql命令行:
     select @@global.var_name|@@var_name|@@session.var_name  查看全局变量var_name|全局变量var_name|会话变量var_name的值
 		
 	show [gloal] status [like "要查找的变量名,%为通配符"]  查看服务器运行状态
+	help content
