@@ -24,4 +24,5 @@
 开源监控工具:
     nagios: 也许是开源中最流行的问题检测和告警系统
     zabbix
+persona server的innodb recover toolkit： 如果innodb的数据损坏到根本不能启动mysql，可以使用此软件直接抽取数据文件里的数据
 删除冗余索引和重复索引的工具：common_schema, percona toolkit的pt-duplicate-key-checker, pt-query-advisor
