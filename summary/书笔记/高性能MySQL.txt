@@ -15,12 +15,21 @@
         innodb_log_file_size
 
 第十五章:　（备份与恢复）
+    数据备份分为：
+        |-逻辑备份: (包含的信息较多,恢复较慢)
+                    |-分隔符文本 (占用较小, 紧凑)
+                    |-sql语句 (占用较大, 大数据量就适合)
+        |-物理备份: (恢复较快,简单, 占用较小)
 
 
 
 书中推荐的工具：
 *percona toolkit是非常优秀的高级命令工具合集
 *innotop 强大的mysql监控管理工具
+*数据库备份软件:
+    *percona xtrabackup
+    *mydumper
+    Zmanda recovery manager
 开源监控工具:
     nagios: 也许是开源中最流行的问题检测和告警系统
     zabbix
