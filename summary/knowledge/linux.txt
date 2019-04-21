@@ -4,6 +4,8 @@ pwd -LP: 显示出当前文件路径(完整的) 后面不加参数时是有些�
 sync : 关机或者重启,首先要执行此命令将内存的数据存储到磁盘中
 cd:
    cd ..返回前一个目录
+   cd ~ 主目录
+   cd - 上次工作的目录
 cp [-r] /home/a/目标文件  /home/b   带-r为复制目录
 scp 安全复制,可以跨服务器
 mv ./a.txt ../b/    复制文件也用于重命名
@@ -42,5 +44,10 @@ userdel -r 用户名  ：删除Linux用户，包含home下的用户目录， 不
 重新加nginx配置文件(不停服)
 /usr/local/nginx/sbin/nginx -t  :检测配置文件的语法正确性(很总要)
 /usr/local/nginx/sbin/nginx -s reload  :重新加加载配置文件(-s有stop的意思)
+
+【网站压力测试】
+Apache自带强大网站测试工具：ab
+    常用用法： 进入Apache的ab.exe(用于请求http,而abs.exe用于请求https)文件所在目录  打开命令行 ab -n 1000 -c 200 http://www.baidu.com
+    (-n 请求总数量, -c并发数)
 
 
