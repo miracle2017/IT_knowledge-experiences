@@ -65,3 +65,29 @@ error_get_last();	返回最近一次的错误
 其他:
 eval();				将字符串code作为php代码执行
 PHP_EOF				换行,依据不同平台换行
+
+【memcache】
+window下安装memcache
+    下载安装包
+    路径\memcache.exe -d start [-p 端口号 -m 分配的内存(兆)] 开启服务(默认11211端口)
+    连接上服务 telnet 127.0.0.1 11211
+
+window下php安装memcache扩展:
+    php7.0以上版本memcache的dll文件下载地址: https://github.com/nono303/PHP7-memcache-dll.git
+    将dll文件放入php的ext扩展目录中
+    在php.ini中加入类似语句 extension=php_memcache.dll引入dll文件
+    重启Apache并检查确认phpinfo()有无存在memcache模块
+
+    php连接的简单实例:
+    $memcache = new Memcache;
+    $memcache->connect('localhost', 11211);
+    $memcache->set("foo", 123);
+
+
+
+
+
+
+
+
+

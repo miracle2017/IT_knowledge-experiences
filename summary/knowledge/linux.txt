@@ -34,7 +34,7 @@ esc + :(冒号) 进入命令行模式
 wq保存并退出
 u： 撤销
 ctrl + r： 反撤销
-
+``
 su root:服务器上切换用户, su(switch user)
 
 useradd 用户名  ：Linux下添加一个用户同时会在home下生成一个用户名的目录
