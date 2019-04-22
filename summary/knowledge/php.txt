@@ -67,7 +67,10 @@ eval();				将字符串code作为php代码执行
 PHP_EOF				换行,依据不同平台换行
 
 【memcache】
-window下安装memcache
+简介:
+    Memcached是一种基于内存的key-value存储，用来存储小块的任意数据（字符串、对象）。这些数据可以是数据库调用、API调用或者是页面渲染的结果。
+    一般的使用目的是，通过缓存数据库查询结果，减少数据库访问次数，以提高动态Web应用的速度、提高可扩展性。
+window下安装memcache服务
     下载安装包
     路径\memcache.exe -d start [-p 端口号 -m 分配的内存(兆)] 开启服务(默认11211端口)
     连接上服务 telnet 127.0.0.1 11211
