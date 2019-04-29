@@ -19,6 +19,9 @@
     strtoupper() / strtolower()
     count_char()		计算字串出现
     str_pad()			补齐字串长度
+    字符串编码转换：
+    mb_convert_encoding()
+    iconv()
 
 数组:
     array_slice();		获取数组的某一部分
