@@ -1,53 +1,59 @@
-﻿基本指令:
-man 命令: 查看某个命令的在线文档
-pwd -LP: 显示出当前文件路径(完整的) 后面不加参数时是有些会是不完整的。
-sync : 关机或者重启,首先要执行此命令将内存的数据存储到磁盘中
-cd:
-   cd ..返回前一个目录
-   cd ~ 主目录
-   cd - 上次工作的目录
-cp [-r] /home/a/目标文件  /home/b   带-r为复制目录
-scp 安全复制,可以跨服务器
-mv ./a.txt ../b/    复制文件也用于重命名
-rm 删除文件
-chmod -R 777 文件名    修改文件权限
-chown -R git:git    修改文件的所属者
-mysql -uroot -p  登录mysql数据库
-service nginx restart  重启nginx
-service php-fpm restart  重启php
-crontab    定时任务
-free [-h|-m|-g] 查看运行内存，-h方便人阅读自动调整单位, -m以M为单位, -g以G为单位
-top 查看进程 （按下1看cpu情况， 默认以cpu列排序,shift + < > 左右切换排序的列
-du -sh: 当前文件夹的大小, -h为自动调整人便于阅读的单位
-chatter [-R] (+|-|=)(A|S|a|c|D|d|I|i|j|s|T|t|u): 对文件属性的更改
-lscpu: 查看系统的一些信息
-ll /proc/进程id : 查看进程具体信息
+﻿【基本指令】:
+    man 命令: 查看某个命令的在线文档
+    pwd -LP: 显示出当前文件路径(完整的) 后面不加参数时是有些会是不完整的。
+    sync : 关机或者重启,首先要执行此命令将内存的数据存储到磁盘中
+    cd:
+       cd ..返回前一个目录
+       cd ~ 主目录
+       cd - 上次工作的目录
+    cp [-r] /home/a/目标文件  /home/b   带-r为复制目录
+    scp 安全复制,可以跨服务器
+    mv ./a.txt ../b/    复制文件也用于重命名
+    rm 删除文件
+    chmod -R 777 文件名    修改文件权限
+    chown -R git:git    修改文件的所属者
+    mysql -uroot -p  登录mysql数据库
+    service nginx restart  重启nginx
+    service php-fpm restart  重启php
+    crontab    定时任务
+    free [-h|-m|-g] 查看运行内存，-h方便人阅读自动调整单位, -m以M为单位, -g以G为单位
+    top [-b|显示全部进程] [-n number|显示数据刷新次数] 查看进程 （按下1看cpu情况， 默认以cpu列排序,shift + < > 左右切换排序的列
+    du -sh: 当前文件夹的大小, -h为自动调整人便于阅读的单位
+    chatter [-R] (+|-|=)(A|S|a|c|D|d|I|i|j|s|T|t|u): 对文件属性的更改
+    lscpu: 查看系统的一些信息
+    ll /proc/进程id : 查看进程具体信息
 
-ctrl + z： 挂起
-ctrl + c： 终端
-ctrl + \: 退出
-tab: 自动补全
+    ctrl + z： 挂起
+    ctrl + c： 终端
+    ctrl + \: 退出
+    tab: 自动补全
 
-Linux下的vi编辑器基本操作:
-i 进入插入,模式
-esc + :(冒号) 进入命令行模式
-wq保存并退出
-u： 撤销
-ctrl + r： 反撤销
-``
-su root:服务器上切换用户, su(switch user)
+    Linux下的vi编辑器基本操作:
+    i 进入插入,模式
+    esc + :(冒号) 进入命令行模式
+    wq保存并退出
+    u： 撤销
+    ctrl + r： 反撤销
+    ``
+    su root:服务器上切换用户, su(switch user)
 
-useradd 用户名  ：Linux下添加一个用户同时会在home下生成一个用户名的目录
-userdel -r 用户名  ：删除Linux用户，包含home下的用户目录， 不加-r 则只是删除用户名不会删除home下的用户目录
+    useradd 用户名  ：Linux下添加一个用户同时会在home下生成一个用户名的目录
+    userdel -r 用户名  ：删除Linux用户，包含home下的用户目录， 不加-r 则只是删除用户名不会删除home下的用户目录
 
-[nginx]
-重新加nginx配置文件(不停服)
-/usr/local/nginx/sbin/nginx -t  :检测配置文件的语法正确性(很总要)
-/usr/local/nginx/sbin/nginx -s reload  :重新加加载配置文件(-s有stop的意思)
+【nginx】
+    重新加nginx配置文件(不停服)
+    /usr/local/nginx/sbin/nginx -t  :检测配置文件的语法正确性(很总要)
+    /usr/local/nginx/sbin/nginx -s reload  :重新加加载配置文件(-s有stop的意思)
 
 【网站压力测试】
-Apache自带强大网站测试工具：ab
-    常用用法： 进入Apache的ab.exe(用于请求http,而abs.exe用于请求https)文件所在目录  打开命令行 ab -n 1000 -c 200 http://www.baidu.com
-    (-n 请求总数量, -c并发数)
+    Apache自带强大网站测试工具：ab
+        常用用法： 进入Apache的ab.exe(用于请求http,而abs.exe用于请求https)文件所在目录  打开命令行 ab -n 1000 -c 200 http://www.baidu.com
+        (-n 请求总数量, -c并发数)
 
+【PHP-FPM】
+    Nginx 是非阻塞IO & IO复用模型，通过操作系统提供的类似 epoll 的功能，可以在一个线程里处理多个客户端的请求。
+    Nginx 的进程就是线程，即每个进程里只有一个线程，但这一个线程可以服务多个客户端。
+
+    PHP-FPM 是阻塞的单线程模型，pm.max_children 指定的是最大的进程数量，pm.max_requests 指定的是每个进程处理多少个请求后重启(因为 PHP 偶尔会有内存泄漏，所以需要重启).
+    PHP-FPM 的每个进程也只有一个线程，但是一个进程同时只能服务一个客户端。
 
