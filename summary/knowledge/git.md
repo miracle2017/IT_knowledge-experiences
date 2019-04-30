@@ -22,5 +22,5 @@ git init --bare myproject mybare.git    //获取myproject项目的版本历史�
     git push -u origin master（由于第一仓库是空的，所以要加- u，之后就不用）
 
 ##删除远端origin关联：
-    git remote rm origin
+git remote rm origin
 
