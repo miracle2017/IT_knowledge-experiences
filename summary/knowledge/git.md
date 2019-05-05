@@ -24,3 +24,4 @@ git init --bare myproject mybare.git    //获取myproject项目的版本历史�
 ##删除远端origin关联：
 git remote rm origin
 
+
