@@ -191,18 +191,21 @@ php7.0以上版本memcache的dll文件下载地址: https://github.com/nono303/P
 
 ##【XHProf】(分析`PHP`性能工具)
 
+    //todo
+
+##【easyswoole】
+
+[文档](https://www.easyswoole.com/Manual/3.x/Cn/_book/noobCourse/Introduction.html)
+
+WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器与服务器全双工(full-duplex)通信——允许服务器主动发送信息给客户端。
+
+
 
 #**收藏问题整理**
 
 ###PHP7下的协程实现
    
 [参考](https://segmentfault.com/a/1190000012457145)
-
-
-
-
-
-
 
 
 
