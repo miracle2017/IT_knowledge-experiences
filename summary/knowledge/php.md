@@ -156,6 +156,8 @@ trait关键字: 同class相似, 一种代码复用的方法,但不用像class要
 [参考地址2](https://www.jianshu.com/p/4a05c55872c3)
 
     //todo
+    
+className::class 获取一个字符串，包含了类 ClassName 的完全限定名称.(`php>5.5`新特性)
 
 ###新特性
 
