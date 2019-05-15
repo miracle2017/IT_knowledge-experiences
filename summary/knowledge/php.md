@@ -157,7 +157,6 @@ trait关键字: 同class相似, 一种代码复用的方法,但不用像class要
 
     //todo
     
-className::class 获取一个字符串，包含了类 ClassName 的完全限定名称.(`php>5.5`新特性)
 
 ###新特性
 
@@ -171,6 +170,7 @@ className::class 获取一个字符串，包含了类 ClassName 的完全限定�
         var_dump($params); //会是一个传入参数的数组
     }
 
+className::class 获取一个字符串，包含了类 ClassName 的完全限定名称.(`php>5.5`新特性)
 
 ##【memcache】
     简介:
