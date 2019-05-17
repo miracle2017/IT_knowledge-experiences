@@ -195,6 +195,16 @@ php7.0以上版本memcache的dll文件下载地址: https://github.com/nono303/P
 
     //todo
 
+##【swoole扩展】
+ 
+    学习前最好看 《linux高性能服务器编程》
+
+
+>ThinkPHP使用(`version>5.1`) 
+
+[入手好文](https://www.kancloud.cn/thinkphp/think-swoole/722895)
+
+
 ##【easyswoole】
 
 [文档](https://www.easyswoole.com/Manual/3.x/Cn/_book/noobCourse/Introduction.html)
