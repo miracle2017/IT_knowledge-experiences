@@ -74,6 +74,10 @@
     ctrl + \: 退出
     
     tab: 自动补全
+    
+    mkdir: 创建文件夹
+    
+    wget url地址: 下载文件, 支付http(s),ftp协议
 
     Linux下的vi编辑器基本操作:
     

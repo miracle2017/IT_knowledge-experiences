@@ -157,6 +157,19 @@ trait关键字: 同class相似, 一种代码复用的方法,但不用像class要
 
     //todo
     
+
+###新特性
+
+标量类型声明之可为空（Nullable）类 
+
+    传入参数或返回值类型前加上`?` 表示要么是给定类型或者null(如果没有设置`?` 传入null会报错); 即是可以为传入和传出null
+
+函数传入不确定的参数(使用`...`)
+
+    function demo(...$params){
+        var_dump($params); //会是一个传入参数的数组
+    }
+
 className::class 获取一个字符串，包含了类 ClassName 的完全限定名称.(`php>5.5`新特性)
 
 ##【memcache】
