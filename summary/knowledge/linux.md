@@ -95,7 +95,8 @@
     useradd 用户名  ：Linux下添加一个用户同时会在home下生成一个用户名的目录
     userdel -r 用户名  ：删除Linux用户，包含home下的用户目录， 不加-r 则只是删除用户名不会删除home下的用户目录
 
-    linux参数前 - 和 -- 区别: - 后接单字符   
+    linux参数前 - 和 -- 区别: - 后接单字符
+    路径之间的 : 冒号做分隔符,分隔多个路径   
     
     【防火墙】
         firewall-cmd --zone=public --add-port=3306/tcp --permanent  //永久开放某个端口
