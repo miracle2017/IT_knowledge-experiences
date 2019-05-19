@@ -68,9 +68,15 @@
 
     ctrl + z： 挂起
     
-    ctrl + c： 终端
+    ctrl + c： 终止
     
     ctrl + \: 退出
+    
+    ctrl + r: 历史命令搜索
+    
+    ctrl + u: 当前位置删除到行首
+    
+    strl + a/e : 光标移到行首/行尾
     
     tab: 自动补全
     
@@ -104,6 +110,12 @@
         firewall-cmd --reload   //重载
         systemctl status/restart/stop firewalld.service   // 状态/重启/停止防火墙服务
         
+    【linux命令行快捷键，或叫配置环境变量】
+        方一(配置环境变量): vi ~/.bash_profile 可以看到 PATH=$PATH:$HOME/bin, 这个就是配置环境变量,在后面新增即可, 路径间用 : 冒号
+        方二(使用别名):  vi ~/.bashrc    增加例如 alias mv='mv -i' 这样的格式,不重启立即生效 source ~/.bashrc
+        
+     【linux修改配置文件不重启立即生效】如修改 ~/.bash_profile文件, 那么 .  /~/.bash_profile  或者 source ~/.bash_profile 即可 (source 又称点命令) 
+          可以使用 alias 列出所有的别名
 
 ##【nginx】
 
