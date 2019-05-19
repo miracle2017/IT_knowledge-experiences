@@ -1,6 +1,5 @@
 ﻿##【基本指令】:
 
-    
     man 命令: 查看某个命令的在线文档
     
     pwd -LP: 显示出当前文件路径(完整的) 后面不加参数时是有些会是不完整的。
@@ -89,12 +88,21 @@
     
     u： 撤销
     ctrl + r： 反撤销
-    
-    ``
+   
+   
     su root:服务器上切换用户, su(switch user)
 
     useradd 用户名  ：Linux下添加一个用户同时会在home下生成一个用户名的目录
     userdel -r 用户名  ：删除Linux用户，包含home下的用户目录， 不加-r 则只是删除用户名不会删除home下的用户目录
+
+    linux参数前 - 和 -- 区别: - 后接单字符   
+    
+    【防火墙】
+        firewall-cmd --zone=public --add-port=3306/tcp --permanent  //永久开放某个端口
+        firewall-cmd --list-all     //查看所有开放的端口
+        firewall-cmd --reload   //重载
+        systemctl status/restart/stop firewalld.service   // 状态/重启/停止防火墙服务
+        
 
 ##【nginx】
 
