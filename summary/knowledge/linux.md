@@ -65,6 +65,11 @@
     lscpu: 查看系统的一些信息
     
     ll /proc/进程id : 查看进程具体信息
+    
+    netstat [参数]:  如netstat -ap | grep 9501
+        -a: 全部
+        -p: 建立相关链接的程序名及进程号
+        
 
     ctrl + z： 挂起
     
@@ -114,8 +119,9 @@
         方一(配置环境变量): vi ~/.bash_profile 可以看到 PATH=$PATH:$HOME/bin, 这个就是配置环境变量,在后面新增即可, 路径间用 : 冒号
         方二(使用别名):  vi ~/.bashrc    增加例如 alias mv='mv -i' 这样的格式,不重启立即生效 source ~/.bashrc
         
-     【linux修改配置文件不重启立即生效】如修改 ~/.bash_profile文件, 那么 .  /~/.bash_profile  或者 source ~/.bash_profile 即可 (source 又称点命令) 
+    【linux修改配置文件不重启立即生效】如修改 ~/.bash_profile文件, 那么 .  /~/.bash_profile  或者 source ~/.bash_profile 即可 (source 又称点命令) 
           可以使用 alias 列出所有的别名
+      
 
 ##【nginx】
 
