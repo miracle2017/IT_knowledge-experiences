@@ -133,11 +133,13 @@
     /usr/local/nginx/sbin/nginx -s reload  :重新加加载配置文件(-s有stop的意思)
 
 ##【网站压力测试】
+
     Apache自带强大网站测试工具：ab
         常用用法： 进入Apache的ab.exe(用于请求http,而abs.exe用于请求https)文件所在目录  打开命令行 ab -n 1000 -c 200 http://www.baidu.com
         (-n 请求总数量, -c并发数)
 
 ##【PHP-FPM】
+
     Nginx 是非阻塞IO & IO复用模型，通过操作系统提供的类似 epoll 的功能，可以在一个线程里处理多个客户端的请求。
     Nginx 的进程就是线程，即每个进程里只有一个线程，但这一个线程可以服务多个客户端。
 
