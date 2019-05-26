@@ -14,6 +14,7 @@ shift + ctrl up/down: 光标所在行的上下移动
 f12: 文件定位
 ctrl + shift + f12:　隐藏边栏
 ctrl + q : 快速查看函数文档
+ctrl + p : 查看函数需要传入的参数
 ctrl + shift + i 查看定义
 
 好用的插件:

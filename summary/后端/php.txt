@@ -51,7 +51,7 @@ rand(min, max)  返回一个在min<= result <=max的随机数字
 
 array_flip（array_flip($array)）  "翻翻法"去除数字数组的重复值,
 
-shuffle（$array） 重新赋值键值为0-n
+shuffle（$array） 产生随机数, 重新赋值键值为0-n
 
 
 php规范:

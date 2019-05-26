@@ -8,6 +8,13 @@
 - 更新数据:     UPDATE table_name SET field1=new-value1, field2=new-value2   [WHERE Clause]
 - 删除数据:     DELETE FROM table_name [WHERE Clause]
 
+【数据库迁移,导出及其导入】
+
+    导入： mysqldump -u root -p --all-databases > $destDir/all_databases_20180314.bak
+    
+    导出： mysql -u root -p < $destDir/all_databases_20180314.bak
+    
+
 - 添加一个mysql用户并授权:   grant all privileges on *.* to 创建的用户名@"%" identified by "密码"; // % 表示所有地方都可登录
                     
     flush privileges; //刷新后才生效

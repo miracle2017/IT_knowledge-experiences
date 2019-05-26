@@ -11,9 +11,11 @@ mb_strlen();		获取字符串长度(可将中文字符按照一个算)
 
 pre_replace()		替换字串  $0表示全部的匹配字串,$n?表示第n个匹配的字串
 
-pre_match();
+pre_match('/正则/', $string [,$match]) / pre_match_all() : $match[0]为完整模式的所有匹配(pre_match_all会是一个二维数组), $match[1]为第一个子组的所有匹配(pre_match_all也是一个二维数组)   
 
 str_replace()		子字串替换	str_ireplace()	/忽略大小写
+
+strtr()				替换字串的字
 
 htmlspecialchars(); *
 
@@ -25,9 +27,11 @@ substr_count();		计算字符串出现的次数
 
 strpos()			查找字串首次出现的位置.    stripos()	忽略大小写	strrpos() / strripos()
 
-strrev()			反转字符串
+strstr():           返回子字符第一在住字符串中匹配到的位置到字符串结束的所有字符。 stristr()大小写不敏感
 
-strtr()				替换字串的字
+substr():       
+
+strrev()			反转字符串
 
 str_split()			将字串转换为数组
 
