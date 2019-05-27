@@ -1,71 +1,70 @@
 #常用核心函数
 
 >##字符串:
-explode();
+- explode($delimiter, $string);       按照某个字符分割字符成数组
 
-implode()/别名:join();
+- str_split($strin, $split_length:int):	按照固定长度将字串分割成数组
 
-strlen();			获取字符串长度
+- preg_split():   按照正则作为分割符分割字串成数组
 
-mb_strlen();		获取字符串长度(可将中文字符按照一个算)
+- implode()/别名:join();
 
-pre_replace()		替换字串  $0表示全部的匹配字串,$n?表示第n个匹配的字串
+- strlen();			获取字符串长度
 
-pre_match('/正则/', $string [,$match]) / pre_match_all() : $match[0]为完整模式的所有匹配(pre_match_all会是一个二维数组), $match[1]为第一个子组的所有匹配(pre_match_all也是一个二维数组)   
+- mb_strlen();		获取字符串长度(可将中文字符按照一个算)
 
-str_replace()		子字串替换	str_ireplace()	/忽略大小写
+- pre_match('/正则/', $string [,$match]) / pre_match_all() ; $match[0]为完整模式的所有匹配(pre_match_all会是一个二维数组), $match[1]为第一个子组的所有匹配(pre_match_all也是一个二维数组)   
 
-strtr()				替换字串的字
+- preg_replace('/正则/', $replacement, $subject)		替换字串  $0表示全部的匹配字串,$n?表示第n个匹配的字串
 
-htmlspecialchars(); *
+- str_replace()		子字串替换	str_ireplace()	/忽略大小写
 
-htmlspecialchars_decode(); *
+- strtr()		    替换字串的字
 
-strip_tags();
+- substr_replace()	子字串替换
 
-substr_count();		计算字符串出现的次数
+- htmlspecialchars(); *
 
-strpos()			查找字串首次出现的位置.    stripos()	忽略大小写	strrpos() / strripos()
+- htmlspecialchars_decode(); *
 
-strstr():           返回子字符第一在住字符串中匹配到的位置到字符串结束的所有字符。 stristr()大小写不敏感
+- strip_tags($string [, $allow_tags]);       删除html和php的标签符号, 标签符号中的内容还在,始终会脱离html的注释     
 
-substr():       
+- strpos()			查找字串首次出现的位置.    stripos()	忽略大小写	strrpos() / strripos()
 
-strrev()			反转字符串
+- strstr($haystack, $needle [, $before_needle:bool]):   返回子字符第一在住字符串中匹配到的位置到字符串结束的所有字符, $before_needle为true时则返回前面一部分. stristr()大小写不敏感
 
-str_split()			将字串转换为数组
+- substr($string, $start, $length);     截取字符串
 
-substr_replace()	子字串替换
+- strrev()			反转字符串
 
-strtoupper() / strtolower()
+- strtoupper() / strtolower()
 
-count_char()		计算字串出现
+- substr_count();		计算字符串出现的次数
 
-str_pad()			补齐字串长度
+- count_char()		计算字串出现
+
+- str_pad()			补齐字串长度
 
 字符串编码转换：
 
-mb_convert_encoding()
+- mb_convert_encoding($string, $to_encoding [, $from_encoding]) : 例如 mb_convert_encoding($string, 'UTF-8', 'GBK');
 
-iconv()
+- iconv($in_charset, $out_charset, $string):  例如iconv('UTF-8', 'GBK', $string);
+
 
 >##数组:
 
-array_slice();		获取数组的某一部分
+- array_slice($array, $offset  [, $length, $prserve_keys]);       获取数组的某一部分
 
-array_splice();		去除数组某一部分并用其他代替
+- array_splice(&$input, $offset, [$length, $replacement]);  去除数组某一部分并用其他代替,变种出$replacement为空就是**删除某部分元素**, $length为空就是**单纯的向数组中增加元素**
 
-array_walk();		对数组每个成员递归应用函数
+- array_combine(array $keys, array $values);	将一数组作为一个键,另一数组作值返回新数组
 
-array_map();		对数组每个元素都应用到回调函数
+- array_count_value($input:array);  返回一个输入数组的值为键名,总的出现次数为值的数组
 
-array_combine();	将一数组作为一个键,另一数组作值返回新数组
+- array_column($array, $column_key  [, $index_key]);	 从多维数组中取出指定的一列值
 
-array_count_value();计算值所出现的次数
-
-array_replace();	前面传入的数组参数如和后面的数组参数有相同则被替换
-
-array_column();		取出数组的某一类值
+- array_replace($array, ...$array1);   后面的数组有和第一数组key名一样的,value则被后面的替换,后面有前面没有的key,则在第一数组中创建. 后一个数组会覆盖前面的. 返回替换后的数组
 
 array_keys();		返回数组的键值
 
@@ -95,6 +94,10 @@ ksort();
 
 krsort();
 
+array_walk();		对数组每个成员递归应用函数
+
+array_map();		对数组每个元素都应用到回调函数
+
 range();			根据范围产生数组
 
 extract();			提取数组中变量
@@ -123,11 +126,11 @@ error_get_last();	返回最近一次的错误
 
 >>魔术常量:
 
-__DIR__: 文件所在目录的绝对路径
+    __DIR__: 文件所在目录的绝对路径
 
-__FILE__: 文件绝对路径
+    __FILE__: 文件绝对路径
 
-__LINE__: 所在行数
+    __LINE__: 所在行数
 
 >>其他:
 
@@ -166,7 +169,7 @@ trait关键字: 同class相似, 一种代码复用的方法,但不用像class要
 
 标量类型声明之可为空（Nullable）类 
 
-    传入参数或返回值类型前加上`?` 表示要么是给定类型或者null(如果没有设置`?` 传入null会报错); 即是可以为传入和传出null
+    传入参数或返回值类型前加上`?` 表示要么是给定类型或者null(如果没有设置`?` 传入null会报错); 即是可以为传入和传出null . 例如  function test(?int param): ?array  { //todo}
 
 函数传入不确定的参数(使用`...`)
 
