@@ -60,89 +60,100 @@
 
 - array_combine(array $keys, array $values);	将一数组作为一个键,另一数组作值返回新数组
 
-- array_count_value($input:array);  返回一个输入数组的值为键名,总的出现次数为值的数组
-
 - array_column($array, $column_key  [, $index_key]);	 从多维数组中取出指定的一列值
 
 - array_replace($array, ...$array1);   后面的数组有和第一数组key名一样的,value则被后面的替换,后面有前面没有的key,则在第一数组中创建. 后一个数组会覆盖前面的. 返回替换后的数组
 
-array_keys();		返回数组的键值
+- array_keys($array [, $search_value [, bool $strict]]);		返回数组的键值
 
-array_values();		返回数组所有的值
+- array_values($array);	返回数组所有的值
 
-array_search();		查找给定值返回首个键名
+- array_search($needle, $haystack [, $strict]); 查找给定值返回**首个匹配**键名
 
-array_push();		向数组末尾压入一个或多个值
+- array_push(&$array, ...$var);		向数组末尾压入一个或多个值, 增加一个元素更推荐 $array[] = $var, 这个更快
 
-array_pop();		数组弹出最后一个值
+- array_pop(&$array);		数组弹出最后一个值
 
-array_shift();		移除数组开头第一个值
+- array_shift(&$array);		移除数组开头第一个值
 
-array_unshift();	向数组开头压入一个或多个值
+- array_unshift(&$array, ...$var);	向数组开头压入一个或多个值
 
-array_fill();		用给定值填充数组value至给定长度
+- array_fill($start_index, $num, $value);		用给定值填充数组value至给定长度
 
-array_fill_key();	用给定的数组填充key(value值一致)
+- array_fill_key(array $keys, $value);	用给定的数组填充key(value值一致)
 
-array_filter();		用回调函数过滤值
+- asort(&$array [, $sort_flags]);   保留索引对数组从低到高排序
 
-asort();
+- arsort(&$array [, $sort_flags]):     保留索引对数组从高到低排序
 
-arsort():
+- ksort(&$array [, $sort_flags]);    按照键值从低到高排序   
 
-ksort();
+- krsort(&$array [, $sort_flags]);   按照键值从高到低排序
 
-krsort();
+- array_filter($array, $callback, $flag);	遍历数组中每个值,用回调函数过滤值(回调函数true的该值留下)
 
-array_walk();		对数组每个成员递归应用函数
+- array_walk(&$array, $funcname [, $userdata]); 	对数组每个成员递归应用函数,如果有设置$userdata则作为第三个参数传入
 
-array_map();		对数组每个元素都应用到回调函数
+- array_map(callback, ...$array1);		对数组每个数组的元素都应用到回调函数, 函数的形参必须是 $array1, $array2
 
-range();			根据范围产生数组
+- array_count_value($input:array);  返回一个输入数组的值为键名,总的出现次数为值的数组
 
-extract();			提取数组中变量
+- range($start, $end, float $step);		根据范围产生一个数组值从$start开始至于$end,步进为$step
 
->>时间:
+- var_export($var, true);  返回变量的字符串表示
+
+- extract($var_array, $extract_type, $prefix);	提取数组中变量
+
+>##时间:
+
+- date();
+
+- time();
 
 strtotime();		将给定时间转换为时间戳
 
 getdate();			获取一个日期信息数组
 
-date();
-
-time();
-
->>文件:
+>##文件:
 
 file_get_content(); 将文件读入一个字符串
 
 file_put_content();	写入数据到文件中
 
->>错误处理:
+>##错误处理:
 
 error_get_last();	返回最近一次的错误
 
->>错误追踪
+>##错误追踪
 
->>魔术常量:
+    todo
+    
+>##魔术常量:
 
-    __DIR__: 文件所在目录的绝对路径
+    __DIR__ : 文件所在目录的绝对路径
+    
+    __FILE__ : 文件绝对路径, 文件完整路径加文件名
+    
+    __LINE__ : 所在行数
+    
+    __FUNCTION__ : 函数名
 
-    __FILE__: 文件绝对路径
+>##其他:
 
-    __LINE__: 所在行数
+- rand($min, $max); 产生一个在[$min, $max]闭区间随机数
 
->>其他:
+- eval();				将字符串code作为php代码执行
 
-eval();				将字符串code作为php代码执行
+- PHP_EOF				换行,依据不同平台换行
 
-PHP_EOF				换行,依据不同平台换行
+- goto: 可以用来跳转到程序中的另一位置
 
-goto: 可以用来跳转到程序中的另一位置
+- get_defined_vars(); 获取所有已经定义的变量
+
+- get_declared_classes(); 获取已经定义的类
 
 ##类与对象
 >###访问控制(可见性)
-
 
 public的权限最大，既可以让子类使用，也可以支持实例化之后的调用，
 
