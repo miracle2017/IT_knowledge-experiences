@@ -58,6 +58,8 @@
 
 - array_splice(&$input, $offset, [$length, $replacement]);  去除数组某一部分并用其他代替,变种出$replacement为空就是**删除某部分元素**, $length为空就是**单纯的向数组中增加元素**
 
+- array_merge($array1, ...$array2); 合并数组,相同键值后面的覆盖前面的,包含数字的索引不会覆盖而是会附上
+
 - array_combine(array $keys, array $values);	将一数组作为一个键,另一数组作值返回新数组
 
 - array_column($array, $column_key  [, $index_key]);	 从多维数组中取出指定的一列值
@@ -78,9 +80,9 @@
 
 - array_unshift(&$array, ...$var);	向数组开头压入一个或多个值
 
-- array_fill($start_index, $num, $value);		用给定值填充数组value至给定长度
+- array_fill($start_index, $num, $value);	用给定值填充数组value至给定长度
 
-- array_fill_key(array $keys, $value);	用给定的数组填充key(value值一致)
+- array_fill_key(array $keys, $value);	用给定的数组填充key, 而对应的value值都是一致的
 
 - asort(&$array [, $sort_flags]);   保留索引对数组从低到高排序
 
@@ -96,6 +98,10 @@
 
 - array_map(callback, ...$array1);		对数组每个数组的元素都应用到回调函数, 函数的形参必须是 $array1, $array2
 
+- array_sum($array); 对数组中所有值求和
+
+- array_product($array);  对数组中所有值求乘积
+
 - array_count_value($input:array);  返回一个输入数组的值为键名,总的出现次数为值的数组
 
 - range($start, $end, float $step);		根据范围产生一个数组值从$start开始至于$end,步进为$step
@@ -106,23 +112,46 @@
 
 >##时间:
 
-- date();
+- date(string $format [, int $timestamp | time()]);   返回时间格式
+ 
+- **strtotime($time [, $now = time()])**;  将英文时间字符串转换为时间戳, $now为计算相对时间的基准时间
+           
+       支持的英文:  
+       
+           this, last, previous, next,
+           
+           first, second, third ... twelfth
+           
+           sunday, monday, ... saturday
+           
+           week(s), weekday(s) ...
+       
+       例子:
+            strtotime('+1 week 2 days 4 hours 2 seconds')
+            
+            strtotime('this week Monday') 
+            
+            strtotime('last week Monday')
+            
+            strtotime('third Sunday 2018-6')
 
-- time();
+            
+                        
+       
 
-strtotime();		将给定时间转换为时间戳
+- time(); 返回当前的UNIX时间戳
 
-getdate();			获取一个日期信息数组
+- getdate();			获取一个日期信息数组
 
 >##文件:
 
-file_get_content(); 将文件读入一个字符串
+- file_get_content(); 将文件读入一个字符串
 
-file_put_content();	写入数据到文件中
+- file_put_content();	写入数据到文件中
 
 >##错误处理:
 
-error_get_last();	返回最近一次的错误
+- error_get_last();	返回最近一次的错误
 
 >##错误追踪
 
@@ -165,30 +194,29 @@ trait关键字: 同class相似, 一种代码复用的方法,但不用像class要
 
 >###重载:
 
-属性重载: __set(), __get(), __isset(), __unset()
+- 属性重载: __set(), __get(), __isset(), __unset()
 
-方法重载: __call(), __callStatic()
+- 方法重载: __call(), __callStatic()
 
 >###抽象类和接口类
-[参考地址1](https://blog.csdn.net/sunlylorn/article/details/6124319),
-[参考地址2](https://www.jianshu.com/p/4a05c55872c3)
+- [参考地址1](https://blog.csdn.net/sunlylorn/article/details/6124319),
+- [参考地址2](https://www.jianshu.com/p/4a05c55872c3)
 
     //todo
     
-
 ###新特性
 
-标量类型声明之可为空（Nullable）类 
+- 标量类型声明之可为空（Nullable）类 
 
     传入参数或返回值类型前加上`?` 表示要么是给定类型或者null(如果没有设置`?` 传入null会报错); 即是可以为传入和传出null . 例如  function test(?int param): ?array  { //todo}
 
-函数传入不确定的参数(使用`...`)
+- 函数传入不确定的参数(使用`...`)
 
     function demo(...$params){
         var_dump($params); //会是一个传入参数的数组
     }
 
-className::class 获取一个字符串，包含了类 ClassName 的完全限定名称.(`php>5.5`新特性)
+- className::class 获取一个字符串，包含了类 ClassName 的完全限定名称.(`php>5.5`新特性)
 
 ##【memcache】
     简介:
