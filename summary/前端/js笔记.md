@@ -1,27 +1,56 @@
-*字符串属性:
-length 	返回字符串的长度
-indexOf() 返回字符串中检索指定字符第一次出现的位置,不存时则返回空,数组也可以使用 lastIndexOf()
-match()   找到一个或多个正则表达式的匹配 (val/RegExp) 存在则返回具体的值,不存在时则返回空
-replace(被替代值,替代值)  替换与正则表达式匹配的子串
-serach(RegExp或字符串)  返回第一个匹配的位置,没有则返回-1
-slice(star[包含], end[不包含,省略则是截取到末尾] ) 提取字符串的片断，并在新的字符串中返回被提取的部分.
-Array.prototype.slice.call(obj [,start[,end]])  将具有长度的对象转换为数组
-split(separator,limit[可选,限制返回结果的长度])  把字符串分割为子字符串数组
-join(separator)：将数组的元素组起一个字符串，以separator为分隔符，省略的话则用默认用逗号为分隔符
-arr.splice(index[开始位置,包含],  deleteCount[删除几个,没填则从包含index删到尾], new1,new2..[可选,如果是数组那么,这项就是数组])  返回被删除的元素,会改变数组
+##字符串属性:
 
-newarr = arr.concat(arr1,arr2,数字,字符串)   将多个两个或多个数组连接起来,返回新数组
+- length 	返回字符串的长度
+
+- indexOf() 返回字符串中检索指定字符第一次出现的位置,不存时则返回空,数组也可以使用. 查找最后一次的位置: lastIndexOf()
+
+- serach(RegExp或字符串)  返回第一个匹配的位置,没有则返回-1
+
+- match()   找到一个或多个正则表达式的匹配 (val/RegExp) 存在则返回具体的值,不存在时则返回空
+
+- replace(被替代值,替代值)  替换与正则表达式匹配的子串
+
+- slice(star[包含], end[不包含,省略则是截取到末尾] ) 提取字符串的片断，并在新的字符串中返回被提取的部分.
+
+- substr(start [, length]);   截取字符串,从下标start开始的length长的字符
+
+- substring(start, stop);     返回一个下标从start到stop-1的字符串
+
+- Array.prototype.slice.call(obj [,start[,end]])  将具有长度的对象转换为数组
+
+- split(separator,limit[可选,限制返回结果的长度])  把字符串分割为子字符串数组
+
+- newstr = str.concat(str1,str2...);     连接多个字符串返回新字符串
+
+
+##数组
+
+- join(separator)：将数组的元素组起一个字符串，以separator为分隔符，省略的话则用默认用逗号为分隔符
+
+- arr.splice(index[开始位置,包含],  deleteCount[删除几个,没填则从包含index删到尾], new1,new2..[可选,如果是数组那么,这项就是数组])  返回被删除的元素,会改变数组
+
+- arr.slice(start, end);   返回一个从arr下标start到end-1的新数组
+
+- **newarr = arr.concat(arr1,arr2, 数字, 字符串)**   将多个两个或多个数组连接起来,返回新数组
 newstr = str.concat(str1,str2...)            连接多个字符串返回新字符串
 
-*array.forEach(function(currentValue, index, arr[本身]), thisValue[this指向哪,没有写则undefined传给this])   用于遍历数组,for in用于遍历对象   值返回undefined
+- array.forEach(function(currentValue, index, arr[本身]), thisValue[this指向哪,没有写则undefined传给this])   用于遍历数组,for in用于遍历对象 ;值返回undefined
 
-*array.map(function(currentValue,index,arr), thisValue) 同上 区别:map返回新数组
+- array.map(function(currentValue, index, arr), thisValue) 同上 区别:map返回新数组
 
-*js数据类型: String, Number, Boolean, Array, Object, Null, Undefined
-原始类型:Undefined, Null, Boolean, Number, String, symbol  (可以直接改变数值)
-引用类型: Object: Array, Date, Function (对象作为参数传入到函数是引用参数,而原始类型是传值参数,函数内部的改变数值不会影响到外部;此外如果是全局变量在函数内部是会被改变)
+- arr.reverse(); 颠倒数组中元素的顺序
 
-*相等号==中,如果有一边不是数字,会先转化为数字    例子:true == 1 , null == undefined  返回 true  null与undefined 在和其他判断相等时都不会转化为数字,所以都是false,不过两者是相等
+##基础
+
+- js数据类型: String, Number, Boolean, Array, Object, Null, Undefined
+        
+      js中一切皆对象.除了Null, Undefined,其他都是对象
+    
+   >原始类型: Undefined, Null, Boolean, Number, String, symbol  (可以直接改变数值)
+      
+   >引用类型: Object: Array, Date, Function (对象作为参数传入到函数是引用参数,而原始类型是传值参数,函数内部的改变数值不会影响到外部;此外如果是全局变量在函数内部是会被改变)
+
+- 相等号==中,如果有一边不是数字,会先转化为数字    例子: true == 1 , null == undefined  返回 true  null与undefined 在和其他判断相等时都不会转化为数字,所以都是false,不过两者是相等
 
 *逻辑与（a && b）, 如果其中一个参数不是boolean,则a转为布尔后true则返回 b的值,false时,则返回a(没有经过布尔转换的值)  2个变量中有 null, undefined, NaN都会返回相应的 null,undefined,NaN
 * a || b  其中一个不是布尔时,a转化为布尔为false时则返回b,反之返回a.
@@ -30,7 +59,7 @@ newstr = str.concat(str1,str2...)            连接多个字符串返回新字�
  
 *debugger  停止执行JavaScript,如果没有调试可用,debugger 语句将无法工作。
 
-*对象没有length,使用则返回为null,无法用length判断对象个数
+* **对象没有length,使用则返回为null,无法用length判断对象个数**
 
 *var fun = function ff(){};  此句是一条语句,ff()函数是不存在,不被被调用. = 后面的函数都是或类似匿名函数
 
@@ -46,7 +75,7 @@ newstr = str.concat(str1,str2...)            连接多个字符串返回新字�
 
 *常见的js全局函数,不是window函数: isNaN(), Number(), parseFloat(),String(), eavl(), escape()
 
-*大小写转换: string.toUpperCase()    String.tolowerCase(); 返回字符串中全部转换为大写或小写,不改变原值
+*大小写转换: string.toUpperCase()    string.tolowerCase(); 返回字符串中全部转换为大写或小写,不改变原值
 
 *hasOwnProperty()
 obj.hasOwnProperty("val");  返回true或false
@@ -55,14 +84,13 @@ obj.hasOwnProperty("val");  返回true或false
 *parseInt("str")         将字符串解析成整数(如果开头不是数字则返回NaN,后面只解析到是数字,第一个非数字后全舍弃)
 parseFloat("str")       将字符串解析成实数
 
-*变量名命名规则:
-字母,数字,下划线,$组成,不能以数字开头.
+- 变量名命名规则: **字母,数字,下划线,$组成, 不能以数字开头.**
 
-var arr = new Array(数组长度)  或  var arr = new Array("Saab","Volvo","BMW")
+  var arr = new Array(数组长度)  或  var arr = new Array("Saab","Volvo","BMW")
 
-*typeof(val) 使用中,但是 null 数组 对象 都会返回 object 要具体知道则使用[如: val instanceof Array 是返回true反之返回false ]或则使用 constructor ,而null类型使用 [ val == null ] 判断是不是undefined类型 也可以 使用 val == undefined 
+- *typeof(val) 使用中,但是 null 数组 对象 都会返回 object 要具体知道则使用[如: val instanceof Array 是返回true反之返回false ]或则使用 constructor ,而null类型使用 [ val == null ] 判断是不是undefined类型 也可以 使用 val == undefined 
 
-*不论var声明的变量处于当前作用域的第几行,都会被提升到作用域的顶部并初始化为undefined，但是如果有赋值要等到执行到才能赋值，不然在赋值语句前都是undefined. 譬如var i =6；语句var i 会被提前而i = 6 要等到语句执行
+*不论var声明的变量处于当前作用域的第几行,都会被提升到作用域的顶部并初始化为undefined，但是如果有赋值要等到执行到才能赋值，不然在赋值语句前都是undefined. 譬如var i =6；语句var i 会被提前,而i = 6 要等到语句执行
 
 *未定义的变量直接赋值,直接变成为全局变量 [ 如: val = 66; ]
 
@@ -74,55 +102,57 @@ val = null;
 'val' in window (存在则返回true反之则返回false)
 
 
-data函数的一些方法: 使用前一定要使用new不能直接赋值 var d = Date() 
-getDate()    从 Date 对象返回一个月中的某一天 (1 ~ 31)。
-getDay()     从 Date 对象返回一周中的某一天 (0 ~ 6,周日-周六)。
-getHours()   返回 Date 对象的小时 (0 ~ 23)。
-getTime()    返回毫秒数
-getMonth()   返回月份(0-11)
+- data函数的一些方法: 使用前一定要使用new不能直接赋值 var d = Date() 
+
+        getDate()    从 Date 对象返回一个月中的某一天 (1 ~ 31)。
+        getDay()     从 Date 对象返回一周中的某一天 (0 ~ 6,周日-周六)。
+        getHours()   返回 Date 对象的小时 (0 ~ 23)。
+        getTime()    返回毫秒数
+        getMonth()   返回月份(0-11)
 
 JSON语法：
-大括号保存对象
-方括号保存数组
-数据为 键/值 对
-数据由逗号分隔
 
+    大括号保存对象
+    方括号保存数组
+    数据为 键/值 对
+    数据由逗号分隔
 
-JSON.parse(txt) 用于将一个 JSON 字符串转换为 JavaScript 对象。
-JSON.stringify(obj)    用于将 JavaScript 值[通常数组或对象]转换为 JSON 字符串。
+>JSON.parse(txt) 用于将一个 JSON 字符串转换为 JavaScript对象。
 
-数组方法:
-length = arr.push(new1,new2,...)   向数组末尾添加n个元素,返回新长度
-popVal = arr.pop()                    删除数组最后一个元素,返回删除值
-delval = arr.shift()                  删除数组第一个元素,返回删除值        
-length = arr.unshift(new1,new2,...) 向数组开头添加n个元素,返回新长度n1在n2前
+>JSON.stringify(obj)    用于将 JavaScript 值[通常数组或对象]转换为 JSON 字符串。
 
 Math方法:
-Math.random()         返回0到1之间的随机数
-Math.round()          返回四舍五入的值, 只返回整数
-Math.sqrt( val )      返回val的开方值,有小数位则精确到10多位
 
-HTML文档选择器:  除了id选择器外,其他的都要Elements都有加s注意,所以出来的都是数组,一定要记得选第几个数组,即便是选出来只有1个那么也要用[0]不然后续无法使用.
-document.getElementById()   
-document.getElementsByClassName()     
-document.getElementsByTagName()
-document.getElementsByName()
-document.querySelectorAll("css selecter")  返回所有的  document.querySelectorAll("#add *") 全部子元素,返回数组形式
-document.querySelector("css selecter")  返回所有选择元素的第一个
+    Math.random()         返回0到1之间的随机数
+    Math.round()          返回四舍五入的值, 只返回整数
+    Math.sqrt( val )      返回val的开方值,有小数位则精确到10多位
 
+HTML文档选择器: 
+ 
+ >除了id选择器外,其他的都要Elements都有加s注意,所以出来的都是数组,一定要记得选第几个数组,即便是选出来只有1个那么也要用[0]不然后续无法使用.
+ 
+    document.getElementById()   
+    document.getElementsByClassName()     
+    document.getElementsByTagName()
+    document.getElementsByName()
+    document.querySelectorAll("css selecter")  返回所有的  document.querySelectorAll("#add *") 全部子元素,返回数组形式
+    document.querySelector("css selecter")  返回所有选择元素的第一个
+
+##前端面试题
 
 代码规范:
 变量名和函数名推荐使用驼峰法来命名;(例如:firstName);
 通常运算符 ( = + - * / ) 前后需要添加空格;
 
 html事件:
-onmouseover(在元素内移动都会一直触发)  与onmouseout配对使用
-onmouseenter 鼠标进入只会触发一次 和onmouseleave 一对
-onblur
-onfocus
-onchange
-onmouseup
-onmousedown
+
+    onmouseover(在元素内移动都会一直触发)  与onmouseout配对使用
+    onmouseenter 鼠标进入只会触发一次 和onmouseleave 一对
+    onblur
+    onfocus
+    onchange
+    onmouseup
+    onmousedown
 
 BOM:浏览器对象模型(BrowserObjectModel)
 DOM:文档对象模型(Document Object Model)
@@ -164,7 +194,8 @@ e.classList  只读属性, e.classList.add("class1","class2..")  e.classList.rem
 移除HTML元素:  parent.removeChild(child)  成功返回删除节点,失败返回NULL  例list.removerChlid( list[0].childNodes[0])   list.childNodes[0].nodeType==1时才是元素节点，2是属性节点，3是文本节点。  所以说这个还是使用  e.children 只会返回元素节点.(同时几乎所有浏览器都支持)
 
 
-*node节点
+##node节点
+
 	e.parentNode 返回节点
 	e.previousElementsibling上个兄弟元素节点
 	e.nextElementsibling 下个兄弟元素节点
@@ -172,6 +203,7 @@ e.classList  只读属性, e.classList.add("class1","class2..")  e.classList.rem
 	parent.insertBefore(newItem,existingItem)  例子  list.insertBefore(newItem,list.childNodes[0]);
 
 BOM:
+
 window.history.back()      返回
 window.history.forward()   前进
 window.history.go(-2)      后退两页,为0会刷新
@@ -202,43 +234,50 @@ document.cookie   属性返回当前文档所有的cookies,以键=值形式
 myObj = function.apply(myObj[, argArray])        参数以数组传入
 myObj = function.call(myObj[, arg1[, arg2[, [,...argN]]]])   参数一个个传入
 
-*跨域:
-后端加上这句就可以实现跨域,*表示任何地址,也可以是自己的地址: header("Access-Control-Allow-Origin: *"); 
-只要协议、域名、端口有任何一个不同都是跨域
-解决跨域:jsonp、 iframe、window.name、window.postMessage、服务器上设置代理页面
-jsonp就是使用标签实现跨域  详解自己博客
-$.ajax({
-	 type:"get",
-	 async:"false",
-	 url: "",
-	 Datatype:"jsonp",
-	 jsonp:"cc", //给服务端做索引,服务端拿到是handler()名字
-	 jsonpCallback:"handler",  客户端处理返回数据的函数
-	 success:function(){}
-})
+- *跨域:
+    
+    >只要协议、域名、端口有任何一个不同都是跨域
+
+    后端加上这句就可以实现跨域,*表示任何地址,也可以是自己的地址: header("Access-Control-Allow-Origin: *"); 
+    
+    解决跨域:jsonp、 iframe、window.name、window.postMessage、服务器上设置代理页面
+    
+    jsonp就是使用标签实现跨域  详解自己博客
+    $.ajax({
+         type:"get",
+         async:"false",
+         url: "",
+         Datatype:"jsonp",
+         jsonp:"cc", //给服务端做索引,服务端拿到是handler()名字
+         jsonpCallback:"handler",  客户端处理返回数据的函数
+         success:function(){}
+    })
 
 
 
-*js的字符串正则: search(正则或字符串都可做检索) [返回开始的位置,没有则返回-1] 和 replace()[返回新String不会改变原String] 和  match()[没有返回null,有返回数组]
-修饰符: i(大小写不敏感) g(全局匹配,不会匹配到第一个就结束) 
+- *js的字符串正则:
 
-.   单个字符，除了换行和行结束符; 
-\w  单词字符。        \W
-\d  查找数字。	      \D
-\s  查找空白符(指包括\n,\r,\f,\t,\v)    \S
-\b  匹配单词边界      \B
-string?=n   匹配任何其后紧接指定字符串 n 的字符串,返回?前的string
-string?!=n  匹配任何其后没有紧接指定字符串 n 的字符串
-[A-z]  匹配大写A到小写z
-[abc]  []中任意字符
-[^abc] 不包含[]中任意一个字符
-(red|blue|yellow) 查找任何指定的选项。
-n{x,}
-n{x,y}
-n+ 至少一个n   ; n*  零个或多个n  ; n? 零个或1个n
+    >search(正则或字符串都可做检索) [返回开始的位置,没有则返回-1] 和 replace()[返回新String不会改变原String] 和  match()[没有返回null,有返回数组]
+        
+        
+        修饰符: i(大小写不敏感) g(全局匹配,不会匹配到第一个就结束) 
+        
+        .   单个字符，除了换行和行结束符; 
+        \w  单词字符。        \W
+        \d  查找数字。	      \D
+        \s  查找空白符(指包括\n,\r,\f,\t,\v)    \S
+        \b  匹配单词边界      \B
+        string?=n   匹配任何其后紧接指定字符串 n 的字符串,返回?前的string
+        string?!=n  匹配任何其后没有紧接指定字符串 n 的字符串
+        [A-z]  匹配大写A到小写z
+        [abc]  []中任意字符
+        [^abc] 不包含[]中任意一个字符
+        (red|blue|yellow) 查找任何指定的选项。
+        n{x,}
+        n{x,y}
+        n+ 至少一个n   ; n*  零个或多个n  ; n? 零个或1个n
 
  
-
 *结果是什么
 var a = 6;
 setTimeout(function () {
@@ -268,21 +307,22 @@ const声明的变量不得改变值
 
 
 *常用HTTP消息状态码 (HyperText Transfer Protocol)超文本传输协议
-1xx   服务器收到请求，需要请求者继续执行操作
-2xx   被成功的接受并处理
-200 一切正常(ok)
-3xx   重定向
-301 永久性转移
-302 暂时转移,客户端应继续使用原有的url
-304 没有被修改(not modified)(服务器返回304状态，表示源文件没有被修改,不会返回资源,继续使用缓存）
-4xx   客户端错误
-400 客户端请求的语法错误(Bad Request)
-401 Unauthorized  合法请求,因为被请求的页面需要身份验证，客户端没有提供或者身份验证失败。
-403 禁止访问(forbidden)
-404 没找到页面(not found)
-5xx   服务端错误
-500 内部服务器出错(internal service error)
-503 服务器超时(通常,这只是暂时状态)
+
+    1xx   服务器收到请求，需要请求者继续执行操作
+    2xx   被成功的接受并处理
+    200 一切正常(ok)
+    3xx   重定向
+    301 永久性转移
+    302 暂时转移,客户端应继续使用原有的url
+    304 没有被修改(not modified)(服务器返回304状态，表示源文件没有被修改,不会返回资源,继续使用缓存）
+    4xx   客户端错误
+    400 客户端请求的语法错误(Bad Request)
+    401 Unauthorized  合法请求,因为被请求的页面需要身份验证，客户端没有提供或者身份验证失败。
+    403 禁止访问(forbidden)
+    404 没找到页面(not found)
+    5xx   服务端错误
+    500 内部服务器出错(internal service error)
+    503 服务器超时(通常,这只是暂时状态)
 
 特点: HTTP是无连接, HTTP是无状态
 客户端请求消息: 请求行（request line）、请求头部（header）、空行和请求数据
@@ -347,7 +387,8 @@ if (typeof(result) == "object"){
 *算法:冒泡,直插法 ??(需要练习下)
 
 
-////////////////////AjAX////////////////////
+##////////////////////AjAX////////////////////
+
 setRequestHeader(header,value);
 open("method"[只有GET和POST],url,async[true/false]);
 send();
@@ -361,7 +402,7 @@ responseXML   获取内容形式为XML   xml.respondxml.documentElement.getEleme
 xml.getAllRespondHead()   获取整个响应头
 xml.getResponseHeader('Last-Modified')   获取指定的响应头
 
-+++++++++++++++++++++++++++JQ 部分+++++++++++++++++++++++++++++++++++++
+##JQ 部分
 
 基础语法： $("selector").action(); selector为css选择器  $("")
 
@@ -450,7 +491,7 @@ css方法:
 	 .filter()   $("p").filter(".intro");   返回所有p元素同时是 .intro 的class元素
 	 .not()      $("p").not(".intro");      返回所有p元素不是 .intro class的元素
 
-*on /off  为现在或未来元素添加事件
+*on / off  为现在或未来元素添加事件
 		$(selector).on("event",childSelector,data,function)
  例子$(".right-col").on("click", "li", function(){
 		$(".right-col>li").removeClass("right-selected");
@@ -480,7 +521,7 @@ jsonp跨域请求: $.getJSON("url?cc=?", function(data){})  cc后端获取到的
 	 $.ajax({})
 
 
-++++++++++++++++++++++ react ++++++++++++++++++++++++++++++++++++++++++
+##React
 
 组件的生命周期:
 Mounting：已插入真实 DOM
@@ -491,6 +532,6 @@ React 为每个状态都提供了两种处理函数，will 函数在进入状态
 (例如: componentWillMount)
 
 
-+++++++++++++++++++  node.js  +++++++++++++++++++++++++++++++++
+##node.js
 
-ode.js 是单进程单线程应用程序，但是通过事件和回调支持并发，所以性能非常高。
+node.js 是单进程单线程应用程序，但是通过事件和回调支持并发，所以性能非常高。

@@ -98,6 +98,8 @@
 
 - array_map(callback, ...$array1);		对数组每个数组的元素都应用到回调函数, 函数的形参必须是 $array1, $array2
 
+- array_flip($array);    反转数组键值,即返回一个键和值对换的数组
+
 - array_sum($array); 对数组中所有值求和
 
 - array_product($array);  对数组中所有值求乘积
@@ -109,6 +111,8 @@
 - var_export($var, true);  返回变量的字符串表示
 
 - extract($var_array, $extract_type, $prefix);	提取数组中变量
+
+- count(array|object $array [, $mode]); 计算数组(或可计算var)长度, $mode=1时则为递归计算
 
 >##时间:
 
@@ -127,6 +131,7 @@
            week(s), weekday(s) ...
        
        例子:
+       
             strtotime('+1 week 2 days 4 hours 2 seconds')
             
             strtotime('this week Monday') 
@@ -220,7 +225,6 @@ trait关键字: 同class相似, 一种代码复用的方法,但不用像class要
     - 接口也可以继承，通过使用 extends 操作符
     
     - 接口中也可以定义常量。接口常量和类常量的使用完全相同，但是不能被子类或子接口所覆盖。(将常量变量放在 interface 中违背了其作为接口的作用而存在的宗旨，也混淆了 interface 与类的不同价值)
-
     
 >###新特性
 
