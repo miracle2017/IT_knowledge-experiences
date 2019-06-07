@@ -2,13 +2,13 @@
 
 - length 	返回字符串的长度
 
-- indexOf() 返回字符串中检索指定字符第一次出现的位置,不存时则返回空,数组也可以使用. 查找最后一次的位置: lastIndexOf()
+- indexOf() / lastIndexOf() 返回字符串中检索指定字符第一次出现的位置,不存时则返回空,数组也可以使用. 查找最后一次的位置: lastIndexOf()
 
 - serach(RegExp或字符串)  返回第一个匹配的位置,没有则返回-1
 
-- match()   找到一个或多个正则表达式的匹配 (val/RegExp) 存在则返回具体的值,不存在时则返回空
+- match('字符串' | /正则/)   找到一个或多个(正则有g时)正则表达式的匹配 (val | RegExp) 存在则返回具体的值,不存在时则返回空
 
-- replace(被替代值,替代值)  替换与正则表达式匹配的子串
+- replace(sercValue: string｜RegExp , replaceValue)  替换与正则表达式匹配的子串
 
 - slice(star[包含], end[不包含,省略则是截取到末尾] ) 提取字符串的片断，并在新的字符串中返回被提取的部分.
 
@@ -68,10 +68,6 @@ newstr = str.concat(str1,str2...)            连接多个字符串返回新字�
 *AMD : (Asynchronous Module Definition 异步模块定义)     
  推崇依赖前置，在定义模块的时候就要声明其依赖的模块 (Require.js)
  CMD : (Common Module Definition通用模块定义) 推崇就近依赖，只有在用到某个模块的时候再去require (Sea.js)
-
-*cookie 
- var d = new Date(); d.setTime(d.getTime() + 1000*60*60);
- document.cookie = "name=vlaue; expires="+d.toGMTString();
 
 *常见的js全局函数,不是window函数: isNaN(), Number(), parseFloat(),String(), eavl(), escape()
 
@@ -141,7 +137,9 @@ HTML文档选择器:
 ##前端面试题
 
 代码规范:
-变量名和函数名推荐使用驼峰法来命名;(例如:firstName);
+
+**变量名和函数名推荐使用驼峰法来命名**;(例如:firstName);
+
 通常运算符 ( = + - * / ) 前后需要添加空格;
 
 html事件:
@@ -155,115 +153,156 @@ html事件:
     onmousedown
 
 BOM:浏览器对象模型(BrowserObjectModel)
+
 DOM:文档对象模型(Document Object Model)
+
 BFC:块级格式化上下文(Block Formatting Contexts):即是元素内的子元素的布局不会影响到外部.
 
 在JavaScript中，有三种常用的绑定事件的方法：
-	在DOM元素中直接绑定； 例如: <div onclick="alert('哈哈')"></div>
-	在JavaScript代码中绑定；onclick = function(){}  (定义多个click时,前者会被后者覆盖)   btn.onclick = null; // 删除事件处理程序；
-	绑定事件监听函数。
+
+- 在DOM元素中直接绑定； 例如: <div onclick="alert('哈哈')"></div>
+	
+- 在JavaScript代码中绑定；onclick = function(){}  (定义多个click时,前者会被后者覆盖)   btn.onclick = null; // 删除事件处理程序；
+
+- 绑定事件监听函数。
+	
 事件流: 捕获阶段  目标阶段  冒泡阶段 (如果一个元素) 
 
-添加事件句柄:(此方法不会覆盖之前的事件,比如可以定义多个click,其他方法则会)
+添加事件句柄:(此方法不会覆盖之前的事件,比如可以定义多个click,其他方法
+则会)
+
 addEventListener("event"[不加on前缀], function[不加括号], useCapture[true|false会使用冒泡) 
+
 如addEventListener("click", f1, false)  传函数使用匿名,addEventListener("click", function(){ f1(i,j)}, false)   如果是冒泡是一直向上到DOM节点传递动作(click),而捕捉是DOM向下一直传递动作.在传递过程有相同的事件(click)就会被触发.
 
 阻止冒泡: 在该元素定义event.stopPropagation();
-
+ 
 removeEventListener(evernt, function)   
 (attachEvent(type, listener); [事件需要加on]
 detachEvent(event,function); )
 
+###添加属性：
 
-添加属性：
+**e.setAttribute("type","button")**       如果e没有该属性则添加,有则覆盖
+e.removeAttribute("属性")          移除属性 e.removeAttribute("style")
+
 attr = document.createAttribute("class")
 attr.value = "classname"
 p.setAttributeNode(attr)
-e.setAttribute("type","button")       如果e没有该属性则添加,有则覆盖
-e.removeAttribute("属性")          移除属性 e.removeAttribute("style")
 
 e.attributes  返回所有属性, 然后遍历出你要的. e.attributes[0].name (例如 href) / e.attributes.value  (例如www.baidu.com)
 
+###html中class的操作
 element.className.replace(目标值[正则], "") 
+
 e.classList  只读属性, e.classList.add("class1","class2..")  e.classList.remove("calss1", "class2")
 (移除不存在的class不会报错)
 
 
 创建HTML元素:  var p = document.createElement("p")   p.innerHTML = "内容"
-添加HTMl元素:  element.appendChild(element)
+添加HTML元素:  element.appendChild(element)
 移除HTML元素:  parent.removeChild(child)  成功返回删除节点,失败返回NULL  例list.removerChlid( list[0].childNodes[0])   list.childNodes[0].nodeType==1时才是元素节点，2是属性节点，3是文本节点。  所以说这个还是使用  e.children 只会返回元素节点.(同时几乎所有浏览器都支持)
 
 
 ##node节点
 
-	e.parentNode 返回节点
-	e.previousElementsibling上个兄弟元素节点
-	e.nextElementsibling 下个兄弟元素节点
+	e.parentNode 返回父节点
+	e.previousElementSibling上个兄弟元素节点
+	e.nextElementSibling 下个兄弟元素节点
 	e.children  返回属性节点 (同时几乎所有浏览器都支持)
 	parent.insertBefore(newItem,existingItem)  例子  list.insertBefore(newItem,list.childNodes[0]);
 
-BOM:
+##BOM:
 
-window.history.back()      返回
-window.history.forward()   前进
-window.history.go(-2)      后退两页,为0会刷新
-setInterval("function",milliseconds)    间隔一定时间不断执行
+window.history.back();      返回
+
+window.history.forward();   前进
+
+window.history.go(-2);      后退两页,为0会刷新
+
+setInterval("function",milliseconds， ...参数)    间隔一定时间不断执行
 clearInterval( val )                               停止不间断执行 
+
 setTimeout(function[不加括号],milliseconds,参数1,参数2..)                计时到后执行
 clearTimeout( val )                                停止计时到执行操作
 
-*location方法及属性:
+- location方法及属性:
+
 location.assign("http://www.baidu.com")  整个页面载入新网址
+
 location.reload(forceGet[true|false])    重新载入当前文档相当于刷新整个页面,true时都会绕过缓存,重新下载
+
 location.host           返回主机
-location.href           返回完整的URL     
+
+location.href           返回完整的URL; location.href = "网址" 跳转到新网址 
 		 
 *navigator.appName      浏览器名称
 
 *window.innerWidth / Height 当前窗口的大小不含滚动条,窗口不全屏也会变小
- window.outerWidth / Height 当前窗口的大小包含滚动条和工具栏,窗口不全屏也会变小  
+
+ window.outerWidth / Height 当前窗口的大小包含滚动条和工具栏, 窗口不全屏也会变小  
+ 
  window.scrollTo(x, y);    例子 window.scrollTo(100,500);
  
 var w = window.open(URL, name["_blank" / "_self"],  specs['width=100px,height=100px']);
+
 w.resizeTo(x, y)  例如:w.resizeTo(500, 500)   
+
 w.moveTo(x, y)    例如:w.moveTo(20, 20)
+
+*cookie 
 
 document.cookie   属性返回当前文档所有的cookies,以键=值形式
 
-函数的call（）与 apply（）用法 如果第一个参数写成 null 或传入 null 那么this指向window
-myObj = function.apply(myObj[, argArray])        参数以数组传入
-myObj = function.call(myObj[, arg1[, arg2[, [,...argN]]]])   参数一个个传入
+var d = new Date(); d.setTime(d.getTime() + 1000 * 60 * 60);
+document.cookie = "name=vlaue; expires="+d.toGMTString();
 
-- *跨域:
+函数的call（）与 apply（）用法 如果第一个参数写成 null 或传入 null 那么this指向window. 最主要区别如下例子
+
+myObj = function.apply(myObj[, argArray])        函数的参数以数组传入
+
+myObj = function.call(myObj[, arg1[, arg2[, [,...argN]]]]) 函数的参数一个个传入
+
+- **跨域:**
     
     >只要协议、域名、端口有任何一个不同都是跨域
-
-    后端加上这句就可以实现跨域,*表示任何地址,也可以是自己的地址: header("Access-Control-Allow-Origin: *"); 
     
     解决跨域:jsonp、 iframe、window.name、window.postMessage、服务器上设置代理页面
     
+    后端加上这句就可以实现跨域,*表示任何地址,也可以是自己的地址: header("Access-Control-Allow-Origin: *"); 
+    
     jsonp就是使用标签实现跨域  详解自己博客
-    $.ajax({
-         type:"get",
-         async:"false",
-         url: "",
-         Datatype:"jsonp",
-         jsonp:"cc", //给服务端做索引,服务端拿到是handler()名字
-         jsonpCallback:"handler",  客户端处理返回数据的函数
-         success:function(){}
-    })
+    前端: 
+    
+        $.ajax({
+             type:"get",
+             async:"false",
+             url: "",
+             Datatype:"jsonp",
+             jsonp:"cc", //给服务端做索引,服务端拿到是handler()名字
+             jsonpCallback:"handler",  客户端处理返回数据的函数
+             success:function(data){
+                这里的data就是后台返回, 在外面函数名为handler的也会接收到数据
+                console.log(data)
+             }
+        })
+    
+    服务器端php:
 
-
-
+        <?php
+        $arr = 返回给前端数据;
+        echo $_REQUEST['cc'] . "(" . json_encode($arr) . ")";
+    
+    
 - *js的字符串正则:
 
-    >search(正则或字符串都可做检索) [返回开始的位置,没有则返回-1] 和 replace()[返回新String不会改变原String] 和  match()[没有返回null,有返回数组]
+    >search(正则或字符串都可做检索) [返回开始的位置,没有则返回-1] 和  match()[没有返回null,有返回数组] 和 replace()[返回新String不会改变原String] 
         
         
         修饰符: i(大小写不敏感) g(全局匹配,不会匹配到第一个就结束) 
         
         .   单个字符，除了换行和行结束符; 
-        \w  单词字符。        \W
+        \w  单词字符。        \W: 不是单词的字符
         \d  查找数字。	      \D
         \s  查找空白符(指包括\n,\r,\f,\t,\v)    \S
         \b  匹配单词边界      \B
@@ -275,38 +314,47 @@ myObj = function.call(myObj[, arg1[, arg2[, [,...argN]]]])   参数一个个传�
         (red|blue|yellow) 查找任何指定的选项。
         n{x,}
         n{x,y}
-        n+ 至少一个n   ; n*  零个或多个n  ; n? 零个或1个n
-
+        n+ 至少一个n  
+        n*  零个或多个n 
+        n? 零个或1个n 
  
 *结果是什么
-var a = 6;
-setTimeout(function () {
-		alert(a);
-		var a = 666;   //有这句和没这句的区别              会是undefined,声明提升.如果没有则是66
-}, 1000);
-a = 66;
+
+    var a = 6;
+    setTimeout(function () {
+            alert(a);
+            var a = 666;   //有这句和没这句的区别, 会是undefined,声明提升.如果没有则是66
+    }, 1000);
+    a = 66;
 
 *let和const的区别
+
 let声明的变量可以改变，值和类型都可以改变，没有限制。
 const声明的变量不得改变值
 
 *js内存泄漏:
+
 全局变量不会被回收
 闭包的变量不会被回收.
 
 *介绍一下闭包和闭包常用场景
+
+ [参考](http://www.ruanyifeng.com/blog/2009/08/learning_javascript_closures.html)
+
+
 闭包是指有权访问另一个函数作用域中的变量的函数. 创建闭包常见方式,就是在一个函数内部创建另一个函数.
 应用场景 设置私有变量和方法
 不适合场景：返回闭包的函数是个非常大的函数
 闭包的缺点就是常驻内存，会增大内存使用量，使用不当很容易造成内存泄露。
 
 *介绍一下你所了解的作用域链,作用域链的尽头是什么，为什么
+
 每一个函数都有一个作用域，比如我们创建了一个函数，函数里面又包含了一个函数，那么现在 就有三个作用域，这样就形成了一个作用域链。
-作用域的特点就是，先在自己的变量范围中查找，如果找不到，就会沿着作用域链往上找。
+作用域的特点就是，先在自己的变量范围中查找，如果找不到，就会沿着作用域链**往上找。**
 
 
 
-*常用HTTP消息状态码 (HyperText Transfer Protocol)超文本传输协议
+**常用HTTP消息状态码 (HyperText Transfer Protocol)超文本传输协议**
 
     1xx   服务器收到请求，需要请求者继续执行操作
     2xx   被成功的接受并处理
@@ -325,12 +373,16 @@ const声明的变量不得改变值
     503 服务器超时(通常,这只是暂时状态)
 
 特点: HTTP是无连接, HTTP是无状态
+
 客户端请求消息: 请求行（request line）、请求头部（header）、空行和请求数据
+
 服务器响应消息: 状态行、消息报头、空行和响应正文。
 
 TCP协议:(Transmission Control Protocol)传输控制协议
 3次握手,4次挥手
+
 TCP协议对应于传输层(面向接协议),而HTTP协议对应于应用层,Http协议是建立在TCP协议基础之上的.
+
 UDP [User Datagram Protocol-用户数据报协议] 结构简单.速度快,没有握手
 
 HTTP请求方法:8种
@@ -347,30 +399,35 @@ HTTP请求方法:8种
 *jq中的ready()和onload的区别:ready表示文档加载完成(不包含图片和非文字媒体文件);  onload表示包含图片在内的所有的元素都已经加载完成
 
 *性能优化方法: 
+
 	1.减少http请求次数:CSS Sprites,JS、CSS源码压缩
 	2.将样式表放在顶部(head中)，将脚本放在底部(body后)(css放在js前面) 
 	3.缓存DOM节点查找结果, 用变量保存AJAX请求结果
 	4.使用CDN加速,即就近资源
 
 *从输入url到得到html详细过程?
+
 1.浏览器根据dns服务器得到域名对应的ip地址;
 2.向这个IP的机器发送http请求
 3.服务器收到处理并返回http请求
 4.浏览器得到返回结果
  
 *浏览器渲染页面的过程
+
 1.根据HTML生成DOM树
 2.根据CSS生成CSSOM
 3.将DOM和CSSOM整合成Render Tree
-4.遇到script时会执行并阻塞渲染
+4.**遇到script时会执行并阻塞渲染**
 
 css样式放在head中(因为这样可以在加载页面时一次渲染完成)script放在body后(不会阻塞渲染,让页面展现更快)
 
 *link 和@import 的区别是?
+
 页面被加载的时，link会同时被加载，而@import等到页面被加载完再加载;
 link方式的样式的权重高于@import的权重.
 
 *new操作符号做了什么?
+
 var fn = function () { };
 var fnObj = new fn();
 1.var obj = new object();创建了一个空对象
@@ -378,11 +435,10 @@ var fnObj = new fn();
 3.var result = fn.call(obj)让fn的this指向obj，并执行fn的函数体
 4.判断fn的返回值，如果是一个对象,直接返回。如果是引用类型，就返回这个引用类型的对象。
 if (typeof(result) == "object"){  
-		fnObj = result;  
+	fnObj = result;  
 } else {  
-		fnObj = obj;
+	fnObj = obj;
 }
-
 
 *算法:冒泡,直插法 ??(需要练习下)
 
@@ -404,74 +460,92 @@ xml.getResponseHeader('Last-Modified')   获取指定的响应头
 
 ##JQ 部分
 
-基础语法： $("selector").action(); selector为css选择器  $("")
+- 基础语法： $("selector").action(); selector为css选择器  $("")
 
 $(document).ready( function(){})
 
-callback 函数有加()则立马执行不是等到隐藏/显示完后才执行; speed有内设 "fast" ,"slow"(使用加引号)
+callback 函数有**加()则立马执行不是等到隐藏/显示完后才执行**; speed有内设 "fast" ,"slow"(使用加引号)
 
-*显示/隐藏  (效果是整个元素变小然后消失)
+- *显示/隐藏  (效果是整个元素变小然后消失)
+
 $(selector).hide(speed,callback); 
 $(selector).show(speed,callback); 
 $(selector).toggle(speed,callback);
 
-*淡入/淡出   (效果是整个元素变淡然后消失)
+- *淡入/淡出   (效果是整个元素变淡然后消失)
+
 $(selector).fadeToggle(speed,callback);
+
 $(selector).fadeIn(speed,callback);
+
 $(selector).fadeOut(speed,callback);
+
 $(selector).fadeTo(speed,opacity,callback);  定义到透明度到哪里
 
-*滑动
+- *滑动
+
  $(selector).slideToggle(speed,callback);
+ 
  $(selector).slideDown(speed,callback);
+ 
  $(selector).slideUP(speed,callback);
 
-*动画
-$(selector).animate({params},speed,callback); 
- 例子:$("div").animate({
-				left:'250px',    
-				height:'+=150px',
-				width:'+=150px'
-			});
+- *动画
 
-*停止动画
+$(selector).animate({params},speed,callback); 
+
+    例子:$("div").animate({
+            left:'250px',    
+            height:'+=150px',
+            width:'+=150px'
+        });
+
+- *停止动画
+
  $(selector).stop(stopAll(没填默认false,是否停止队列所有动画),goToEnd(没填默认false,true时立刻完成当前的动作,队列中下一个不影响)); 
 
-*chaining  一条语句中运行多个 jQuery 方法（在相同的元素上）
+- *chaining  一条语句中运行多个 jQuery 方法（在相同的元素上）
+
  例子: $("#p1").css("color","red").slideUp(2000).slideDown(2000);
 
-*添加
+- *添加
  $("p").append("<b>Appended text</b>"); 
 
-*删除
- $("selector").remove() 删除被选元素及其子元素。
+- *删除
+
+ $("selector").remove() **删除被选元素及其子元素。**
  $("selector").empty()  只删除子元素
 
-*设置属性
+- *设置属性
+
  $("#w3s").attr("href","//www.w3cschool.cn/jquery"); 
 
-*text(),html(),val()的获取及设置(回调函数两个参数:被选元素列表中当前元素的下标，以及原始值)
+- *text(),html(),val()的获取及设置(回调函数两个参数:被选元素列表中当前元素的下标，以及原始值)
 		$("#test2").html(function(i,origText){ 
 			return "Old html: " + origText + " New html: Hello <b>world!</b> 
 			(index: " + i + ")"; 
 		});
 
+*css
 
-*css 
  $("h1,h2,p").toggleClass("blue");       
- $("h1,h2,p").removeClass("class1 class2")
+ $("h1,h2,p").removeClass("class1 class2");
  $("#div1").addClass("class1 class2");
+ 
 css方法:
- $("p").css("background-color","yellow");  设置指定值
- $("p").css("background-color");           返回首个指定的 CSS 属性的值
- $("p").css({"background-color":"yellow","font-size":"200%"});   设置多个 CSS 属性
+
+     $("p").css("background-color","yellow");  //设置指定值
+     $("p").css("background-color");    //返回首个指定CSS 属性的值
+     $("p").css({"background-color":"yellow","font-size":"200%"});   //设置多个 CSS 属性
 
 *祖先
+
  $("selector").parent()  直接上级父节点,自己本身不包含
- $("selector").parents("ul"[可选,祖先ul的.])   一直向上到html遍历出该元素的所有祖先.  
+ $("selector").parents("ul"[可选,祖先ul的.])  一直向上到html标签,遍历出该元素的所有祖先. 
  $("span").parentsUntil("div");     <span> (不包含)与 <div>(不包含) 元素之间的所有祖先元素：
 
 *后代
+
  $("div").children();   返回div的所有直接子元素。
  $("div").children("p.1");    返回div的直接子元素并且class是 .1的p元素。
  $("div").find("span");     返回 <div> 后代的所有 <span> 元素：
@@ -499,27 +573,29 @@ css方法:
 		 })
 
 *杂项
-	 $(selector).index()  相对于同一级元素的位置,0开始计算,没有返回-1
-	 $(selector).index(element)  返回元素的索引位置, 例 $(".hot").index( $("#favorite") ) 
+
+ $(selector).index()  相对于同一级元素的位置,0开始计算,没有返回-1
+ $(selector).index(element)  返回元素的索引位置, 例 $(".hot").index( $("#favorite") ) 
 
 *尺寸
-	 width(内容的宽) / innerWidth(包含padding) / outWidht(包含padding和border)  / outWidth(true) (包含padding和border和margin)
-	 height 同上
-	 $("#div1").width() 返回宽的     $("#div1").width("设定值px")  设定宽度
+
+ width(内容的宽) / innerWidth(包含padding) / outWidht(包含padding和border)  / outWidth(true) (包含padding和border和margin)
+ height 同上
+ $("#div1").width() 返回宽的     $("#div1").width("设定值px")  设定宽度
 	
 *AJAX
-	 $("selector").load(URL,data,callback);  从服务器加载数据，并把返回的数据放入被选元素中。
-		callback(responseTxt, status, xhr) 参数:
-								 responseTxt - 包含调用成功时的结果内容
-								 statusTXT - 包含调用的状态
-								 xhr - 包含 XMLHttpRequest 对象   
 
-	 $.get(URL,callback);  callback(data, status)  data为数据, status是状态(success为成功)
+ $("selector").load(URL,data,callback);  从服务器加载数据，并把返回的数据放入被选元素中。
+    callback(responseTxt, status, xhr) 参数:
+                             responseTxt - 包含调用成功时的结果内容
+                             statusTXT - 包含调用的状态
+                             xhr - 包含 XMLHttpRequest 对象   
 
-	 $.post(URL,data,callback);    data用json形式,callback参数同get方法.
+ $.get(URL,callback);  callback(data, status)  data为数据, status是状态(success为成功)
+
+ $.post(URL,data,callback);    data用json形式,callback参数同get方法.
 jsonp跨域请求: $.getJSON("url?cc=?", function(data){})  cc后端获取到的是function()回调  详解自己博客
-	 $.ajax({})
-
+ $.ajax({})
 
 ##React
 
