@@ -34,7 +34,7 @@
 - **newarr = arr.concat(arr1,arr2, 数字, 字符串)**   将多个两个或多个数组连接起来,返回新数组
 newstr = str.concat(str1,str2...)            连接多个字符串返回新字符串
 
-- array.forEach(function(currentValue, index, arr[本身]), thisValue[this指向哪,没有写则undefined传给this])   用于遍历数组,for in用于遍历对象 ;值返回undefined
+- array.forEach(function(currentValue, index, arr[本身]), thisValue[this指向哪,没有写则undefined传给this])   用于遍历数组,for in用于遍历对象,数组也可以 ;值返回undefined
 
 - array.map(function(currentValue, index, arr), thisValue) 同上 区别:map返回新数组
 
@@ -255,7 +255,7 @@ w.moveTo(x, y)    例如:w.moveTo(20, 20)
 document.cookie   属性返回当前文档所有的cookies,以键=值形式
 
 var d = new Date(); d.setTime(d.getTime() + 1000 * 60 * 60);
-document.cookie = "name=vlaue; expires="+d.toGMTString();
+document.cookie = "name=vlaue; expires="+d.toUTCString();
 
 函数的call（）与 apply（）用法 如果第一个参数写成 null 或传入 null 那么this指向window. 最主要区别如下例子
 
@@ -326,6 +326,7 @@ myObj = function.call(myObj[, arg1[, arg2[, [,...argN]]]]) 函数的参数一个
             var a = 666;   //有这句和没这句的区别, 会是undefined,声明提升.如果没有则是66
     }, 1000);
     a = 66;
+    //先在自己作用域中找, 没有则一直往上一个一个作用域寻找
 
 *let和const的区别
 
@@ -341,16 +342,16 @@ const声明的变量不得改变值
 
  [参考](http://www.ruanyifeng.com/blog/2009/08/learning_javascript_closures.html)
 
+闭包是指能够访问另一个函数作用域中的变量的**函数**. 创建闭包常见方式,就是在一个函数内部创建子函数(这个子函数就是闭包).
 
-闭包是指有权访问另一个函数作用域中的变量的函数. 创建闭包常见方式,就是在一个函数内部创建另一个函数.
-应用场景 设置私有变量和方法
+应用场景：读取函数内部变量; 让变量常驻内存
 不适合场景：返回闭包的函数是个非常大的函数
 闭包的缺点就是常驻内存，会增大内存使用量，使用不当很容易造成内存泄露。
 
 *介绍一下你所了解的作用域链,作用域链的尽头是什么，为什么
 
 每一个函数都有一个作用域，比如我们创建了一个函数，函数里面又包含了一个函数，那么现在 就有三个作用域，这样就形成了一个作用域链。
-作用域的特点就是，先在自己的变量范围中查找，如果找不到，就会沿着作用域链**往上找。**
+作用域的特点就是，先在自己的变量范围中查找，如果找不到，就会沿着作用域链 **往上找。**
 
 
 
@@ -359,7 +360,7 @@ const声明的变量不得改变值
     1xx   服务器收到请求，需要请求者继续执行操作
     2xx   被成功的接受并处理
     200 一切正常(ok)
-    3xx   重定向
+    3xx 重定向
     301 永久性转移
     302 暂时转移,客户端应继续使用原有的url
     304 没有被修改(not modified)(服务器返回304状态，表示源文件没有被修改,不会返回资源,继续使用缓存）
@@ -398,7 +399,7 @@ HTTP请求方法:8种
 
 *jq中的ready()和onload的区别:ready表示文档加载完成(不包含图片和非文字媒体文件);  onload表示包含图片在内的所有的元素都已经加载完成
 
-*性能优化方法: 
+*前端性能优化方法: 
 
 	1.减少http请求次数:CSS Sprites,JS、CSS源码压缩
 	2.将样式表放在顶部(head中)，将脚本放在底部(body后)(css放在js前面) 
@@ -407,19 +408,20 @@ HTTP请求方法:8种
 
 *从输入url到得到html详细过程?
 
-1.浏览器根据dns服务器得到域名对应的ip地址;
-2.向这个IP的机器发送http请求
-3.服务器收到处理并返回http请求
-4.浏览器得到返回结果
+    1.浏览器根据dns服务器得到域名对应的ip地址;
+    2.向这个IP的机器发送http请求
+    3.服务器收到处理并返回http请求
+    4.浏览器得到返回结果
  
 *浏览器渲染页面的过程
 
-1.根据HTML生成DOM树
-2.根据CSS生成CSSOM
-3.将DOM和CSSOM整合成Render Tree
-4.**遇到script时会执行并阻塞渲染**
+    1.根据HTML生成DOM树
+    2.根据CSS生成CSSOM(CSS Object Model)树
+    3.将DOM和CSSOM整合成Render Tree(渲染树) 
+    4.**遇到script时会执行并阻塞渲染**
+    5.根据渲染树在屏幕上画出
 
-css样式放在head中(因为这样可以在加载页面时一次渲染完成)script放在body后(不会阻塞渲染,让页面展现更快)
+    所以有: css样式放在head中(因为这样可以在加载页面时一次渲染完成)script放在body后(不会阻塞渲染,让页面展现更快)
 
 *link 和@import 的区别是?
 
@@ -464,37 +466,37 @@ xml.getResponseHeader('Last-Modified')   获取指定的响应头
 
 $(document).ready( function(){})
 
-callback 函数有**加()则立马执行不是等到隐藏/显示完后才执行**; speed有内设 "fast" ,"slow"(使用加引号)
+callback 函数有**加()则立马执行,不是等到隐藏/显示完后才执行**; speed有内设 "fast" ,"slow"(使用加引号)
 
 - *显示/隐藏  (效果是整个元素变小然后消失)
 
-$(selector).hide(speed,callback); 
-$(selector).show(speed,callback); 
-$(selector).toggle(speed,callback);
+    $(selector).hide(speed,callback); 
+    $(selector).show(speed,callback); 
+    $(selector).toggle(speed,callback);
 
 - *淡入/淡出   (效果是整个元素变淡然后消失)
 
-$(selector).fadeToggle(speed,callback);
-
-$(selector).fadeIn(speed,callback);
-
-$(selector).fadeOut(speed,callback);
-
-$(selector).fadeTo(speed,opacity,callback);  定义到透明度到哪里
+    $(selector).fadeToggle(speed,callback);
+    
+    $(selector).fadeIn(speed,callback);
+    
+    $(selector).fadeOut(speed,callback);
+    
+    $(selector).fadeTo(speed,opacity,callback);  定义到透明度到哪里
 
 - *滑动
 
- $(selector).slideToggle(speed,callback);
- 
- $(selector).slideDown(speed,callback);
- 
- $(selector).slideUP(speed,callback);
+     $(selector).slideToggle(speed,callback);
+     
+     $(selector).slideDown(speed,callback);
+     
+     $(selector).slideUP(speed,callback);
 
 - *动画
-
-$(selector).animate({params},speed,callback); 
-
-    例子:$("div").animate({
+    
+        $(selector).animate({params},speed,callback); 
+        
+        例子:$("div").animate({
             left:'250px',    
             height:'+=150px',
             width:'+=150px'
@@ -502,100 +504,135 @@ $(selector).animate({params},speed,callback);
 
 - *停止动画
 
- $(selector).stop(stopAll(没填默认false,是否停止队列所有动画),goToEnd(没填默认false,true时立刻完成当前的动作,队列中下一个不影响)); 
+       $(selector).stop(stopAll(没填默认false,是否停止队列所有动画),goToEnd(没填默认false,true时立刻完成当前的动作,队列中下一个不影响)); 
 
-- *chaining  一条语句中运行多个 jQuery 方法（在相同的元素上）
+- *css之class
 
- 例子: $("#p1").css("color","red").slideUp(2000).slideDown(2000);
+     $("h1,h2,p").toggleClass("blue");       
+     
+     $("#div1").addClass("class1 class2");
+     
+     $("h1,h2,p").removeClass("class1 class2");
+ 
+- css方法:
 
-- *添加
- $("p").append("<b>Appended text</b>"); 
+     $("p").css("background-color");    //返回首个指定CSS 属性的值
+     
+     $("p").css("background-color","yellow");  //设置指定值
+     
+     $("p").css({"background-color":"yellow","font-size":"200%"});   //设置多个 CSS 属性
 
-- *删除
+- 设置属性
 
- $("selector").remove() **删除被选元素及其子元素。**
- $("selector").empty()  只删除子元素
-
-- *设置属性
-
- $("#w3s").attr("href","//www.w3cschool.cn/jquery"); 
-
+        $("#w3s").attr("href","//www.w3cschool.cn/jquery");
+     
 - *text(),html(),val()的获取及设置(回调函数两个参数:被选元素列表中当前元素的下标，以及原始值)
+
 		$("#test2").html(function(i,origText){ 
 			return "Old html: " + origText + " New html: Hello <b>world!</b> 
 			(index: " + i + ")"; 
 		});
 
-*css
+     
+- *祖先
+        
+        $("selector").parent()  直接上级父节点,自己本身不包含
+        $("selector").parents("ul"[可选,祖先ul的.])  一直向上到html标签,遍历出该元素的所有祖先. 
+        $("span").parentsUntil("div");     <span> (不包含)与 <div>(不包含) 元素之间的所有祖先元素：
 
- $("h1,h2,p").toggleClass("blue");       
- $("h1,h2,p").removeClass("class1 class2");
- $("#div1").addClass("class1 class2");
- 
-css方法:
+- *后代
 
-     $("p").css("background-color","yellow");  //设置指定值
-     $("p").css("background-color");    //返回首个指定CSS 属性的值
-     $("p").css({"background-color":"yellow","font-size":"200%"});   //设置多个 CSS 属性
+        $("div").children();   返回div的所有直接子元素。
+        $("div").children("p.1");    返回div的直接子元素并且class是 .1的p元素。
+        $("div").find("span");     返回 <div> 后代的所有 <span> 元素(一直向下到最后一代的遍历)
+        $("div").find("*");       返回所有后代(一直向下到最后一代的遍历)
 
-*祖先
+- *同胞(sibling)
 
- $("selector").parent()  直接上级父节点,自己本身不包含
- $("selector").parents("ul"[可选,祖先ul的.])  一直向上到html标签,遍历出该元素的所有祖先. 
- $("span").parentsUntil("div");     <span> (不包含)与 <div>(不包含) 元素之间的所有祖先元素：
+        $("h2").siblings();     返回所有同胞元素,不包含自己
+        $("h2").next();         下一个同胞元素
+        $("h2").nextAll();       h2元素(不包含)后的所有同胞
+        $("h2").nextUntil("h6");  h2(不含)到h6(不含)之间的所有同胞元素
+        prev(), prevAll(), prevUntil()  同上
+        
+- *添加元素
 
-*后代
+       append() - 在被选元素的内部结尾插入内容 
+       prepend() - 在被选元素的内部开头插入内容
+       after() - 在被选元素之后插入内容
+       before() - 在被选元素之前插入内容
 
- $("div").children();   返回div的所有直接子元素。
- $("div").children("p.1");    返回div的直接子元素并且class是 .1的p元素。
- $("div").find("span");     返回 <div> 后代的所有 <span> 元素：
- $("div").find("*");       返回所有后代
+       例子:
+       $("p").append("<b>Appended text</b>"); 
 
-*同胞(sibling)
-	 $("h2").siblings();     返回所有同胞元素,不包含自己
-	 $("h2").next();         下一个同胞元素
-	 $("h2").nextAll();       h2元素(不包含)后的所有同胞
-	 $("h2").nextUntil("h6");  h2(不含)到h6(不含)之间的所有同胞元素
-	 prev(), prevAll(), prevUntil()  同上
 
-*过滤
-	 .first()    $("div p").first();  第一个div内部中的第一个p元素
-	 .last()     $("div p").last();  最后一个div内部中的最后一个p
-	 .eq(index)  $("p").eq(5);     选取第6个元素p元素,索引从0开始.  
-	 .filter()   $("p").filter(".intro");   返回所有p元素同时是 .intro 的class元素
-	 .not()      $("p").not(".intro");      返回所有p元素不是 .intro class的元素
+- *删除元素
+    
+       $("selector").remove() **删除被选元素及其子元素。**
+       $("selector").empty()  只删除子元素
 
-*on / off  为现在或未来元素添加事件
-		$(selector).on("event",childSelector,data,function)
- 例子$(".right-col").on("click", "li", function(){
-		$(".right-col>li").removeClass("right-selected");
-		$(this).addClass("right-selected");
-		 })
+- *过滤
 
-*杂项
+    .first()    $("div p").first();  第一个div内部中的第一个p元素
+    
+    .last()     $("div p").last();  最后一个div内部中的最后一个p
+    
+    .eq(index)  $("p").eq(5);     选取第6个元素p元素,索引从0开始.  
+    
+    .filter()   $("p").filter(".intro");   返回所有p元素同时是 .intro 的class元素
+    
+    .not()      $("p").not(".intro");      返回所有p元素不是 .intro class的元素
 
- $(selector).index()  相对于同一级元素的位置,0开始计算,没有返回-1
- $(selector).index(element)  返回元素的索引位置, 例 $(".hot").index( $("#favorite") ) 
+- *on / off  为现在或未来元素添加事件, off为移除on绑定的事件
 
-*尺寸
+	$(selector).on("event",childSelector,data,function)
+        
+        例子: 
+        $(".right-col").on("click", "li", function(){
+            $(".right-col>li").removeClass("right-selected");
+            $(this).addClass("right-selected");
+        })
+        
+- *chaining  一条语句中运行多个 jQuery 方法（在相同的元素上）
+    
+       例子: $("#p1").css("color","red").slideUp(2000).slideDown(2000);
 
- width(内容的宽) / innerWidth(包含padding) / outWidht(包含padding和border)  / outWidth(true) (包含padding和border和margin)
- height 同上
- $("#div1").width() 返回宽的     $("#div1").width("设定值px")  设定宽度
+- *杂项
+
+    $(selector).index()  相对于同一级元素的位置,0开始计算,没有返回-1
+    
+    $(selector).index(element)  返回元素的索引位置, 例 $(".hot").index( $("#favorite") ) 
+
+- *尺寸
+    
+     width(内容的宽) / innerWidth(包含padding) / outWidht(包含padding和border)  / outWidth(true) (包含padding和border和margin)
+     
+     height 同上
+     
+     $("#div1").width() 返回宽的     $("#div1").width("设定值")  设定宽度, 设定值没有单位默认使用px
 	
-*AJAX
+- *AJAX
 
- $("selector").load(URL,data,callback);  从服务器加载数据，并把返回的数据放入被选元素中。
-    callback(responseTxt, status, xhr) 参数:
-                             responseTxt - 包含调用成功时的结果内容
-                             statusTXT - 包含调用的状态
-                             xhr - 包含 XMLHttpRequest 对象   
-
- $.get(URL,callback);  callback(data, status)  data为数据, status是状态(success为成功)
-
- $.post(URL,data,callback);    data用json形式,callback参数同get方法.
-jsonp跨域请求: $.getJSON("url?cc=?", function(data){})  cc后端获取到的是function()回调  详解自己博客
- $.ajax({})
+         $("selector").load(URL,data,callback);  从服务器加载数据，并把返回的数据放入被选元素中。
+            callback(responseTxt, status, xhr) 参数:
+                 responseTxt - 包含调用成功时的结果内容
+                 statusTXT - 包含调用的状态
+                 xhr - 包含 XMLHttpRequest 对象   
+        
+         $.get(URL,callback);  callback(data, status)  data为数据, status是状态(success为成功)
+        
+         $.post(URL,data,callback);    data用json形式,callback参数同get方法.
+        jsonp跨域请求: $.getJSON("url?cc=?", function(data){})  cc后端获取到的是function()回调  详解自己博客
+    
+         $.ajax({
+            "method": "post"|"get",
+            "url": "",
+            "data": {},
+            success: function(){
+            },
+            error: function(){
+            }
+         })
 
 ##React
 
