@@ -183,14 +183,14 @@ detachEvent(event,function); )
 
 ###添加属性：
 
+e.attributes  返回所有属性, 然后遍历出你要的. e.attributes.name (例如 href) / e.attributes.href  (例如www.baidu.com)
+
 **e.setAttribute("type","button")**       如果e没有该属性则添加,有则覆盖
 e.removeAttribute("属性")          移除属性 e.removeAttribute("style")
 
 attr = document.createAttribute("class")
 attr.value = "classname"
 p.setAttributeNode(attr)
-
-e.attributes  返回所有属性, 然后遍历出你要的. e.attributes[0].name (例如 href) / e.attributes.value  (例如www.baidu.com)
 
 ###html中class的操作
 element.className.replace(目标值[正则], "") 
@@ -513,6 +513,8 @@ callback 函数有**加()则立马执行,不是等到隐藏/显示完后才执�
      $("#div1").addClass("class1 class2");
      
      $("h1,h2,p").removeClass("class1 class2");
+     
+     想获取某个元素所有的class, 可用 $("p").attr("class)
  
 - css方法:
 
@@ -524,7 +526,9 @@ callback 函数有**加()则立马执行,不是等到隐藏/显示完后才执�
 
 - 设置属性
 
-        $("#w3s").attr("href","//www.w3cschool.cn/jquery");
+    $("#w3s").attr("href"); 返回属性值
+    
+    $("#w3s").attr("href","//www.w3cschool.cn/jquery");设置属性
      
 - *text(),html(),val()的获取及设置(回调函数两个参数:被选元素列表中当前元素的下标，以及原始值)
 
@@ -577,7 +581,7 @@ callback 函数有**加()则立马执行,不是等到隐藏/显示完后才执�
     
     .last()     $("div p").last();  最后一个div内部中的最后一个p
     
-    .eq(index)  $("p").eq(5);     选取第6个元素p元素,索引从0开始.  
+    .eq(index)  $("p").eq(5);     选取第6个元素p元素,索引从0开始.   eq和数组下标索引区别: [参考](https://blog.csdn.net/weixin_37281289/article/details/82669966)
     
     .filter()   $("p").filter(".intro");   返回所有p元素同时是 .intro 的class元素
     
