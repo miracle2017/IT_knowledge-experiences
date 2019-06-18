@@ -18,4 +18,13 @@ php和前端的一些常用的函数要整理经常温习下.
 
 学习phpstorm的debug
 
-怎么写文档
+心得:遇到不懂的知识点, 要一次性认真深入性的搞懂并做好笔记
+
+
+worldpress
+mysql优化
+php缓存技术
+LAMP分别的编译安装
+nginx + mysql + php 的性能调优
+
+自己有什么特长

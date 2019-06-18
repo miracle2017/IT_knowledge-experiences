@@ -43,7 +43,7 @@ mysqli_multi_query()   :执行多条语句
 
 ##mysql命令行:
 
-    show （full)　progresslist 显示当前连接到mysql的连接或线程的清单, full将完整的显示每个查询的全文
+    show （full)　proceesslist 显示当前连接到mysql的连接或线程的清单, full将完整的显示每个查询的全文
     
     @为会话(session)变量, @@为系统变量.
     
@@ -58,3 +58,20 @@ mysqli_multi_query()   :执行多条语句
 	help content
 
 	show status like "table_locks_waited" 显示有多少锁需要等待
+	
+##mysql性能分析
+
+    set profiling = 1; 开启
+	show profile;  显示执行语句各阶段详细执行时间
+	show profiles; 显示语句执行总的时间
+	
+	mysql语句前加上explain; 显示mysql如何使用索引等情况
+	
+索引生效条件
+
+    假设index（a,b,c）
+    最左前缀匹配：模糊查询时，使用%匹配时：’a%‘会使用索引，’%a‘不会使用索引
+    条件中有or，索引不会生效
+    a and c，a生效，c不生效
+    b and c，都不生效
+    a and b > 5 and c,a和b生效，c不生效。
