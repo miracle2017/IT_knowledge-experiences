@@ -59,7 +59,7 @@ mysqli_multi_query()   :执行多条语句
 
 	show status like "table_locks_waited" 显示有多少锁需要等待
 	
-##mysql性能分析
+##mysql性能分析操作
 
     set profiling = 1; 开启
 	show profile;  显示执行语句各阶段详细执行时间
@@ -67,7 +67,7 @@ mysqli_multi_query()   :执行多条语句
 	
 	mysql语句前加上explain; 显示mysql如何使用索引等情况
 	
-索引生效条件
+##索引生效条件
 
     假设index（a,b,c）
     最左前缀匹配：模糊查询时，使用%匹配时：’a%‘会使用索引，’%a‘不会使用索引
@@ -75,3 +75,12 @@ mysqli_multi_query()   :执行多条语句
     a and c，a生效，c不生效
     b and c，都不生效
     a and b > 5 and c,a和b生效，c不生效。
+    
+##mysql优化30条经验
+[参考http://www.jincon.com/archives/120/](http://www.jincon.com/archives/120/)
+
+    
+###杂项
+    
+innodb默认是行锁，**前提条件是建立在索引之上的**。如果筛选条件没有建立索引，会降级到表锁。
+即如果where条件中的字段都加了索引，则加的是行锁；否则加的是表锁。
