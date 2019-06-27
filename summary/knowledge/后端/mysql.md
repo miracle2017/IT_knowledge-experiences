@@ -10,7 +10,7 @@
 
 【数据库迁移,导出及其导入】
 
-    导入： mysqldump -u root -p --all-databases > $destDir/all_databases_20180314.bak
+    导入： mysqldump -u root -p --all-databases > $destDir/all_databases_20180314.bak   直接在linux命令行中输入
     
     导出： mysql -u root -p < $destDir/all_databases_20180314.bak
     
@@ -26,6 +26,7 @@ mysqli_multi_query()   :执行多条语句
 ##函数:
 
     FROM_UNIXTIME('时间戳字段', '%Y-%m-%d');     格式化时间戳为时间格式
+    UNIX_TIMESTAMP([date]);   转换为时间戳,不传入参数为当前时间戳, 给定date(格式为正常日期时间格式如 2019-6-6 10:10:10)时则返回当时的时间戳
     
     CONCAT(str1, str2, ...):  拼接字符串
     
@@ -79,8 +80,12 @@ mysqli_multi_query()   :执行多条语句
 ##mysql优化30条经验
 [参考http://www.jincon.com/archives/120/](http://www.jincon.com/archives/120/)
 
+
     
 ###杂项
     
 innodb默认是行锁，**前提条件是建立在索引之上的**。如果筛选条件没有建立索引，会降级到表锁。
 即如果where条件中的字段都加了索引，则加的是行锁；否则加的是表锁。
+
+索引对update语句影响 例:update table_name set a = value where b = value;  
+b字段有索引时能用到索引,mysql能快速定位要更新的位置速度变快, a有索引更新不仅要更新表数据还要更新索引所以变慢.
