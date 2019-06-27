@@ -66,7 +66,7 @@ mysqli_multi_query()   :执行多条语句
 	show profile;  显示执行语句各阶段详细执行时间
 	show profiles; 显示语句执行总的时间
 	
-	mysql语句前加上explain; 显示mysql如何使用索引等情况
+	mysql语句前加上explain; 显示mysql如何使用索引等情况. >=5.6的版本update等语句也能使用explain查看索引使用情况
 	
 ##索引生效条件
 
