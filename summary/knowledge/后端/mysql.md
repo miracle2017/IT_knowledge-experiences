@@ -83,15 +83,19 @@ mysqli_multi_query()   :执行多条语句
     
 ##mysql存储引擎之Federated
 
->开启
+    Federated实现同步远端表格, 实现数据库映射.一边更改时,对方都会随之变化.
 
-  - show engines; 查看federated是否开启
+>开启:
+
+  - show engines; 查看federated引擎是否开启, 远端的mysql表的存储引擎可以不是federated
 
   - 没有开启进入my.ini文件加入一行 `federated` 即可, 重启再次show engines查看是否开启
 
+>使用: 
+
+ - 创建新表加上CONNECTION='mysql://mysql_user:password@remote_ip:port/database_name/table_name'
  
-创建新表加上CONNECTION='mysql://mysql_user:password@remote_ip:port/database_name/table_name'
-            例子: CONNECTION='mysql://test:test@172.16.16.204:3306/lry/fed_test'; 
+   例子: CONNECTION='mysql://test:test@172.16.16.204:3306/lry/fed_test'; 
 
 ##杂项
     
