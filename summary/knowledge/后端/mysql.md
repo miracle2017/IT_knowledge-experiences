@@ -66,7 +66,7 @@ mysqli_multi_query()   :执行多条语句
 	show profile;  显示执行语句各阶段详细执行时间
 	show profiles; 显示语句执行总的时间
 	
-	mysql语句前加上explain; 显示mysql如何使用索引等情况. >=5.6的版本update等语句也能使用explain查看索引使用情况
+	mysql语句前加上explain; 显示mysql如何使用索引等情况
 	
 ##索引生效条件
 
@@ -80,9 +80,20 @@ mysqli_multi_query()   :执行多条语句
 ##mysql优化30条经验
 [参考http://www.jincon.com/archives/120/](http://www.jincon.com/archives/120/)
 
-
     
-###杂项
+##mysql存储引擎之Federated
+
+>开启
+
+  - show engines; 查看federated是否开启
+
+  - 没有开启进入my.ini文件加入一行 `federated` 即可, 重启再次show engines查看是否开启
+
+ 
+创建新表加上CONNECTION='mysql://mysql_user:password@remote_ip:port/database_name/table_name'
+            例子: CONNECTION='mysql://test:test@172.16.16.204:3306/lry/fed_test'; 
+
+##杂项
     
 innodb默认是行锁，**前提条件是建立在索引之上的**。如果筛选条件没有建立索引，会降级到表锁。
 即如果where条件中的字段都加了索引，则加的是行锁；否则加的是表锁。
