@@ -27,6 +27,7 @@ mysqli_multi_query()   :执行多条语句
 
     FROM_UNIXTIME('时间戳字段', '%Y-%m-%d');     格式化时间戳为时间格式
     UNIX_TIMESTAMP([date]);   转换为时间戳,不传入参数为当前时间戳, 给定date(格式为正常日期时间格式如 2019-6-6 10:10:10)时则返回当时的时间戳
+   current_timestamp()/ current_time()/ now()/ current_date() 获取当前的时间戳/ 完整的日期加时间/ 时间(10:10:01)/ 日期(2019-12-01)
     
     CONCAT(str1, str2, ...):  拼接字符串
     
