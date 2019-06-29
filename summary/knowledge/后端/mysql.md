@@ -66,6 +66,7 @@ mysqli_multi_query()   :执行多条语句
     set profiling = 1; 开启
 	show profile;  显示执行语句各阶段详细执行时间
 	show profiles; 显示语句执行总的时间
+	last_query_cost: 查询陈本 show status like 'last_query_cost'
 	
 	mysql语句前加上explain; 显示mysql如何使用索引等情况
 	
