@@ -82,6 +82,10 @@ mysqli_multi_query()   :执行多条语句
 ##mysql优化30条经验
 [参考http://www.jincon.com/archives/120/](http://www.jincon.com/archives/120/)
 
+##mysql优化
+
+
+
     
 ##mysql存储引擎之Federated
 
@@ -98,11 +102,18 @@ mysqli_multi_query()   :执行多条语句
  - 创建新表加上CONNECTION='mysql://mysql_user:password@remote_ip:port/database_name/table_name'
  
    例子: CONNECTION='mysql://test:test@172.16.16.204:3306/lry/fed_test'; 
+   
+##monyog --- mysql性能检测工具(window)  
+
 
 ##杂项
     
-innodb默认是行锁，**前提条件是建立在索引之上的**。如果筛选条件没有建立索引，会降级到表锁。
+- innodb默认是行锁，**前提条件是建立在索引之上的**。如果筛选条件没有建立索引，会降级到表锁。
 即如果where条件中的字段都加了索引，则加的是行锁；否则加的是表锁。
 
-索引对update语句影响 例:update table_name set a = value where b = value;  
+- 索引对update语句影响 例:update table_name set a = value where b = value;  
 b字段有索引时能用到索引,mysql能快速定位要更新的位置速度变快, a有索引更新不仅要更新表数据还要更新索引所以变慢.
+
+- mysql主动同步（可用于读写分离）
+  [参考https://blog.csdn.net/mycwq/article/details/17136001](https://blog.csdn.net/mycwq/article/details/17136001)
+  [参考https://www.jianshu.com/p/0d07b446ae33](https://www.jianshu.com/p/0d07b446ae33)
