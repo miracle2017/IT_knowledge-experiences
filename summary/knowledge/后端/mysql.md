@@ -72,19 +72,28 @@ mysqli_multi_query()   :执行多条语句
 	
 ##索引生效条件
 
-    假设index（a,b,c）
-    最左前缀匹配：模糊查询时，使用%匹配时：’a%‘会使用索引，’%a‘不会使用索引
-    条件中有or，索引不会生效
-    a and c，a生效，c不生效
-    b and c，都不生效
-    a and b > 5 and c,a和b生效，c不生效。
+>假设index（a,b,c）
+>- 最左前缀匹配：模糊查询时，使用%匹配时：'a%'会使用索引，'%a'不会使用索引
+>- 条件中有or: 索引不会生效
+>- a and c: a生效，c不生效
+>- b and c: 都不生效
+>- a and b > 5 and c : a和b生效，c不生效。
     
 ##mysql优化30条经验
 [参考http://www.jincon.com/archives/120/](http://www.jincon.com/archives/120/)
 
 ##mysql优化
+[参考https://dbaplus.cn/news-155-1531-1.html](https://dbaplus.cn/news-155-1531-1.html)
+[参考http://itindex.net/detail/55421-mysql-sql-%E8%AF%AD%E5%8F%A5](http://itindex.net/detail/55421-mysql-sql-%E8%AF%AD%E5%8F%A5)
 
 
+>###mysql查询执行过程
+>- 客户端向MySQL服务器发送一条查询请求
+>- 服务器首先检查查询缓存，如果命中缓存，则立刻返回存储在缓存中的结果。否则进入下一阶段
+>- 服务器进行SQL解析、预处理、再由优化器生成对应的执行计划
+>- MySQL根据执行计划，调用存储引擎的API来执行查询
+>- 将结果返回给客户端，同时缓存查询结果
+>![](../../../images/mysql/mysql查询过程.jpg)
 
     
 ##mysql存储引擎之Federated

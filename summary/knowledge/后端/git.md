@@ -1,5 +1,5 @@
 #git 工作流程：
-![](./../../images/git_flow.jpg)
+![](../../../images/git/git_flow.jpg)
 ##git裸仓:
 >就是没有工作目录的仓库; 即是没有实际源文件,只是包含版本历史记录的仓库.
 git init --bare myproject mybare.git    //获取myproject项目的版本历史记录即不包含实际源码生成一个mybare.git裸仓.(该命令
