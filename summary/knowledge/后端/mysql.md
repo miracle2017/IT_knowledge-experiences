@@ -72,12 +72,16 @@ mysqli_multi_query()   :执行多条语句
 	
 ##mysql性能分析操作
 
-    set profiling = 1; 开启
-	show profile;  显示执行语句各阶段详细执行时间
-	show profiles; 显示语句执行总的时间
-	last_query_cost: 查询陈本 show status like 'last_query_cost'
-	
-	mysql语句前加上explain; 显示mysql如何使用索引等情况
+- set profiling = 1; 开启
+
+- show profile;  显示执行语句各阶段详细执行时间
+
+- show profiles; 显示语句执行总的时间
+
+- last_query_cost: 查询陈本 show status like 'last_query_cost'
+
+>- mysql语句前加上explain; 显示mysql如何使用索引等情况
+>- [参考](https://www.jianshu.com/p/593e115ffadd)
 	
 ##索引生效条件
 
@@ -95,6 +99,7 @@ mysqli_multi_query()   :执行多条语句
 [参考https://dbaplus.cn/news-155-1531-1.html](https://dbaplus.cn/news-155-1531-1.html)
 [参考http://itindex.net/detail/55421-mysql-sql-%E8%AF%AD%E5%8F%A5](http://itindex.net/detail/55421-mysql-sql-%E8%AF%AD%E5%8F%A5)
 [参考https://www.cnblogs.com/huchong/p/10219318.html#_lab2_1_0](https://www.cnblogs.com/huchong/p/10219318.html#_lab2_1_0)
+
 
 
 >###mysql查询执行过程
