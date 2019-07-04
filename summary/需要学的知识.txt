@@ -26,4 +26,6 @@ php缓存技术
 LAMP分别的编译安装
 nginx + mysql + php 的性能调优
 
-自己有什么特长
+有什么特长
+
+UNIX domain sock和tcp的区别?

@@ -138,6 +138,11 @@ mysqli_multi_query()   :执行多条语句
 - 索引对update语句影响 例:update table_name set a = value where b = value;  
 b字段有索引时能用到索引,mysql能快速定位要更新的位置速度变快, a有索引更新不仅要更新表数据还要更新索引所以变慢.
 
-- mysql主动同步（可用于读写分离）
+- mysql主从同步（可用于读写分离）
   [参考https://blog.csdn.net/mycwq/article/details/17136001](https://blog.csdn.net/mycwq/article/details/17136001)
   [参考https://www.jianshu.com/p/0d07b446ae33](https://www.jianshu.com/p/0d07b446ae33)
+  
+- mysql使用UNIX sock方式或者tcp连接
+
+  连接时未指定 host 或者使用 localhost 的情况下，使用 mysql.sock. 
+  mysql配置参数skip-networking开启后就不能使用tcp连接, 只能使用socket方式通信
