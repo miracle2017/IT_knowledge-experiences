@@ -78,10 +78,57 @@ mysqli_multi_query()   :执行多条语句
 
 - show profiles; 显示语句执行总的时间
 
-- last_query_cost: 查询陈本 show status like 'last_query_cost'
+- last_query_cost: 查询成本 show status like 'last_query_cost'
 
->- mysql语句前加上explain; 显示mysql如何使用索引等情况
+- mysql语句前加上explain; 显示mysql如何使用索引等情况
+>- [官网参考https://dev.mysql.com/doc/refman/8.0/en/explain-output.html#explain-join-types](https://dev.mysql.com/doc/refman/8.0/en/explain-output.html#explain-join-types)
 >- [参考](https://www.jianshu.com/p/593e115ffadd)
+        
+       QEP:查询执行计划
+       注：标注星号的字段为重点
+        
+ >- 1.__id__：SELECT语句的标识符，代表SELECT查询在整个查询中的序号。
+ >>- id越大执行顺序越优先
+ >>- id相同，执行顺序由上至下
+ >- 2.__select_type__: SELECT查询的类型，该类型的值有11种类型。
+ 
+ >- 3.__table__: 输出行所引用的表名。
+ 
+ >- 4.__partitions__: 查询所匹配到的分区, 非分区表为`null`。
+ 
+ >- 5.__*type__: 连接类型。
+ >>&nbsp;&nbsp; 以下从最好到差排序
+ >>- system: 当表只有一行时,这个const的特例
+ >>- const: 表中最多只有一行被匹配, 因为只返回一行所以很快. 将`PRIMARY KEY` 或 `UNIQUE INDEX`索引和常量值比较时,会使用const。
+ >>- eq_ref: 假设A JOIN B，B表读取A表的各个行组合的一行时，通过B表的PRIMARY KEY或UNIQUE NOT NULL索引列连接时，优化器会使用eq_ref类型，
+ >>- ref: 基于键值选择出行数不止一行. 
+ >>- fulltext: 使用可全文索引.
+ >>- ref_or_null: 连接类型类似ref,同时附加查找包含null的值.
+ >>- index_merge: 查询中有多个独立索引,但是只能使用一个, mysql分别对多个索引进行扫描,然后合并结果.只能合并单表不能合并多表的扫描结果.
+ >>- unique_subquery: eq_ref类型在子查询中的替代类型.
+ >>- range: 在WHERE子句中，执行>,<,<>,=,BETWEEN,IN() 等操作时，MySQL可能会(不一定)使用range类型.
+ >>- index: index类型和ALL类型几乎相同. 
+ >>>&nbsp;&nbsp;有两种情况:
+ >>>- select 中的列被全部索引覆盖, mysql只需要对索引树进行扫描, 这种情况下extra会显示  USING INDEX
+ >>>- 使用索引读取主键值, 按照索引的顺序对全表进行扫描, 此时extra 中没有 USING INDEX
+ >>- all: 对表中每一行进行扫描, 这个最糟糕的情况. 
+ 
+ >- 6.__possible_key__: 在查询中能够用到的索引，但是实际中不一定会被全部用到, 这取决`mysql`优化器的选择.
+ 
+ >- 7.__*key__: 查询中实际用到的索引, 该列的值可能包含`possible_key`列中没有出现的索引; 当查询满足覆盖索引的条件时，`possible_keys`列为`NULL`，索引仅在`key`列显示，`MySQL`只需要扫描索引树，不用到实际的数据行检索即可得到结果，查询会更高效，`Extra`列显示`USING INDEX`，则证明使用了覆盖索引。 
+                            
+ >- 8.__key_len__: 实际用到的索引字段长度，越短越好。     
+ 
+ >- 9.__ref__: 显示哪个列或者常数和索引比较筛选出结果。
+ 
+ >- 10.__rows__: MySQL认为执行查询必须检查的行数，对Innodb表来说，这是一个预估值，可能并不是确切的值。
+
+ >- 11.__filtered__: 过滤百分比, 1~100, 值越大可能意味着索引越好。
+ 
+ >- 12.__*Extra__: 附加信息
+ 
+ 
+ 
 	
 ##索引生效条件
 
@@ -92,14 +139,13 @@ mysqli_multi_query()   :执行多条语句
 >- b and c: 都不生效
 >- a and b > 5 and c : a和b生效，c不生效。
     
-##mysql优化30条经验
-[参考http://www.jincon.com/archives/120/](http://www.jincon.com/archives/120/)
-
+    
 ##mysql优化
+
+[mysql优化30条经验参考http://www.jincon.com/archives/120/](http://www.jincon.com/archives/120/)
 [参考https://dbaplus.cn/news-155-1531-1.html](https://dbaplus.cn/news-155-1531-1.html)
 [参考http://itindex.net/detail/55421-mysql-sql-%E8%AF%AD%E5%8F%A5](http://itindex.net/detail/55421-mysql-sql-%E8%AF%AD%E5%8F%A5)
 [参考https://www.cnblogs.com/huchong/p/10219318.html#_lab2_1_0](https://www.cnblogs.com/huchong/p/10219318.html#_lab2_1_0)
-
 
 
 >###mysql查询执行过程
