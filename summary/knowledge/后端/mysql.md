@@ -173,8 +173,22 @@ mysqli_multi_query()   :执行多条语句
  
    例子: CONNECTION='mysql://test:test@172.16.16.204:3306/lry/fed_test'; 
    
-##monyog --- mysql性能检测工具(window)  
+   
+##Mysql工具使用集合
 
+- ###monyog --- mysql性能检测工具(window)  
+
+- ###mysql主从同步,主主同步（可用于读写分离) 
+
+  [参考https://blog.csdn.net/mycwq/article/details/17136001](https://blog.csdn.net/mycwq/article/details/17136001)
+  [参考https://www.jianshu.com/p/0d07b446ae33](https://www.jianshu.com/p/0d07b446ae33)
+  ps: master1->master2实现主从同步, 反过来mater2->master1也实现主从同步,这样就主主同步了
+  
+- ###Percona toolkit分析mysql工具
+  >感觉不是很有用
+  
+- ###PXC(Percona XtraDB Cluster)实现mysql集群
+   [参考https://www.jianshu.com/p/db7190658926](https://www.jianshu.com/p/db7190658926)
 
 ##杂项
     
@@ -184,10 +198,6 @@ mysqli_multi_query()   :执行多条语句
 - 索引对update语句影响 例:update table_name set a = value where b = value;  
 b字段有索引时能用到索引,mysql能快速定位要更新的位置速度变快, a有索引更新不仅要更新表数据还要更新索引所以变慢.
 
-- mysql主从同步（可用于读写分离）
-  [参考https://blog.csdn.net/mycwq/article/details/17136001](https://blog.csdn.net/mycwq/article/details/17136001)
-  [参考https://www.jianshu.com/p/0d07b446ae33](https://www.jianshu.com/p/0d07b446ae33)
-  
 - mysql使用UNIX sock方式或者tcp连接
 
   连接时未指定 host 或者使用 localhost 的情况下，使用 mysql.sock. 
