@@ -182,12 +182,18 @@ mysqli_multi_query()   :执行多条语句
 
 - ###monyog --- mysql性能检测工具(window)  
 
-- ###mysql主从同步,主主同步（可用于读写分离) 
-
+- ###mysql主从同步,主主同步（可用于读写分离)
+ 
   [参考https://blog.csdn.net/mycwq/article/details/17136001](https://blog.csdn.net/mycwq/article/details/17136001)
   [参考https://www.jianshu.com/p/0d07b446ae33](https://www.jianshu.com/p/0d07b446ae33)
   ps: master1->master2实现主从同步, 反过来mater2->master1也实现主从同步,这样就主主同步了
-  
+ 
+  >使用到的三个线程. 2个在从服务器上, 1个在主服务 
+  >>[官网参考https://dev.mysql.com/doc/refman/5.7/en/replication-implementation-details.html](https://dev.mysql.com/doc/refman/5.7/en/replication-implementation-details.html)
+    - Binlog dump thread: 在从设备连接时将二进制日志内容发送到从设备。
+    - Slave I/O thread: 连接到主服务器发送的数据并存储在中继日志(relay log)文件上
+    - Slave SQL thread: 读取中继日志(relay log )文件进行回放
+    
 - ###Percona toolkit分析mysql工具
   >感觉不是很有用
   
