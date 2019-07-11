@@ -173,6 +173,10 @@ mysqli_multi_query()   :执行多条语句
  
    例子: CONNECTION='mysql://test:test@172.16.16.204:3306/lry/fed_test'; 
    
+##mysql备份与恢复
+  [官网的参考https://dev.mysql.com/doc/refman/5.7/en/backup-and-recovery.html](https://dev.mysql.com/doc/refman/5.7/en/backup-and-recovery.html)
+  - 使用mysqldump进行备份及恢复
+  - 使用二进制文件进行增量备份或者恢复
    
 ##Mysql工具使用集合
 
