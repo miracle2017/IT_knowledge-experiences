@@ -177,6 +177,9 @@ mysqli_multi_query()   :执行多条语句
   [官网的参考https://dev.mysql.com/doc/refman/5.7/en/backup-and-recovery.html](https://dev.mysql.com/doc/refman/5.7/en/backup-and-recovery.html)
   - 使用mysqldump进行备份及恢复
   - 使用二进制文件进行增量备份或者恢复
+  
+##mysql经典面试题
+  [参考https://www.jianshu.com/p/977a9e7d80b3](https://www.jianshu.com/p/977a9e7d80b3)
    
 ##Mysql工具使用集合
 
