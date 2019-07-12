@@ -180,6 +180,26 @@ mysqli_multi_query()   :执行多条语句
   
 ##mysql经典面试题
   [参考https://www.jianshu.com/p/977a9e7d80b3](https://www.jianshu.com/p/977a9e7d80b3)
+  
+  
+##mysql数据类型
+  - 数值
+  
+    >对于整数类型，M表示最大显示宽度。最大显示宽度为255.显示宽度与存储大小,类型可包含的值范围无关. 当插入的表的字段数据长度小于设定的INT(M)最大长度的时候，检索出来的数据会自动空格补充, 如果你设定zerofill, 那么可以看到存入的格式是在实际数字前补零到总的位数等于M。zerofill(补零)，当实际插入的数据长度小于建表的时候设定的长度时候，它会从左开始补零, 具体补多少与int(M)的M有关。这个修饰符可以防止MySQL存储负值。比如int(20)表示显示宽度是20, 但是实际上可以存储的只有10位数范围2^32-1(无符号), 整数的类型决定着存储的大小, 具体大小和范围如下
+    
+    >对于浮点和定点类型， M是可以存储的总位数。
+     
+    - TINYINT: 1个字节, 无符号的取值范围: 0 ~ 2^8-1, 有符号 -128 ~ 127
+    - SMALLINT: 2个字节  无符号的取值范围: 0 ~ 2^16-1
+    - MEDIUMINT: 3个字节 无符号的取值范围: 0 ~ 2^24-1
+    - INT: 4个字节  无符号的取值范围: 0 ~ 2^32-1
+    - BIGINT: 8个字节 无符号的取值范围: 0 ~ 2^64-1
+    
+  - 字符串
+    >varchar(M) M表示最大存储范围M个字节, 实际存储多少字节是变动的, 内容多少就是多少字节
+     char(M) M表示最大存储范围M个字节, 实际存储时都是固定的M字节 
+  
+    
    
 ##Mysql工具使用集合
 
@@ -194,14 +214,21 @@ mysqli_multi_query()   :执行多条语句
   >使用到的三个线程. 2个在从服务器上, 1个在主服务 
   >>[官网参考https://dev.mysql.com/doc/refman/5.7/en/replication-implementation-details.html](https://dev.mysql.com/doc/refman/5.7/en/replication-implementation-details.html)
     - Binlog dump thread: 在从设备连接时将二进制日志内容发送到从设备。
-    - Slave I/O thread: 连接到主服务器发送的数据并存储在中继日志(relay log)文件上
-    - Slave SQL thread: 读取中继日志(relay log )文件进行回放
+    - Slave I/O thread: 连接并接收主服务器发送的数据并存储在中继日志(relay log)文件上
+    - Slave SQL thread: 读取中继日志(relay log )文件, 执行其中的事件
     
 - ###Percona toolkit分析mysql工具
   >感觉不是很有用
   
 - ###PXC(Percona XtraDB Cluster)实现mysql集群
    [参考https://www.jianshu.com/p/db7190658926](https://www.jianshu.com/p/db7190658926)
+   
+- ###mysql性能检测工具之 innotop
+  >安装
+  - yum install innotop
+  >使用
+  - innotop -u username -p 'password'
+  - 进入后输入 ` 模式代码字母(大小写敏感) ` 进行模式切换
 
 ##杂项
     
@@ -212,6 +239,3 @@ mysqli_multi_query()   :执行多条语句
 b字段有索引时能用到索引,mysql能快速定位要更新的位置速度变快, a有索引更新不仅要更新表数据还要更新索引所以变慢.
 
 - mysql使用UNIX sock方式或者tcp连接
-
-  连接时未指定 host 或者使用 localhost 的情况下，使用 mysql.sock. 
-  mysql配置参数skip-networking开启后就不能使用tcp连接, 只能使用socket方式通信

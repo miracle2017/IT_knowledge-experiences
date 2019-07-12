@@ -2,6 +2,7 @@
 
 - mysql -user=root 不用输入密码可以直接登录mysql, 为什么?
 
-    匿名登录, mysql.user中存在一行user名为空的数值, 而如上写法登录的用户即是空的吗, 可以select current_user查看当前用户
+  >done. 匿名登录, mysql.user中存在一行user名为空的数值, 而如上写法登录的用户即是空的吗, 可以select current_user查看当前用户
 
 - tp的hook的作用及使用?
+  >done.
