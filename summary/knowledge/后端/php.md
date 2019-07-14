@@ -153,6 +153,10 @@
 
 - file_put_content();	写入数据到文件中
 
+- unlink('path/name'): 删除文件
+
+- glob('/*.txt'): 查找出所有与模式匹配的路径名, 返回一个数组
+
 >##错误处理:
 
 - error_get_last();	返回最近一次的错误
@@ -274,7 +278,7 @@ php7.0以上版本memcache的dll文件下载地址: https://github.com/nono303/P
 
 
 ##【XHProf】(分析`PHP`性能工具)
-
+[参考](https://learnku.com/laravel/t/3142/php-performance-tracking-and-analysis-tool-xhprof-installation-and-use)
     //todo
 
 ##【swoole扩展】
@@ -294,6 +298,20 @@ php7.0以上版本memcache的dll文件下载地址: https://github.com/nono303/P
 WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器与服务器全双工(full-duplex)通信——允许服务器主动发送信息给客户端。
 
 
+##php缓存技术
+[参考https://www.cnblogs.com/godok/p/6341300.html](https://www.cnblogs.com/godok/p/6341300.html)
+[参考https://juejin.im/entry/5c871001e51d4539a756f734](https://juejin.im/entry/5c871001e51d4539a756f734)
+
+>缓存函数
+ - ob_flush(): 把当前缓存写入到上级缓存, 如果用了一个ob_start(), 那么上级就是Apache, 或者nginx
+ - flush(): 将Apache缓存写入到浏览器中, nginx要做些参数配置才能实现相应的效果
+
+- ###opcache使用
+  >[参考https://blog.csdn.net/u011250882/article/details/49431053](https://blog.csdn.net/u011250882/article/details/49431053)
+  >
+  - window上
+    [参考https://blog.csdn.net/xgocn/article/details/86669091](https://blog.csdn.net/xgocn/article/details/86669091)
+ 
 
 #**收藏问题整理**
 
