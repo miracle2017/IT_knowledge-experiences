@@ -189,6 +189,8 @@
 
 - get_declared_classes(); 获取已经定义的类
 
+- 反单引号作用: 直接执行服务器的系统命令 ` echo "<pre>". `ipconfig` . "</pre>";` 前提shell_exec()函数被允许
+
 ##类与对象
 >###访问控制(可见性)
 
@@ -276,11 +278,6 @@ php7.0以上版本memcache的dll文件下载地址: https://github.com/nono303/P
     
     $memcache->set("foo", 123);
 
-
-##【XHProf】(分析`PHP`性能工具)
-[参考](https://learnku.com/laravel/t/3142/php-performance-tracking-and-analysis-tool-xhprof-installation-and-use)
-    //todo
-
 ##【swoole扩展】
  
     学习前最好看 《linux高性能服务器编程》
@@ -311,7 +308,22 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
   >
   - window上
     [参考https://blog.csdn.net/xgocn/article/details/86669091](https://blog.csdn.net/xgocn/article/details/86669091)
- 
+
+##php性能分析
+[参考](https://segmentfault.com/a/1190000003895734)
+
+- webgrind(Xdebug分析的前端, 即是将Xdebug产生的cache.out文件显示出来)
+
+  [参考](https://github.com/jokkedk/webgrind)
+
+- XHProf(分析`PHP`性能工具)
+
+  [参考](https://learnku.com/laravel/t/3142/php-performance-tracking-and-analysis-tool-xhprof-installation-and-use)
+    //todo
+
+##实现session分布式
+
+>
 
 #**收藏问题整理**
 
