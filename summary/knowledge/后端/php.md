@@ -319,11 +319,25 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
 - XHProf(分析`PHP`性能工具)
 
   [参考](https://learnku.com/laravel/t/3142/php-performance-tracking-and-analysis-tool-xhprof-installation-and-use)
+  [参考](http://www.voidcn.com/article/p-zdxrjwwb-bou.html)
+  
     //todo
+    
+##MongoDB
+
+- window上
+  [参考](https://www.mongodb.org.cn/tutorial/55.html)
+  [phpmongodb驱动参考](https://www.php.net/manual/zh/mongodb.installation.windows.php)
+  
+- linux上
+
+  //todo  
+  
+  
 
 ##实现session分布式
 
->
+- 将session存在redis， mysql等上面
 
 #**收藏问题整理**
 
