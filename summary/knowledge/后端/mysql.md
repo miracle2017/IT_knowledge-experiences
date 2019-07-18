@@ -68,7 +68,7 @@ mysqli_multi_query()   :执行多条语句
 	
 	help content
 
-	show status like "table_locks_waited" 显示有多少锁需要等待
+	show status like "table_locks_waited" 显示有多少锁需要等待  
 	
 ##mysql性能分析操作
 

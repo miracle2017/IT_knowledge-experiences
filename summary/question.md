@@ -6,3 +6,5 @@
 
 - tp的hook的作用及使用?
   >done.
+  
+- phpstudy的php7.1版本在nginx下无法加载curl扩展， 其他php版本能正常加载
