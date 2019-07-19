@@ -263,7 +263,7 @@ trait关键字: 同class相似, 一种代码复用的方法,但不用像class要
          xdebug.remote_mode = "req"
          xdebug.remote_handler = "dbgp"
          xdebug.remote_host = "127.0.0.1"
-         xdebug.remote_port = 9000
+         xdebug.remote_port = 9100
          xdebug.idekey="PHPSTORM"
          xdebug.remote_autostart = no
          xdebug.auto_trace = 0
