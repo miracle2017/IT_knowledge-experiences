@@ -33,5 +33,7 @@ redis实战
 
 熟悉下php.ini内容
 
+phpunit
+
 
 

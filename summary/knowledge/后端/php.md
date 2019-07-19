@@ -247,6 +247,29 @@ trait关键字: 同class相似, 一种代码复用的方法,但不用像class要
 
 - className::class 获取一个字符串，包含了类 ClassName 的完全限定名称.(`php>5.5`新特性)
 
+##【xdebug】
+
+- window上
+
+  1. [超快速简单安装指导](https://xdebug.org/wizard.php)
+  
+  2. 常规配置
+              
+         xdebug.profiler_append = 0
+         xdebug.profiler_enable = 1
+         xdebug.profiler_enable_trigger = 0
+         xdebug.profiler_output_name = "cache.out.%t-%s"
+         xdebug.remote_enable = 1
+         xdebug.remote_mode = "req"
+         xdebug.remote_handler = "dbgp"
+         xdebug.remote_host = "127.0.0.1"
+         xdebug.remote_port = 9000
+         xdebug.idekey="PHPSTORM"
+         xdebug.remote_autostart = no
+         xdebug.auto_trace = 0
+    
+
+
 ##【memcache】
     简介:
     Memcached是一种基于内存的key-value存储，用来存储小块的任意数据（字符串、对象）。这些数据可以是数据库调用、API调用或者是页面渲染的结果。
@@ -321,23 +344,26 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
   [参考](https://learnku.com/laravel/t/3142/php-performance-tracking-and-analysis-tool-xhprof-installation-and-use)
   [参考](http://www.voidcn.com/article/p-zdxrjwwb-bou.html)
   
+- wnidow上
+
+  [tideway-xhprof-extension下载](https://ci.appveyor.com/project/tideways/php-profiler-extension)
+  
     //todo
     
 ##MongoDB
 
 - window上
-  [参考](https://www.mongodb.org.cn/tutorial/55.html)
+  [mongodbzaiwindow安装参考](https://www.mongodb.org.cn/tutorial/55.html)
   [phpmongodb驱动参考](https://www.php.net/manual/zh/mongodb.installation.windows.php)
   
 - linux上
 
   //todo  
   
-  
 
 ##实现session分布式
 
-- 将session存在redis， mysql等上面
+- php.ini中设置session.handler将session存在redis， mysql等上面
 
 #**收藏问题整理**
 
