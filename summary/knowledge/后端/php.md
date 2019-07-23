@@ -1,3 +1,5 @@
+[完善的纯中文版手册](https://php.golaravel.com/)
+
 #常用核心函数
 
 >##字符串:
@@ -364,6 +366,13 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
 ##实现session分布式
 
 - php.ini中设置session.handler将session存在redis， mysql等上面
+
+
+##php.ini文件配置
+
+[完善的纯中文版手册](https://php.golaravel.com/)
+[核心配置官网](https://www.php.net/manual/zh/ini.core.php)
+[配置选项列表官网](https://www.php.net/manual/zh/ini.list.php)
 
 #**收藏问题整理**
 
