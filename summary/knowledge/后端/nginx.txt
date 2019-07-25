@@ -36,3 +36,54 @@ nginx支持pathinfo的配置:
             include        fastcgi_params;
         }
     }
+
+
+    #设置uploads底下的php文件禁止访问, 即不会被转发到php进行解析
+    location /uploads/ {
+        location ~ .*\.php.* {
+            deny all;
+        }
+        root /home/wwwroot/wanxinceshi/;
+    }
+
+    #设置只能访问指定的几个文件和目录, 这之外的所有文件都不能访问
+    location / {
+       if (!-e $request_filename) {
+            rewrite  ^/index.php(.*)$  /index.php?s=$1  last;
+            rewrite  ^(.*)$  /index.php?s=$1  last;
+            break;
+       }
+
+
+     location /uploads/ {
+        break;
+     }
+
+     location /public/ {
+        break;
+     }
+
+     location /template/ {
+        break;
+     }
+
+
+     location ~ ^/favicon.ico$ {
+        break;
+     }
+
+     location ~ ^/$ {
+        break;
+     }
+
+       return 404;
+    }
+
+
+    location ~ ^/(admin|index|home)\.php$ {
+      fastcgi_pass   127.0.0.1:9000;
+      fastcgi_index  index.php;
+      fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+      fastcgi_param  PHP_VALUE        open_basedir=$document_root:/tmp/:/proc/;
+      include        fastcgi_params;
+    }
