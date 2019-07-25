@@ -342,14 +342,23 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
   [参考](https://github.com/jokkedk/webgrind)
 
 - XHProf(分析`PHP`性能工具)
-
+  
+  >介绍:　xhprof是一个开源的,但是不兼容php7以上, 且不再维护. tideway的xhprof_extension分析器可以使用php7及以上, 结合xhgui开源免费的图形界面进行分析(tideway也提供了图形界面但是收费, 故我们用xhgui代替) 
+  
+    
   [参考](https://learnku.com/laravel/t/3142/php-performance-tracking-and-analysis-tool-xhprof-installation-and-use)
   [参考](http://www.voidcn.com/article/p-zdxrjwwb-bou.html)
   
 - wnidow上
 
-  [tideway-xhprof-extension下载](https://ci.appveyor.com/project/tideways/php-profiler-extension)
-  
+  1. 下载及安装[tideway-xhprof-extension的window版本下载](https://ci.appveyor.com/project/tideways/php-profiler-extension)
+      [项目github地址](https://github.com/tideways/php-xhprof-extension)
+  2. 从github上拉取xhgui项目
+  3. - 安装mongodb(xhgui基于它实现的)
+     - 安装php mongodb扩展
+     
+- linux上     
+     
     //todo
     
 ##MongoDB

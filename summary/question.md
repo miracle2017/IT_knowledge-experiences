@@ -8,7 +8,8 @@
   >done.
   
 - phpstudy的php7.1版本在nginx下无法加载curl扩展， 其他php版本能正常加载
-  重新安装新的phpstudy后解决
+  > donw 重新安装新的phpstudy后解决
   
   
 - Linux中, nginx配置静态文件, 目录没有执行权限时则出现不能访问的问题?
+  > done [参考](https://blog.csdn.net/li_101357/article/details/78391589)
