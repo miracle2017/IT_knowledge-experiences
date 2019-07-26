@@ -54,31 +54,29 @@ nginx支持pathinfo的配置:
             break;
        }
 
+         location /uploads/ {
+            break;
+         }
 
-     location /uploads/ {
-        break;
-     }
+         location /public/ {
+            break;
+         }
 
-     location /public/ {
-        break;
-     }
-
-     location /template/ {
-        break;
-     }
+         location /template/ {
+            break;
+         }
 
 
-     location ~ ^/favicon.ico$ {
-        break;
-     }
+         location ~ ^/favicon.ico$ {
+            break;
+         }
 
-     location ~ ^/$ {
-        break;
-     }
+         location ~ ^/$ {
+            break;
+         }
 
-       return 404;
+           return 404;
     }
-
 
     location ~ ^/(admin|index|home)\.php$ {
       fastcgi_pass   127.0.0.1:9000;
