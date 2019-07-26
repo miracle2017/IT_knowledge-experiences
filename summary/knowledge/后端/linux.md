@@ -121,6 +121,8 @@
   - ctrl + r： 反撤销
 
 - su root:服务器上切换用户, su(switch user)
+  su - username: 加-,表示环境变量进行切换
+          命令行前的#表示超级用户, $表示普通用户
 
 - useradd 用户名  ：Linux下添加一个用户同时会在home下生成一个用户名的目录
 
