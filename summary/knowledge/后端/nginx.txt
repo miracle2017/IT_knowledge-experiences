@@ -1,3 +1,13 @@
+[内置变量-参考](https://blog.csdn.net/dragonfly12/article/details/88397551)
+[rewrite, location执行顺序-参考](https://segmentfault.com/a/1190000008102599)
+调试技巧:
+   return法:
+       例如 return 504  $request_uri" is result";
+   add_header X-uri "$uri";
+杂项:
+   location块匹配的是$uri, 有重写规则$uri是经过重写的, 不包含请求参数串
+   执行顺序是先匹配location块,没有找到再找rewrite, rewrite后再匹配location
+
 nginx支持pathinfo的配置:
  server {
         server_name www.baidu.com;
@@ -15,7 +25,6 @@ nginx支持pathinfo的配置:
         location ~ ^(.+\.php)(.*)$ {
             fastcgi_pass   127.0.0.1:9000;
             fastcgi_index  index.php;
-
             ###支持pathinfo的实现 开始
             ##增加 fastcgi_split_path_info指令，将URI匹配成PHP脚本的URI和pathinfo两个变量
             ##即$fastcgi_script_name 和$fastcgi_path_info
