@@ -148,7 +148,7 @@
 ##【nginx】
 
 >- 重新nginx配置文件(不停服)
->- /usr/local/nginx/sbin/nginx -t  :检测配置文件的语法正确性(很总要)
+>- /usr/local/nginx/sbin/nginx -t  :检测配置文件的语法正确性(很重要)
 >- /usr/local/nginx/sbin/nginx -s reload  :重新加加载配置文件(-s有stop的意思)
 
 ##【网站压力测试】
