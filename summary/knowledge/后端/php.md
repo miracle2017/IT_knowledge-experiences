@@ -324,15 +324,25 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
 [参考https://www.cnblogs.com/godok/p/6341300.html](https://www.cnblogs.com/godok/p/6341300.html)
 [参考https://juejin.im/entry/5c871001e51d4539a756f734](https://juejin.im/entry/5c871001e51d4539a756f734)
 
->缓存函数
- - ob_flush(): 把当前缓存写入到上级缓存, 如果用了一个ob_start(), 那么上级就是Apache, 或者nginx
- - flush(): 将Apache缓存写入到浏览器中, nginx要做些参数配置才能实现相应的效果
+- ###内置缓存
+  >缓存函数
+  - ob_flush(): 把当前缓存写入到上级缓存, 如果用了一个ob_start(), 那么上级就是Apache, 或者nginx
+  - flush(): 将Apache缓存写入到浏览器中, nginx要做些参数配置才能实现相应的效果
 
 - ###opcache使用
   >[参考https://blog.csdn.net/u011250882/article/details/49431053](https://blog.csdn.net/u011250882/article/details/49431053)
   >
   - window上
     [参考https://blog.csdn.net/xgocn/article/details/86669091](https://blog.csdn.net/xgocn/article/details/86669091)
+
+- ###nginx配置静态缓存
+  
+  例如: 
+  location ~ \.(img|jpg)$ {
+      expires 1d;   //比如缓存1天, 但是如果文件有更改时, 浏览器则会重新下载
+  } 
+
+
 
 ##php性能分析
 [参考](https://segmentfault.com/a/1190000003895734)
