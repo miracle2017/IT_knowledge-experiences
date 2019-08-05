@@ -1,4 +1,7 @@
 #git 工作流程：
+
+[教程参考](https://backlog.com/git-tutorial/cn/)
+
 ![](../../../images/git/git_flow.jpg)
 ##git裸仓:
 >就是没有工作目录的仓库; 即是没有实际源文件,只是包含版本历史记录的仓库.
