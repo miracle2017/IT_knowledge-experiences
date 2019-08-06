@@ -25,7 +25,8 @@ worldpress
 mysql优化
 php缓存技术
 LAMP分别的编译安装
-nginx + mysql + php 的性能调优
+
+nginx + mysql + php + fpm的性能调优
 
 redis实战
 
@@ -34,6 +35,11 @@ redis实战
 熟悉下php.ini内容
 
 phpunit
+
+ngin配置优化
+php-fpm配置优化
+
+完整看下mysql官方手册
 
 
 
