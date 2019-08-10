@@ -341,6 +341,8 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
   location ~ \.(img|jpg)$ {
       expires 1d;   //比如缓存1天, 但是如果文件有更改时, 浏览器则会重新下载
   } 
+  
+ 
 
 - tp5使用消息队列
 [参考](https://www.kancloud.cn/yangweijie/learn_thinkphp5_with_yang/367645)
