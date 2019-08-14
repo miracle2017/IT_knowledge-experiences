@@ -19,6 +19,8 @@ php和前端的一些常用的函数要整理经常温习下.
 UNIX domain sock和tcp的区别?
 学习phpstorm的debug
 
+学习Hbuild打包网址的app
+
 心得:遇到不懂的知识点, 要一次性认真深入性的搞懂并做好笔记
 
 worldpress
@@ -42,6 +44,8 @@ php-fpm配置优化
 完整看下mysql官方手册
 
 php 怎么开启一个守护进程
+
+OAuth
 
 
 

@@ -165,3 +165,17 @@
 >- PHP-FPM 是阻塞的单线程模型，pm.max_children 指定的是最大的进程数量，pm.max_requests 指定的是每个进程处理多少个请求后重启(因为 PHP 偶尔会有内存泄漏，所以需要重启).
 >- PHP-FPM 的每个进程也只有一个线程，但是一个进程同时只能服务一个客户端。
 
+##shell并发执行
+
+    for ((i=0; i<3; i++))
+    do
+    {
+         sleep `expr 10 - $i \* 2` 
+        echo $(curl www.baidu.com &)
+        echo "\nNO" $i
+    }& 
+    #这个&是重点 
+    done
+    
+    wait  
+    echo 'finish'
