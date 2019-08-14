@@ -395,6 +395,18 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
 [核心配置官网](https://www.php.net/manual/zh/ini.core.php)
 [配置选项列表官网](https://www.php.net/manual/zh/ini.list.php)
 
+##php爬虫
+
+- 使用curl模拟登录后获取cookie进行爬去其他页面 
+
+[参考](http://www.voidcn.com/article/p-rcxgdvsy-xe.html)
+[参考](https://www.cnblogs.com/wangluochong/p/9849647.html)
+
+- Guzzle(php http client)
+
+[中文文档](https://guzzle-cn.readthedocs.io/zh_CN/latest/overview.html)
+[git文档](https://github.com/guzzle/guzzle)
+
 #**收藏问题整理**
 
 ###PHP7下的协程实现
