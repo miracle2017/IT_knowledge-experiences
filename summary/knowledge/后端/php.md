@@ -406,11 +406,16 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
 
 - Guzzle(php http client)
 
-[中文文档](https://guzzle-cn.readthedocs.io/zh_CN/latest/overview.html)
-[git文档](https://github.com/guzzle/guzzle)
+   [中文文档](https://guzzle-cn.readthedocs.io/zh_CN/latest/overview.html)
+   [git文档](https://github.com/guzzle/guzzle)
+
+- php异步执行的几种方法
+
+[参考:PHP非阻塞模式](http://www.4wei.cn/archives/1002336)
 
 #**收藏问题整理**
 
 ###PHP7下的协程实现
    
 [参考](https://segmentfault.com/a/1190000012457145)
+
