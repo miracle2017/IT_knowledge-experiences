@@ -91,7 +91,10 @@
   - b.按照输出大小文件大小分割 
     - split -b 2G mysql-slow.log -d -a 1 new.log 每2G拆分成一个文件, 使用数字为后缀, 后缀长度1, 文件名new.log
   
-　
+- nohup
+  不挂断运行命令, 一般与&一起使用, 即关闭当前终端窗口也能在后台运行; 
+  而如果只用&, 只能在后台运行, ctrl + c不会退出进程, 但是当前终端关闭了就会结束后台进程
+  nohup php cmd.php &
 
 - linux常规操作
     - ctrl + z： 挂起

@@ -409,9 +409,80 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
    [中文文档](https://guzzle-cn.readthedocs.io/zh_CN/latest/overview.html)
    [git文档](https://github.com/guzzle/guzzle)
 
-- php异步执行的几种方法
+- php异步执行的几种方法(不阻塞后续执行)
 
-[参考:PHP非阻塞模式](http://www.4wei.cn/archives/1002336)
+[参考:PHP非阻塞模式](http://www.4wei.cn/archives/1002336) 
+
+  - 1.提前结束会话
+    - FastCGI模式下, 使用fastcgi_finish_request()函数能马上结束会话
+    - 一般模式下(如Apache, Nginx, FastCGI(直接使用fastcgi_finish_request()更快等), 提前输出内容, 结束会话
+      
+      `<?php
+      //适用于大多数运行模式(不包括命令行模式)
+      set_time_limit(0);  //设置不限执行时间
+      ignore_user_abort(true);  //忽略客户端中断
+      //nginx等可能需要达到4k才会输出buffer,所有先输出一些空字符串
+      $str = str_repeat(' ', 65536);
+      $str .= '立即输出' . date('Y-m-d H:i:s');
+      header("Content-Type: text/html;charset=utf-8");
+      header("Connection: close");//告诉浏览器不需要保持长连接
+      header('Content-Length: '. strlen($str));//告诉浏览器本次响应的数据大小只有上面的echo那么多
+      ob_end_flush();
+      ob_start();
+      echo $str;
+      ob_flush();
+      flush();
+      //至此,连接已经关闭. 但是进程还不会结束, 以下程序还能运行但不会输出
+      sleep(10);
+      file_put_contents('./log.txt', '10s后我写入log文本: 时间' . date('Y-m-d H:i:s'));`
+      
+      - 注意: 
+      
+      
+  - 2.请求子进程网址, 不等待返回结果
+    - fsockopen打开一个网络连接或者一个Unix套接字连接, 忽略返回结果(不等待返回结果)
+    - curl 设置超时时间为1s, 忽略返回结果(不等待返回结果,直接超时,但最短要1s)
+  
+  - 3.开启子进程(确保以下函开启异步子进程数没有被禁用)
+    - popen 
+      >[官方介绍链接](https://www.php.net/manual/zh/function.popen.php): 打开一个指向进程的管道，该进程由派生给定的command命令执行而产生。他是单向的(只能用于写或读)
+      
+      - 例子1 (不等待子进程返回结果直接结束父脚本)
+      <?php
+      ini_set('date.timezone', 'Asia/shanghai');
+      echo "父脚本开始\n";
+      echo date('Y-m-d H:i:s') . "\n";
+      //&: 转入后台运行; nohup:不挂断地运行命令, 防止当前的终端窗口被关闭后导致进程结束
+      $cmd = 'nohup php cmd.php &';
+      pclose(popen($cmd, 'r'));//开启一个子进程后马上关闭, 子进程进入后台处理耗时的处理
+      echo "父脚本结束";
+       
+      - 例子2 (等待子进程返回结果在结束父脚本)
+      <?php
+      ini_set('date.timezone', 'Asia/shanghai');
+      echo "父进程开始\n";
+      echo date('Y-m-d H:i:s') . "\n";
+      $cmd1 = 'nohup php cmd.php &';
+      $cmd2 = 'nohup php cmd1.php &';     
+      //执行耗时异步任务1
+      $p1 = popen($cmd1, 'r');
+      //执行耗时异步任务2, 与任务1是并行运行的
+      $p2 = popen($cmd2, 'r');
+      register_shutdown_function(function () use ($p1, $p2) {
+          $res1 = stream_get_contents($p1);
+          echo $res1;
+          $res2 = stream_get_contents($p2);
+          echo $res2;
+          pclose($p1);
+          pclose($p2);
+          echo "父脚本结束" . date('Y-m-d H:i:s') . "\n";
+      });
+      
+    - proc_open 开启异步子进程
+      >与popen()一样, 只是该函数有更强的控制程序执行的能力, 可以双向(读又写)
+      >参考例子(https://my.oschina.net/eechen/blog/745504)
+      
+  - 4.借助框架如swoole等
 
 #**收藏问题整理**
 
