@@ -417,13 +417,14 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
     - FastCGI模式下, 使用fastcgi_finish_request()函数能马上结束会话
     - 一般模式下(如Apache, Nginx, FastCGI(直接使用fastcgi_finish_request()更快等), 提前输出内容, 结束会话
       
-      `<?php
+      <?php
       //适用于大多数运行模式(不包括命令行模式)
       set_time_limit(0);  //设置不限执行时间
       ignore_user_abort(true);  //忽略客户端中断
       //nginx等可能需要达到4k才会输出buffer,所有先输出一些空字符串
       $str = str_repeat(' ', 65536);
       $str .= '立即输出' . date('Y-m-d H:i:s');
+      #header('X-Accel-Buffering: no');   // 关闭加速缓冲, 在nginx模式需要开启此行
       header("Content-Type: text/html;charset=utf-8");
       header("Connection: close");//告诉浏览器不需要保持长连接
       header('Content-Length: '. strlen($str));//告诉浏览器本次响应的数据大小只有上面的echo那么多
@@ -434,9 +435,13 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
       flush();
       //至此,连接已经关闭. 但是进程还不会结束, 以下程序还能运行但不会输出
       sleep(10);
-      file_put_contents('./log.txt', '10s后我写入log文本: 时间' . date('Y-m-d H:i:s'));`
+      file_put_contents('./log.txt', '10s后我写入log文本: 时间' . date('Y-m-d H:i:s'));
       
-      - 注意: 
+      - 注意: 在以下情况中,该方法失效:无论那个模式,gzip一定要关闭; 是window32下web服务不行;   [官方说明](https://www.php.net/manual/zh/function.flush.php)
+      
+        个别web服务器程序，特别是Win32下的web服务器程序，在发送结果到浏览器之前，仍然会缓存脚本的输出，直到程序结束为止。
+        
+        有些Apache的模块，比如mod_gzip，可能自己进行输出缓存，这将导致flush()函数产生的结果不会立即被发送到客户端浏览器。
       
       
   - 2.请求子进程网址, 不等待返回结果
