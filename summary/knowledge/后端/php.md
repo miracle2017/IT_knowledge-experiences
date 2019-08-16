@@ -415,7 +415,11 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
 
   - 1.提前结束会话
     - FastCGI模式下, 使用fastcgi_finish_request()函数能马上结束会话
-    - 一般模式下(如Apache, Nginx, FastCGI(直接使用fastcgi_finish_request()更快等), 提前输出内容, 结束会话
+    
+      - 注意: fastcgi_finish_request官方介绍页面下的评论提出需要注意的点[链接](https://www.php.net/manual/zh/function.fastcgi-finish-request.php)
+        正常脚本结束时php会自动调用session_write_close()函数, 而脚本在处理中的时候占用者session锁,对于后续请求来说是阻塞的.所以要尽快手动调用session_write_close()结束并保存session数据. 这对于其他有竞争锁情况同样适用,没有用了要尽快释放
+        
+    - 一般模式下(如Apache, Nginx, FastCGI(直接使用fastcgi_finish_request()更方便等), 提前输出内容, 结束会话
       
       <?php
       //适用于大多数运行模式(不包括命令行模式)
