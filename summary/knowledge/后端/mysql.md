@@ -140,7 +140,9 @@ mysqli_multi_query()   :执行多条语句
 >- a and b > 5 and c : a和b生效，c不生效。
     
     
-##mysql优化
+## mysql优化
+
+[MySQL优化/面试，看这一篇就够了](https://zhuanlan.zhihu.com/p/53865600)
 
 [mysql优化30条经验参考http://www.jincon.com/archives/120/](http://www.jincon.com/archives/120/)
 [参考https://dbaplus.cn/news-155-1531-1.html](https://dbaplus.cn/news-155-1531-1.html)
@@ -172,6 +174,9 @@ mysqli_multi_query()   :执行多条语句
  - 创建新表加上CONNECTION='mysql://mysql_user:password@remote_ip:port/database_name/table_name'
  
    例子: CONNECTION='mysql://test:test@172.16.16.204:3306/lry/fed_test'; 
+   
+##mysql存储引擎之MRG_MyISAM
+    >将所有表具有相同的列数据类型和索引信息集合到一个表上.MERGE表 的替代方法是分区表(它将单个表的分区存储在单独的文件中。分区使得一些操作能够更有效地执行，并且不限于MyISAM 存储引擎。)
    
 ##mysql备份与恢复
   [官网的参考https://dev.mysql.com/doc/refman/5.7/en/backup-and-recovery.html](https://dev.mysql.com/doc/refman/5.7/en/backup-and-recovery.html)

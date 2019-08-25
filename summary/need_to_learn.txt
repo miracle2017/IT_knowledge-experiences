@@ -30,7 +30,7 @@ LAMP分别的编译安装
 
 nginx + mysql + php + fpm的性能调优
 
-redis实战
+redis实战 done
 
 有什么特长
 
@@ -42,8 +42,8 @@ ngin配置优化
 php-fpm配置优化
 
 完整看下mysql官方手册
-
-php 怎么开启一个守护进程
+怎么开启一个守护进程
+php
 
 OAuth
 
