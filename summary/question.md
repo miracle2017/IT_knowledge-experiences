@@ -14,3 +14,5 @@
 - Linux中, nginx配置静态文件, 目录没有执行权限时则出现不能访问的问题?
   > done [参考](https://blog.csdn.net/caomiao2006/article/details/21701791) [参考](https://blog.csdn.net/li_101357/article/details/78391589) [参考](https://blog.csdn.net/yangcs2009/article/details/39998309)
          [参考](https://unix.stackexchange.com/questions/21251/execute-vs-read-bit-how-do-directory-permissions-in-linux-work)[参考](https://blog.csdn.net/cdu09/article/details/10310103)
+         
+- ajax中的success函数中怎么使用到外部变量, 又怎么将结果赋值给外部变量?    
