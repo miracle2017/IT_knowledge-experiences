@@ -16,3 +16,7 @@
          [参考](https://unix.stackexchange.com/questions/21251/execute-vs-read-bit-how-do-directory-permissions-in-linux-work)[参考](https://blog.csdn.net/cdu09/article/details/10310103)
          
 - ajax中的success函数中怎么使用到外部变量, 又怎么将结果赋值给外部变量?    
+  > 藐视没有问题中问题
+  
+- 访问页面时, nginx超时, php还会继续执行吗?
+  >php进程还会继续执行直到任务完成
