@@ -247,3 +247,19 @@ mysqli_multi_query()   :执行多条语句
 b字段有索引时能用到索引,mysql能快速定位要更新的位置速度变快, a有索引更新不仅要更新表数据还要更新索引所以变慢.
 
 - mysql使用UNIX sock方式或者tcp连接
+
+- 删除重复字段保留最大或者最小值? 
+  - 方法1 (即找出所有重复的id, 然后在找出每组重复id最小值, 然后去除此部分)
+  
+    DELETE FROM ls_article_new WHERE id in
+    (SELECT id FROM
+    (SELECT
+    id
+    FROM 
+    ls_article_new 
+    where
+    id in (SELECT id FROM `ls_article_new` GROUP BY  out_article_id HAVING COUNT(out_article_id) > 1)
+    AND
+    id NOT in (SELECT min(id) FROM `ls_article_new` GROUP BY  out_article_id HAVING COUNT(out_article_id) > 1)
+    ) as a)
+  
