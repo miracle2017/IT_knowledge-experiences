@@ -95,6 +95,7 @@
   不挂断运行命令, 一般与&一起使用, 即关闭当前终端窗口也能在后台运行; 
   而如果只用&, 只能在后台运行, ctrl + c不会退出进程, 但是当前终端关闭了就会结束后台进程
   nohup php cmd.php &
+  nohup ./myprogram.sh > result.log 2>&1 & echo $! > run.pid  //将输入和输出结果记录到result.log中, 将pid号记录到run.pid中
 
 - linux常规操作
     - ctrl + z： 挂起
