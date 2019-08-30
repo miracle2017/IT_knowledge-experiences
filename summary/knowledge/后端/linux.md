@@ -92,10 +92,19 @@
     - split -b 2G mysql-slow.log -d -a 1 new.log 每2G拆分成一个文件, 使用数字为后缀, 后缀长度1, 文件名new.log
   
 - nohup
+
   不挂断运行命令, 一般与&一起使用, 即关闭当前终端窗口也能在后台运行; 
   而如果只用&, 只能在后台运行, ctrl + c不会退出进程, 但是当前终端关闭了就会结束后台进程
-  nohup php cmd.php &
-  nohup ./myprogram.sh > result.log 2>&1 & echo $! > run.pid  //将输入和输出结果记录到result.log中, 将pid号记录到run.pid中
+  
+  `nohup php cmd.php &`
+  
+  `nohup ./myprogram.sh > result.log 2>&1 & echo $! > run.pid  //将输入和输出结果记录到result.log中, 将pid号记录到run.pid中`
+  
+- 命令行之间分号`;`, `&&`, `||` 的作用?
+  
+  - 分号(`;`) : 顺序独立执行各条命令, 彼此不关系是否失败, 所有命令都会执行
+  - `&&` : 顺序执行, 只有当前一条执行成功才会执行后面的
+  - `||` : 顺序执行, 只有当前一条执行失败才会执行后面的
 
 - linux常规操作
     - ctrl + z： 挂起
