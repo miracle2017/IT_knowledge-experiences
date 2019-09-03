@@ -270,6 +270,20 @@ trait关键字: 同class相似, 一种代码复用的方法,但不用像class要
          xdebug.remote_autostart = no
          xdebug.auto_trace = 0
     
+ ##【Composer】
+  
+ - ###安装
+ 
+    - Linux
+        //安装composer
+        php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');"
+        php composer-setup.php
+        //移动到/usr/local/bin/下并命令为composer, 之后就在全局中使用composer命令
+        mv composer.phar /usr/local/bin/composer
+        //使用阿里云镜像
+        composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+        //更新composer
+        composer selfupdate
 
 
 ##【memcache】
