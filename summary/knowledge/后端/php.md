@@ -306,8 +306,7 @@ php7.0以上版本memcache的dll文件下载地址: https://github.com/nono303/P
 ##【swoole扩展】
  
     学习前最好看 《linux高性能服务器编程》
-
-
+    
 >ThinkPHP使用(`version>5.1`) 
 
 [入手好文](https://www.kancloud.cn/thinkphp/think-swoole/722895)
@@ -319,6 +318,8 @@ php7.0以上版本memcache的dll文件下载地址: https://github.com/nono303/P
 
 WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器与服务器全双工(full-duplex)通信——允许服务器主动发送信息给客户端。
 
+- 附录:好文
+  - php多进程模型](https://easyswoole.oss-cn-shenzhen.aliyuncs.com/入门教程1/php多进程模型.pdf)
 
 ##php缓存技术
 [参考https://www.cnblogs.com/godok/p/6341300.html](https://www.cnblogs.com/godok/p/6341300.html)
