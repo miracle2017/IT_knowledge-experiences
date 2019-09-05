@@ -159,6 +159,8 @@
 
 - glob('/*.txt'): 查找出所有与模式匹配的路径名, 返回一个数组
 
+- mkdir(); 第三个参数为true可创建多级目录
+
 >##错误处理:
 
 - error_get_last();	返回最近一次的错误
@@ -176,6 +178,9 @@
     __LINE__ : 所在行数
     
     __FUNCTION__ : 函数名
+    
+>##正则 PCRE
+   [官方文档](https://www.php.net/manual/zh/reference.pcre.pattern.syntax.php)
 
 >##其他:
 
