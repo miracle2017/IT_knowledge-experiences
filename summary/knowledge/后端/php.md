@@ -2,6 +2,14 @@
 
 #常用核心函数
 
+>##变量处理
+
+- isset($var, [...$_]); 检测变量是否已设置并且非 NULL
+
+- empty($var); 判断一个变量是否被认为是空的(false, 0, "0", null, "", 0.0, array(), 没有被赋值的变量); 当变量不存在, 不会产生警告
+
+- is_null($var); 检测变量是否为 NULL, 变量不存在时会产生一个notice
+
 >##字符串:
 - explode($delimiter, $string);       按照某个字符分割字符成数组
 
