@@ -156,3 +156,20 @@ function human_filesize($bytes, $decimals = 2)
     $factor = floor((strlen($bytes) - 1) / 3);
     return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
 }
+
+################遍历目录, 转换为数组或格式为树形目录
+//输出树形结构目录
+$tree = new RecursiveTreeIterator(new RecursiveDirectoryIterator('D:\phpstudy2018\PHPTutorial\WWW\tp5.1'));
+foreach ($tree as $item) {
+    echo $item . "\n";
+}
+
+//输出所有的子目录,文件
+$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator('D:\phpstudy2018\PHPTutorial\WWW\tp5.1'));
+foreach ($tree as $item) {
+    echo $item . "\n";
+}
+//还可以转化为数组
+$array = iterator_to_array($iterator);
+
+
