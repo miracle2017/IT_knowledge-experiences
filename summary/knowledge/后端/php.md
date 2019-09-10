@@ -177,6 +177,9 @@
 
     todo
     
+    debug_print_backtrace(); 打印一条回溯。
+    debug_backtrace();  产生一条回溯跟踪(backtrace)
+    
 >##魔术常量:
 
     __DIR__ : 文件所在目录的绝对路径

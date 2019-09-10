@@ -652,3 +652,8 @@ React 为每个状态都提供了两种处理函数，will 函数在进入状态
 ##node.js
 
 node.js 是单进程单线程应用程序，但是通过事件和回调支持并发，所以性能非常高。
+
+##
+
+- 光标, 选区处理(rang接口)
+[参考](https://www.jianshu.com/p/ad2f818cc3b0)
