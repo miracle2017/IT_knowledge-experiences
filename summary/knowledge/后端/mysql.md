@@ -11,6 +11,7 @@
 【数据库迁移,导出及其导入】
 
     导入： mysqldump -u root -p --all-databases > $destDir/all_databases_20180314.bak   直接在linux命令行中输入
+           mysqldump -uroot -p database_name < import.sql   //Linux下导入import.sql文件到库名为database_name的数据库中
     
     导出： mysql -u root -p < $destDir/all_databases_20180314.bak
     
