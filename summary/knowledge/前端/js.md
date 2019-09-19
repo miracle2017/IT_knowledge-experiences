@@ -655,5 +655,5 @@ node.js 是单进程单线程应用程序，但是通过事件和回调支持并
 
 ##
 
-- 光标, 选区处理(rang接口)
+- 光标, 选区处理(Range接口)
 [参考](https://www.jianshu.com/p/ad2f818cc3b0)
