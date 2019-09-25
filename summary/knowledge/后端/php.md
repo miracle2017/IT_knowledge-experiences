@@ -414,8 +414,7 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
   
 - linux上
 
-  //todo  
-  
+  //todo    
 
 ##实现session分布式
 
@@ -440,7 +439,7 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
    [中文文档](https://guzzle-cn.readthedocs.io/zh_CN/latest/overview.html)
    [git文档](https://github.com/guzzle/guzzle)
 
-- php异步执行的几种方法(不阻塞后续执行)
+- php异步执行的几种方法(不阻塞后续执行)?
 
 [参考:PHP非阻塞模式](http://www.4wei.cn/archives/1002336) 
 
@@ -525,6 +524,8 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
     - pcntl_fork 需要扩展支持较麻烦
       
   - 4.借助框架如swoole等
+  
+##
 
 #**收藏问题整理**
 
