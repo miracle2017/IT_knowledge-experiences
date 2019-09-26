@@ -269,7 +269,7 @@ trait关键字: 同class相似, 一种代码复用的方法,但不用像class要
 
 - window上
 
-  1. [超快速简单安装指导](https://xdebug.org/wizard.php)
+  1. [超快速简单详细的安装指导](https://xdebug.org/wizard.php)
   
   2. 常规配置
               
@@ -285,6 +285,23 @@ trait关键字: 同class相似, 一种代码复用的方法,但不用像class要
          xdebug.idekey="PHPSTORM"
          xdebug.remote_autostart = no
          xdebug.auto_trace = 0
+         
+- linux上
+
+  1. [超快速简单详细的安装指导](https://xdebug.org/wizard.php)
+  
+  2. 配置
+  
+         zend_extension=xdebug.so
+         xdebug.remote_enable=1
+         ;如果remote_connect_back(推荐开启这个)没有开启,就要开启remote_host=(你phpstorm端电脑的ip地址), 这个只能指定一个触发, 多人用时还是推荐前者, 比较智能
+         xdebug.remote_connect_back=1
+         ;Linux机器上的端口注意不要和Linux上的程序端口冲突了, phpstorm的端口需要和这一样
+         xdebug.remote_port=9100
+         ;在每次请求带上?XDEBUG_SESSION_START=PHPSTORM即可触发, 或者使用谷歌xdebug插件(他做的就是在每次请求时cookie带上XDEBUG_SESSION_START参数,比较省事), 又或者开启remote_autostart=1(每次请求都会触发)
+         xdebug.idekey="PHPSTORM"
+         xdebug.remote_log="/usr/local/php/var/log/xdebug_remote.log"
+ 
     
  ##【Composer】
   
