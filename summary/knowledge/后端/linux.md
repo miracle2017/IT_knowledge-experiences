@@ -99,6 +99,7 @@
   `nohup php cmd.php &`
   
   `nohup ./myprogram.sh > result.log 2>&1 & echo $! > run.pid  //将输入和输出结果记录到result.log中, 将pid号记录到run.pid中`
+  `nohup node server.js 1>log.out 2>err.out > & echo $! > run.pid` //将正常信息和错误信息分别对应输出到log.out和err.out文件, pid记录到run.pid文件中
   
 - HASH-TYPE名字+'sum'后缀 filename :(如sha1sum,sha512sum,md5sum等)计算文件(不能是文件夹, 要是单一文件, 文件夹可以先打包压缩)哈希值(sha1, sha512, md5等)  
  
