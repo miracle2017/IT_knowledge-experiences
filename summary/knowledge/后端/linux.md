@@ -196,3 +196,7 @@
     
     wait  
     echo 'finish'
+  
+##Linux下独立编译安装搭建nginx + php + mysql
+
+  [指南](https://blog.csdn.net/faith306/article/details/78541974)
