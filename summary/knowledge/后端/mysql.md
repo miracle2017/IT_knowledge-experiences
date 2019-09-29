@@ -8,6 +8,18 @@
 - 更新数据:     UPDATE table_name SET field1=new-value1, field2=new-value2   [WHERE Clause]
 - 删除数据:     DELETE FROM table_name [WHERE Clause]
 
+##mysql启动
+
+- Linux安装多个mysql
+  
+  下载mysql二进制包, 然后初始化, 初始化时务必使指定basedir和database格式, 这样就能避免与已安装的冲突
+  `bin/mysqld --initialize --user=mysql --basedir=/opt/mysql/mysql --datadir=/opt/mysql/mysql/data`
+
+- 指定配置文件启动(Linux)
+  
+  `mysql_path/bin/mysqld --defaults-file=customize_config_path`
+  
+
 【数据库迁移,导出及其导入】
 
     导入： mysqldump -u root -p --all-databases > $destDir/all_databases_20180314.bak   直接在linux命令行中输入
