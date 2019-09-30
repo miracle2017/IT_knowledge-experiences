@@ -225,7 +225,6 @@ mysqli_multi_query()   :执行多条语句
    
   
     
-   
 ##Mysql工具使用集合
 
 - ###monyog --- mysql性能检测工具(window)  
@@ -254,6 +253,10 @@ mysqli_multi_query()   :执行多条语句
   >使用
   - innotop -u username -p 'password'
   - 进入后输入 ` 模式代码字母(大小写敏感) ` 进行模式切换
+  
+##忘记密码
+  
+  [How to Reset the Root Password官网](https://dev.mysql.com/doc/refman/5.6/en/resetting-permissions.html)
 
 ##杂项
     
