@@ -660,3 +660,4 @@ node.js 是单进程单线程应用程序，但是通过事件和回调支持并
 
 - node开启守护进程方法
   - [forever](https://www.npmjs.com/package/forever) 实现程序的永久运行
+  

@@ -17,7 +17,11 @@
 
 - 指定配置文件启动(Linux)
   
-  `mysql_path/bin/mysqld --defaults-file=customize_config_path`
+  `mysql_path/bin/mysqld --defaults-file=customize_config_path/my.cnf`
+  
+- 查看mysqld会以什么参数启动或初始化
+  
+  `bin/mysqld [--defaults-file=path/my.cnf] --print-defaults`
   
 
 【数据库迁移,导出及其导入】
