@@ -209,7 +209,9 @@
 
 - 反单引号作用: 直接执行服务器的系统命令 ` echo "<pre>". `ipconfig` . "</pre>";` 前提shell_exec()函数被允许
 
-- socket函数
+- socket函数(用php监听ip+端口)
+  
+  - 应用demo
   [用php实现一个动态web服务器](https://segmentfault.com/a/1190000003029173)
   
 
