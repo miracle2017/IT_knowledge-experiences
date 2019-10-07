@@ -214,6 +214,7 @@
   - 应用demo
   [用php实现一个动态web服务器](https://segmentfault.com/a/1190000003029173)
   
+- streams
 
 ##类与对象
 >###访问控制(可见性)
