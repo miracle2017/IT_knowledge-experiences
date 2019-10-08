@@ -65,6 +65,14 @@
 - chatter [-R] (+|-|=)(A|S|a|c|D|d|I|i|j|s|T|t|u): 对文件属性的更改
 
 - lscpu: 查看系统的一些信息
+    
+    >CPUs = Threads per core X cores per socket X sockets
+    
+    >Cores = Cores per socket X Sockets
+    - sockets: 插槽, 即实际物理cpu数
+    - cores per socket: 每个cpu包含的核数
+    - Threads per core: 每个核有几个线程(超线程)
+    
 
 - ll /proc/进程id : 查看进程具体信息
 
