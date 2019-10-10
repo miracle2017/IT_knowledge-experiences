@@ -1,8 +1,25 @@
 [完善的纯中文版手册](https://php.golaravel.com/)
 
+#变量类型(共9中原始数据类型)
+
+- 四种标量类型
+  1. boolean(布尔型)
+  2. integer(整型)
+  3. float(浮点型, 也称为double, 实际上float和double是相同的, 由于历史两个名称同时存在) 
+  4. string(字符串)
+
+- 三种符合类型
+  5. array(数组)
+  6. object(对象)
+  7. callable(可调用)
+  
+- 两种特殊类型
+  8. resource(资源)
+  9. NULL(无类型)
+
 #常用核心函数
 
->##变量处理
+> ##变量处理
 
 - isset($var, [...$_]); 检测变量是否已设置并且非 NULL
 
