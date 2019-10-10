@@ -53,6 +53,7 @@
 - service php-fpm restart  重启php
 
 - crontab    定时任务
+  > 注意: %有特殊作用, 所以\%才是表达%. 如使用$(date +"\%Y.\%m.\%d")
 
 - free [-h|-m|-g] 查看运行内存，-h方便人阅读自动调整单位, -m以M为单位, -g以G为单位
 
