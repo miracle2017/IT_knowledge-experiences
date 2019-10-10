@@ -271,6 +271,9 @@ mysqli_multi_query()   :执行多条语句
 b字段有索引时能用到索引,mysql能快速定位要更新的位置速度变快, a有索引更新不仅要更新表数据还要更新索引所以变慢.
 
 - mysql使用UNIX sock方式或者tcp连接
+  
+  host是localhost时，优先使用socket方式，也可以使用--protocol指定采用什么方式连接
+  在php编程中，host为localhost即可实现使用socket方式连接
 
 - 删除重复字段保留最大或者最小值? 
   - 方法1 (即找出所有重复的id, 然后在找出每组重复id最小值, 然后去除此部分. 需要用到一个中间表, 不然会报错因为不能对一个表又select又delete(update等)操作)
