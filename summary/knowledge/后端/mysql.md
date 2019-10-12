@@ -1,10 +1,23 @@
-﻿# mysql官方手册
+﻿# MySQL官方手册
 
 ## 安装升级MySQL
 - Postinstallation Setup and Testing
-  - mysql_secure_installation: 安装MySQL后, 运行程序后会提供一些安全方面的建议 
+  - mysql_secure_installation: 安装MySQL后, 运行此程序后会提供一些安全方面的建议 
+  
+  - Upgrading MySQL
+  
+##有用
+
+  - 设置mysql server slow shutdown: mysql -u root -p --execute="SET GLOBAL innodb_fast_shutdown=0" , 然后mysqladmin -u root -p shutdown
+  
   
 ## 常用基本语法
+
+- SQl(Structured Query Language, 结构化查询语言)分为4种语言:
+    - DDl(Data Definition Language, 数据定义语言)
+    - DML(Data Manipulate Language, 数据操纵语言)
+    - DCL(Data Control Language, 数据控制语言)
+    - TCL(transaction Control Language, 事务控制语言)
 
 - 创建数据库:   CREATE DATABASE RUNOOB
 - 删除数据库:   DROP DATABASE RUNOOB
@@ -32,14 +45,14 @@
 
 【数据库迁移,导出及其导入】
 
-    导入： mysqldump -u root -p --all-databases > $destDir/all_databases_20180314.bak   直接在linux命令行中输入
-        导入sql脚本:
-           1. mysqldump -uroot -p database_name < import.sql   //Linux命令行下导入import.sql文件到库名为database_name的数据库中
-           2. 先进入myslq
-              use datebase
-              source /root/import.sql
-    
-    导出： mysql -u root -p < $destDir/all_databases_20180314.bak
+- 导出： mysqldump -u root -p --all-databases > $destDir/all_databases_20180314.bak   直接在linux命令行中输入
+
+- 导入： mysql -u root -p < $destDir/all_databases_20180314.bak
+    导入sql脚本:
+       1. mysqldump -uroot -p database_name < import.sql   //Linux命令行下导入import.sql文件到库名为database_name的数据库中
+       2. 先进入myslq
+          use datebase
+          source /root/import.sql
     
 
 - 添加一个mysql用户并授权:   grant all privileges on *.* to 创建的用户名@"%" identified by "密码"; // % 表示所有地方都可登录
@@ -100,6 +113,7 @@ mysqli_multi_query()   :执行多条语句
 	help content
 
 	show status like "table_locks_waited" 显示有多少锁需要等待  
+	
 	
 ## mysql性能分析操作
 
