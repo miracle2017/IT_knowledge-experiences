@@ -1,4 +1,10 @@
-﻿##常用基本语法
+﻿# mysql官方手册
+
+## 安装升级MySQL
+- Postinstallation Setup and Testing
+  - mysql_secure_installation: 安装MySQL后, 运行程序后会提供一些安全方面的建议 
+  
+## 常用基本语法
 
 - 创建数据库:   CREATE DATABASE RUNOOB
 - 删除数据库:   DROP DATABASE RUNOOB
@@ -8,7 +14,7 @@
 - 更新数据:     UPDATE table_name SET field1=new-value1, field2=new-value2   [WHERE Clause]
 - 删除数据:     DELETE FROM table_name [WHERE Clause]
 
-##mysql启动
+## mysql启动
 
 - Linux安装多个mysql
   
@@ -44,7 +50,7 @@ ASC升序 / DESC 降序
 
 mysqli_multi_query()   :执行多条语句
 
-##函数:
+## 函数:
 
 - FROM_UNIXTIME('时间戳字段', '%Y-%m-%d');     格式化时间戳为时间格式 
 
@@ -73,7 +79,11 @@ mysqli_multi_query()   :执行多条语句
     INSERT INTO TABLE (a,c) VALUES (1,3) ON DUPLICATE KEY UPDATE c=c+1; (存在重复值则更新)
 
 
-##mysql命令行:
+## mysql命令行:
+
+- show status:(provides server status information) 服务器系统状态 [官网](https://dev.mysql.com/doc/refman/5.7/en/show-status.html)
+
+- show variables:(shows the values of MySQL system variables) 系统变量, 分为GLOBAL和SESSION, 可以被改变  [官网](https://dev.mysql.com/doc/refman/5.7/en/show-variables.html)
 
     show （full)　proceesslist 显示当前连接到mysql的连接或线程的清单, full将完整的显示每个查询的全文
     
@@ -91,7 +101,7 @@ mysqli_multi_query()   :执行多条语句
 
 	show status like "table_locks_waited" 显示有多少锁需要等待  
 	
-##mysql性能分析操作
+## mysql性能分析操作
 
 - set profiling = 1; 开启
 
@@ -151,7 +161,7 @@ mysqli_multi_query()   :执行多条语句
  
  
 	
-##索引生效条件
+## 索引生效条件
 
 >假设index（a,b,c）
 >- 最左前缀匹配：模糊查询时，使用%匹配时：'a%'会使用索引，'%a'不会使用索引
@@ -171,7 +181,7 @@ mysqli_multi_query()   :执行多条语句
 [参考https://www.cnblogs.com/huchong/p/10219318.html#_lab2_1_0](https://www.cnblogs.com/huchong/p/10219318.html#_lab2_1_0)
 
 
->###mysql查询执行过程
+>### mysql查询执行过程
 >- 客户端向MySQL服务器发送一条查询请求
 >- 服务器首先检查查询缓存，如果命中缓存，则立刻返回存储在缓存中的结果。否则进入下一阶段
 >- 服务器进行SQL解析、预处理、再由优化器生成对应的执行计划
@@ -180,7 +190,7 @@ mysqli_multi_query()   :执行多条语句
 >![](../../../images/mysql/mysql查询过程.jpg)
 
     
-##mysql存储引擎之Federated
+## mysql存储引擎之Federated
 
     Federated实现同步远端表格, 实现数据库映射.一边更改时,对方都会随之变化.
 
@@ -196,19 +206,19 @@ mysqli_multi_query()   :执行多条语句
  
    例子: CONNECTION='mysql://test:test@172.16.16.204:3306/lry/fed_test'; 
    
-##mysql存储引擎之MRG_MyISAM
+## mysql存储引擎之MRG_MyISAM
     >将所有表具有相同的列数据类型和索引信息集合到一个表上.MERGE表 的替代方法是分区表(它将单个表的分区存储在单独的文件中。分区使得一些操作能够更有效地执行，并且不限于MyISAM 存储引擎。)
    
-##mysql备份与恢复
+## mysql备份与恢复
   [官网的参考https://dev.mysql.com/doc/refman/5.7/en/backup-and-recovery.html](https://dev.mysql.com/doc/refman/5.7/en/backup-and-recovery.html)
   - 使用mysqldump进行备份及恢复
   - 使用二进制文件进行增量备份或者恢复
   
-##mysql经典面试题
+## mysql经典面试题
   [参考https://www.jianshu.com/p/977a9e7d80b3](https://www.jianshu.com/p/977a9e7d80b3)
   
   
-##mysql数据类型
+## mysql数据类型
   - 数值
   
     >对于整数类型，M表示最大显示宽度。最大显示宽度为255.显示宽度与存储大小,类型可包含的值范围无关. 当插入的表的字段数据长度小于设定的INT(M)最大长度的时候，检索出来的数据会自动空格补充, 如果你设定zerofill, 那么可以看到存入的格式是在实际数字前补零到总的位数等于M。zerofill(补零)，当实际插入的数据长度小于建表的时候设定的长度时候，它会从左开始补零, 具体补多少与int(M)的M有关。这个修饰符可以防止MySQL存储负值。比如int(20)表示显示宽度是20, 但是实际上可以存储的只有10位数范围2^32-1(无符号), 整数的类型决定着存储的大小, 具体大小和范围如下
@@ -229,11 +239,11 @@ mysqli_multi_query()   :执行多条语句
    
   
     
-##Mysql工具使用集合
+## Mysql工具使用集合
 
-- ###monyog --- mysql性能检测工具(window)  
+- ### monyog --- mysql性能检测工具(window)  
 
-- ###mysql主从同步,主主同步（可用于读写分离)
+- ### mysql主从同步,主主同步（可用于读写分离)
  
   [参考https://blog.csdn.net/mycwq/article/details/17136001](https://blog.csdn.net/mycwq/article/details/17136001)
   [参考https://www.jianshu.com/p/0d07b446ae33](https://www.jianshu.com/p/0d07b446ae33)
@@ -245,24 +255,24 @@ mysqli_multi_query()   :执行多条语句
     - Slave I/O thread: 连接并接收主服务器发送的数据并存储在中继日志(relay log)文件上
     - Slave SQL thread: 读取中继日志(relay log )文件, 执行其中的事件
     
-- ###Percona toolkit分析mysql工具
+- ### Percona toolkit分析mysql工具
   >感觉不是很有用
   
-- ###PXC(Percona XtraDB Cluster)实现mysql集群
+- ### PXC(Percona XtraDB Cluster)实现mysql集群
    [参考https://www.jianshu.com/p/db7190658926](https://www.jianshu.com/p/db7190658926)
    
-- ###mysql性能检测工具之 innotop
+- ### mysql性能检测工具之 innotop
   >安装
   - yum install innotop
   >使用
   - innotop -u username -p 'password'
   - 进入后输入 ` 模式代码字母(大小写敏感) ` 进行模式切换
   
-##忘记密码
+## 忘记密码
   
   [How to Reset the Root Password官网](https://dev.mysql.com/doc/refman/5.6/en/resetting-permissions.html)
 
-##杂项
+## 杂项
     
 - innodb默认是行锁，**前提条件是建立在索引之上的**。如果筛选条件没有建立索引，会降级到表锁。
 即如果where条件中的字段都加了索引，则加的是行锁；否则加的是表锁。
