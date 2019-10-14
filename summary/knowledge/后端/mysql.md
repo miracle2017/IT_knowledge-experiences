@@ -6,7 +6,31 @@
   
   - Upgrading MySQL
   
-##有用
+## 14.innoDB storage Engine
+
+### 14.6innoDB On-Disk Structures
+
+#### 14.6.1 Tables
+#### 14.6.1.4 AUTO_INCREMENT Handling in InnoDB
+ - InnoDB AUTO_INCREMENT Lock Modes
+   1. innodb_autoinc_lock_mode = 0 ("traditional" lock mode)
+      会产生表锁
+   2. innodb_autoinc_lock_mode = 1 ("consecutive" lock mode)
+      
+   3. innodb_autoinc_lock_mode = 2 ("interleaved" lock mode)
+      速度最快(有些情况也会产生表级锁), 但是it is not safe whenusing statement-based replication or recovery scenarios when SQL statements are replayed from the binary log
+
+ - InnoDB AUTO_INCREMENT Lock Mode Usage Implications
+
+   - Using auto-increment with replication
+     - 使用statement-based replication: 设置innodb_autoinc_lock_mode为0或1同时master和slaves必须同一个值, 这样是安全的
+     - row-based or mixed-format replication: innodb_autoinc_lock_mode的所有模式都安全
+     
+   - "Lost" auto-increment values and sequence gaps
+     所有模式中, 当一个值已经分配给自增键, 这个值都不会再被使用, 无论事务是否回滚
+   
+   
+##有用(未分类)
 
   - 设置mysql server slow shutdown: mysql -u root -p --execute="SET GLOBAL innodb_fast_shutdown=0" , 然后mysqladmin -u root -p shutdown
   
@@ -313,4 +337,9 @@ b字段有索引时能用到索引,mysql能快速定位要更新的位置速度�
     AND
     id NOT in (SELECT min(id) FROM `ls_article_new` GROUP BY  out_article_id HAVING COUNT(out_article_id) > 1)
     ) as a)
+    
+- Foreign Keys: InnoDB表才支持
+
+- 
+  
   
