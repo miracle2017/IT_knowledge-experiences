@@ -25,10 +25,12 @@
    - Using auto-increment with replication
      - 使用statement-based replication: 设置innodb_autoinc_lock_mode为0或1同时master和slaves必须同一个值, 这样是安全的
      - row-based or mixed-format replication: innodb_autoinc_lock_mode的所有模式都安全
+     - "Lost" auto-increment values and sequence gaps
+        所有模式中, 当一个值已经分配给自增键, 这个值都不会再被使用, 无论事务是否回滚
+     - 自增值超过定义类型的最大值: 会报错duplicate entry ...
      
-   - "Lost" auto-increment values and sequence gaps
-     所有模式中, 当一个值已经分配给自增键, 这个值都不会再被使用, 无论事务是否回滚
-   
+ - InnoDB AUTO_INCREMENT Counter Initialization
+   在InnoDB中, 自增计数器存储内存中; 空表默认1(auto_increment_offset可以设置)开始; 当服务器重启了, 自增计数器会在第一次插入操作或show table status时初始化(做类似的操作: SELECT MAX(ai_col) FROM table_name FOR UPDATE;)
    
 ##有用(未分类)
 
@@ -50,6 +52,10 @@
 - 插入数据:     INSERT INTO table_name ( field1, field2,...fieldN ) VALUES  ( value1,value2,...valueN )
 - 更新数据:     UPDATE table_name SET field1=new-value1, field2=new-value2   [WHERE Clause]
 - 删除数据:     DELETE FROM table_name [WHERE Clause]
+
+- 创建用户: CREATE USER 'jeffrey'@'localhost' IDENTIFIED BY 'password';(刚创建的用户没有操作数据库的权限, 只能登录, 故需给用户授权)
+
+- 授权用户: GRANT ALL ON *.* TO 'someuser'@'somehost';(该句例子为全局授权)
 
 ## mysql启动
 
