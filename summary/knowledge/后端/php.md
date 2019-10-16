@@ -233,6 +233,15 @@
   
 - streams
 
+##数据库扩展
+###数据库抽象层
+  - PDO (PHP Data Object)
+    - 事务
+      注意: 开始一个事务时会先将autocommit设为0(关闭), $dbh->commit()或$dbh->rollBack();后恢复autocommit到开始事务之前的状态
+          /* 开始一个事务，关闭自动提交(如果是开启的话) */
+          $dbh->beginTransaction();
+  
+
 ##类与对象
 >###访问控制(可见性)
 
