@@ -60,6 +60,12 @@
      
  - InnoDB AUTO_INCREMENT Counter Initialization
    在InnoDB中, 自增计数器存储内存中; 空表默认1(auto_increment_offset可以设置)开始; 当服务器重启了, 自增计数器会在第一次插入操作或show table status时初始化(做类似的操作: SELECT MAX(ai_col) FROM table_name FOR UPDATE;)
+ 
+ 
+##命令行命令
+    mysql命令行键入: help, 可以获取全部可用的命令信息
+    
+  - status (\s): 从服务端获取状态信息(比如连接信息等等), 用法 直接在命令行中键入status或\s
    
 ##有用(未分类)
 
