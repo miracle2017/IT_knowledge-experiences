@@ -1,10 +1,39 @@
 ﻿# MySQL官方手册
 
-## 安装升级MySQL
+## 2.安装升级MySQL
 - Postinstallation Setup and Testing
   - mysql_secure_installation: 安装MySQL后, 运行此程序后会提供一些安全方面的建议 
   
   - Upgrading MySQL
+
+## 4.MySQL Programs
+
+### 4.2 Using MySQL Programs
+
+#### 4.2.2 Specifying Program Options
+ 
+##### 4.2.2.1 Using Options on the Command Line
+    
+  - 命令行中指定程序选项
+    
+    - 横杠(-): 可以紧接值, 或者空格在接值.(唯独 -p 例外, 必须马上接值, 不然空格会当成密码)
+    - 双横杠(--): 后面必须紧接 =值(不能有空格)
+    - 短横杠开头的选项为简写, 双横杠开头的选项为全称格式
+    - 指定系统变量时, 横杠与下划线等价(开头横杠不行);(如 --skip-grant-tables 等价 --skip_grant_tables;) 但在运行中设置系统变量时(如set, select), 必须使用下划线格式(如SET GLOBAL general_log = ON;)
+    - 选项的值中有空格时,必须使用引号, 如果是多条mysql语句用;分隔(如mysql -u root -p -e "SELECT VERSION();SELECT NOW()")
+    
+#### 4.2.2.2 Using Option Files
+   - Option File Processing Order
+     window, Linux读取配置文件的顺序[链接](https://dev.mysql.com/doc/refman/5.7/en/option-files.html#option-file-order),后面的配置优先前者
+   - Option File Syntax
+     - #和;为注释符, #注释可以出现在句中
+     - [group] group选项配置应用于同名的程序上(如[mysql] 应用与mysql客户端程序)
+   - Option File Inclusions
+     - !include /home/mydir/myopt.cnf : 引入配置文件
+     - !includedir /home/mydir : 在指定目录查找.cnf后缀的配置文件(Unix系统); .ini或.cnf后缀文件(window系统)
+   
+   
+
   
 ## 14.innoDB storage Engine
 
@@ -57,6 +86,8 @@
 
 - 授权用户: GRANT ALL ON *.* TO 'someuser'@'somehost';(该句例子为全局授权)
 
+- 删除用户: DROP USER 'jeffrey'@'localhost';
+
 ## mysql启动
 
 - Linux安装多个mysql
@@ -86,8 +117,7 @@
     
 
 - 添加一个mysql用户并授权:   grant all privileges on *.* to 创建的用户名@"%" identified by "密码"; // % 表示所有地方都可登录
-                    
-    flush privileges; //刷新后才生效
+  flush privileges; //刷新后才生效
 
 ASC升序 / DESC 降序
 

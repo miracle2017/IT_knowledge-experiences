@@ -32,4 +32,4 @@
   1. 在host上加上127.0.0.1 localhost
   2. 在mysql的配置文件中加上如下内容, 表示禁用dns解析, 但是不推荐, 这样之后就无法使用域名, 只能用ip替换之
       [mysqld]
-      skip-name-resolve 
+      skip-name-resolve
