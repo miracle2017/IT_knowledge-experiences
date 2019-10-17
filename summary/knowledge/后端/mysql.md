@@ -17,12 +17,12 @@
   - 命令行中指定程序选项
     
     - 横杠(-): 可以紧接值, 或者空格在接值.(唯独 -p 例外, 必须马上接值, 不然空格会当成密码)
-    - 双横杠(--): 后面必须紧接 =值(不能有空格)
+    - 双横杠(--): 后面必须紧接 =值(其间不能有空格), 或者一个空格再紧接值(不建议, 选项有默认值就不会起作用甚至报错)
     - 短横杠开头的选项为简写, 双横杠开头的选项为全称格式
     - 指定系统变量时, 横杠与下划线等价(开头横杠不行);(如 --skip-grant-tables 等价 --skip_grant_tables;) 但在运行中设置系统变量时(如set, select), 必须使用下划线格式(如SET GLOBAL general_log = ON;)
     - 选项的值中有空格时,必须使用引号, 如果是多条mysql语句用;分隔(如mysql -u root -p -e "SELECT VERSION();SELECT NOW()")
     
-#### 4.2.2.2 Using Option Files
+##### 4.2.2.2 Using Option Files
    - Option File Processing Order
      window, Linux读取配置文件的顺序[链接](https://dev.mysql.com/doc/refman/5.7/en/option-files.html#option-file-order),后面的配置优先前者
    - Option File Syntax
@@ -30,7 +30,12 @@
      - [group] group选项配置应用于同名的程序上(如[mysql] 应用与mysql客户端程序)
    - Option File Inclusions
      - !include /home/mydir/myopt.cnf : 引入配置文件
-     - !includedir /home/mydir : 在指定目录查找.cnf后缀的配置文件(Unix系统); .ini或.cnf后缀文件(window系统)
+     - !includedir /home/mydir : 在指定目录查找.cnf后缀的配置文件(Unix系统); .ini或.cnf后缀文件(window系统), 不使用引号,路劲中不能有转义字符, 
+     例子(`!include C:\\ProgramData\\MySQL\\MySQL Server\\myopts.ini`)
+   
+#### 4.2.5 Connection Compression Control
+   压缩连接能减少数据的传送, 需要服务端和客户端都支持, 默认关闭; 压缩连接都会增加服务端和客户端的cpu负载, 因为都要压缩和解压缩; 
+   因为会降低性能所以仅在低网速(网络传输消耗大于压缩解压缩)才会有收益.
    
    
 

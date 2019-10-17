@@ -233,13 +233,19 @@
   
 - streams
 
-##数据库扩展
-###数据库抽象层
-  - PDO (PHP Data Object)
-    - 事务
-      注意: 开始一个事务时会先将autocommit设为0(关闭), $dbh->commit()或$dbh->rollBack();后恢复autocommit到开始事务之前的状态
-          /* 开始一个事务，关闭自动提交(如果是开启的话) */
-          $dbh->beginTransaction();
+## 数据库扩展
+### 数据库抽象层
+#### PDO(PHP Data Object)
+- 事务
+  注意: 开始一个事务时会先将autocommit设为0(关闭), $dbh->commit()或$dbh->rollBack();后恢复autocommit到开始事务之前的状态
+      /* 开始一个事务，关闭自动提交(如果是开启的话) */
+      $dbh->beginTransaction();
+- PDO, PDO_MYSQL, Mysqlnd是什么关系?
+
+  [参考](https://stackoverflow.com/questions/41812651/what-is-the-difference-between-mysqlnd-pdo-and-pdo-mysql-extensions-in-php)
+  PDO: 是一个数据访问抽象层, PDO为访问不同数据库提供了一个轻量级的一致接口
+  PDO_MYSQL: 实现PDO接口的驱动. PDO_MYSQL可以选择使用mysqlnd库(>php5.4时为默认)或libmysqlclient库
+  Mysqlnd(MySQL Native Driver): 只处理php与mysql的通讯, Mysqlnd并没有直接提供新API给php程序调用, Mysqli,PDO MYSQL使用Mysqlnd提供的服务去与mysql服务器通讯, 因此你不能认为Mysqlnd是一个API. MySQL Native Driver是MySQL Client Library (libmysqlclient)的替代品, 拥有许多优势, 推荐使用.
   
 
 ##类与对象
