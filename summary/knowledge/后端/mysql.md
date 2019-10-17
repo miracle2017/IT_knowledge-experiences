@@ -221,7 +221,7 @@ mysqli_multi_query()   :执行多条语句
  >>- const: 表中最多只有一行被匹配, 因为只返回一行所以很快. 将`PRIMARY KEY` 或 `UNIQUE INDEX`索引和常量值比较时,会使用const。
  >>- eq_ref: 假设A JOIN B，B表读取A表的各个行组合的一行时，通过B表的PRIMARY KEY或UNIQUE NOT NULL索引列连接时，优化器会使用eq_ref类型，
  >>- ref: 基于键值选择出行数不止一行. 
- >>- fulltext: 使用可全文索引.
+ >>- fulltext: 使用可全文索引. 
  >>- ref_or_null: 连接类型类似ref,同时附加查找包含null的值.
  >>- index_merge: 查询中有多个独立索引,但是只能使用一个, mysql分别对多个索引进行扫描,然后合并结果.只能合并单表不能合并多表的扫描结果.
  >>- unique_subquery: eq_ref类型在子查询中的替代类型.
