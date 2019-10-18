@@ -38,7 +38,7 @@
    因为会降低性能所以仅在低网速(网络传输消耗大于压缩解压缩)才会有收益.
  
 
-##10 
+## 10 
 ### 10.8   
 
 #### 10.8.5 The binary Collation Compared to _bin Collations   
