@@ -36,10 +36,32 @@
 #### 4.2.5 Connection Compression Control
    压缩连接能减少数据的传送, 需要服务端和客户端都支持, 默认关闭; 压缩连接都会增加服务端和客户端的cpu负载, 因为都要压缩和解压缩; 
    因为会降低性能所以仅在低网速(网络传输消耗大于压缩解压缩)才会有收益.
-   
-   
+ 
+# 10 
+### 10.8   
 
+#### 10.8.5 The binary Collation Compared to _bin Collations   
+> 
+- The Unit for Comparison and Sorting
+  - binary collation的比较和排序基于数字字节值(base on numeric byte values)
+  - nobinary string是字符序列(sequences of characters), 它的collations值定义了用于比较和排序的字符值的顺序
+- Character Set Conversion
+  - 当character set有变化时, binary collation的字符串的值不会改变
+- Lettercase Conversion
+  nobinary string的collation提供字母大小信息, 而二进制字符串没有
+  如使用 select upper(binary 'aZ'); 结果还是 'aZ', upper要生效需将collation转换为非二进制的
+
+- Trailing Space Handling in Comparisons
+  - 进行比较时,nobinary string会裁掉尾部的空格, select 'a' = 'a  '结果是1.
+  - 进行比较时, binary string则是原样比较 select 'a' = 'a  '结果0
   
+- Trailing Space Handling for Inserts and Retrievals
+  - CHAR(N) columns: 
+    - 插入时: 当插入值小于N时, 尾部补上空格; 读取时: 去掉尾部的空格
+  - BINARY(N) columns: 
+    - 插入时: 当插入值与N时, 尾部不上0x00 bytes(就是(N-插入值)个00); 读取时, 不会任何移除, 原样返回
+    
+    
 ## 14.innoDB storage Engine
 
 ### 14.6innoDB On-Disk Structures
@@ -400,6 +422,7 @@ b字段有索引时能用到索引,mysql能快速定位要更新的位置速度�
       如果表中字段不是binary又不想改, 那么需将搜索字符串定义为binary. 例如 select * from table_name where binary name = "value" 或者 select * from table_name where name = binary "value";
   - 查看字段是否是大小敏感?
      show collation(column name);结果有_bin后缀或binary就是大小写敏感 (如show collation(version()) )
+  - binary collate string和nobinary string的比较?[参考]($id)
   
   
   
