@@ -41,7 +41,7 @@
 ### 10.8   
 
 #### 10.8.5 The binary Collation Compared to _bin Collations   
-> 
+
 - The Unit for Comparison and Sorting
   - binary collation的比较和排序基于数字字节值(base on numeric byte values)
   - nobinary string是字符序列(sequences of characters), 它的collations值定义了用于比较和排序的字符值的顺序
@@ -422,7 +422,7 @@ b字段有索引时能用到索引,mysql能快速定位要更新的位置速度�
       如果表中字段不是binary又不想改, 那么需将搜索字符串定义为binary. 例如 select * from table_name where binary name = "value" 或者 select * from table_name where name = binary "value";
   - 查看字段是否是大小敏感?
      show collation(column name);结果有_bin后缀或binary就是大小写敏感 (如show collation(version()) )
-  - binary collate string和nobinary string的比较?[参考]($id)
+  - binary collate string和nobinary string的比较?[参考](#10.8.5)
   
   
   
