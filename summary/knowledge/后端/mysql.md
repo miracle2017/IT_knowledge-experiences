@@ -423,7 +423,7 @@ b字段有索引时能用到索引,mysql能快速定位要更新的位置速度�
       如果表中字段不是binary又不想改, 那么需将搜索字符串定义为binary. 例如 select * from table_name where binary name = "value" 或者 select * from table_name where name = binary "value";
   - 查看字段是否是大小敏感?
      show collation(column name);结果有_bin后缀或binary就是大小写敏感 (如show collation(version()) )
-  - binary collate string和nobinary string的比较?[参考](#10)
+  - binary collate string和nobinary string的比较?[参考](#1085)
 
   
   
