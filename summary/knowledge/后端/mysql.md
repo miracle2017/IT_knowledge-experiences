@@ -170,7 +170,7 @@ mysqli_multi_query()   :执行多条语句
 
 - show status:(provides server status information) 服务器系统状态 [官网](https://dev.mysql.com/doc/refman/5.7/en/show-status.html)
 
-- show variables:(shows the values of MySQL system variables) 系统变量, 分为GLOBAL和SESSION, 可以被改变  [官网](https://dev.mysql.com/doc/refman/5.7/en/show-variables.html)
+- show variables:(shows the values of MySQL system variables) 系统变量, 分为GLOBAL和SESSION, 大部分可以被改变  [官网](https://dev.mysql.com/doc/refman/5.7/en/show-variables.html)
 
     show （full)　proceesslist 显示当前连接到mysql的连接或线程的清单, full将完整的显示每个查询的全文
     
