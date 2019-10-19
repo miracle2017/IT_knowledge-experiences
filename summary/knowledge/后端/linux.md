@@ -173,7 +173,7 @@
     
 - 【linux命令行快捷键，或叫配置环境变量】
     方一(配置环境变量): vi ~/.bash_profile 可以看到 PATH=$PATH:$HOME/bin, 这个就是配置环境变量,在后面新增即可, 路径间用 : 冒号
-    方二(使用别名):  vi ~/.bashrc    增加例如 alias mv='mv -i' 这样的格式,不重启立即生效方法 source ~/.bashrc
+    方二(使用别名):  vi ~/.bashrc    增加例如 alias mv='mv -i' 这样的格式,不重启立即生效方法 source ~/.bashrc 或者 \. ~/.bashrc
     
 - 【linux修改配置文件不重启立即生效】如修改 ~/.bash_profile文件, 那么 .  /~/.bash_profile  或者 source ~/.bash_profile 即可 (source 又称点命令) 
       可以使用 alias 列出所有的别名

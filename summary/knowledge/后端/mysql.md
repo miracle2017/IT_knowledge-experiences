@@ -46,6 +46,11 @@
   1. >shell mysql -uroot -p [datebase_name] < test_file > result.log; 如果文件有use datebase; datebase_name参数就不需要在命令行中指定
   2. >mysql source test_file 或 >mysql  \. test_file
 
+#### 4.5.3 mysqlcheck — A Table Maintenance Program
+>mysqlcheck能check checks, repairs, optimizes, or analyzes tables. mysqlcheck和myisamchk差不多, 在mysql serve运行时使用mysqlcheck, 关闭时使用myisamchk
+
+#### 4.6.6 mysql_config_editor — MySQL Configuration Utility
+>管理名为.mylogin.cnf(默认在用户home目录下)的模糊登录路径文件, 当如mysql. mysqladmin等客户端工具使用--login-path=.mylogin.cnf启动时, 这些客户端会读取其中的[client], [mysql], [mypath]块配置(优先权高于其他配置文件但低于命令行的), 这样就能知道要连接那个mysql server, 同时记录在.mylogin.cnf的密码不是明文的有一定安全性(但是不要认为它是牢不可破,因为无法阻挡有决心的攻击者), 有多个mysql服务器时方便连接切换
 
 ## 10 
 ### 10.8   
