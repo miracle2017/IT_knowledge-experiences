@@ -9,3 +9,5 @@
 >ctrl + shift + d: 切换dock side的位置
 
 >ctrl + space: 展示智能提示
+
+复制js变量到系统剪切板中: 命令行中键入copy(variable_name)
