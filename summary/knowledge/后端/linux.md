@@ -159,6 +159,11 @@
 - linux参数前 - 和 -- 区别: - 后接单字符
 路径之间的 : 冒号做分隔符,分隔多个路径   
     
+- 显示环境变量命令
+  env: 查看所有环境变量
+  set: 查看所有本地定义的环境变量
+  export: 查看所有导出的环境变量
+    
 - 【防火墙】
     firewall-cmd --zone=public --add-port=3306/tcp --permanent  //永久开放某个端口
     firewall-cmd --zone=public --remove-port=3306/tcp --permanent  //永久关闭某个端口
