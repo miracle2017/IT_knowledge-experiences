@@ -41,6 +41,12 @@
 命令行交互式语句默认都会被记录在home目录下默认名字为.mysql_history的文件中, 也可以设置为不记录
 需注意, 设置密码时, 明文可能会被记录, 所以需确认设置密码会不会被记录以提高安全性
 
+##### 4.5.1.5 Executing SQL Statements from a Text File
+> 从文件读取sql语句并执行, 如下2种方法
+  1. >shell mysql -uroot -p [datebase_name] < test_file > result.log; 如果文件有use datebase; datebase_name参数就不需要在命令行中指定
+  2. >mysql source test_file 或 >mysql  \. test_file
+
+
 ## 10 
 ### 10.8   
 
