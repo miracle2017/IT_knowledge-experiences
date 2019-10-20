@@ -55,6 +55,9 @@
 - analyze: 分析表
 - optimize: 优化表
 
+#### 4.5.4 mysqldump — A Database Backup Program
+> mysqldump施行的是逻辑备份(即是sql语句), 也可以导出为其他的定界文本如csv
+
 #### 4.6.6 mysql_config_editor — MySQL Configuration Utility
 >管理名为.mylogin.cnf(默认在用户home目录下)的模糊登录路径文件, 当如mysql. mysqladmin等客户端工具使用--login-path=.mylogin.cnf启动时, 这些客户端会读取其中的[client], [mysql], [mypath]块配置(优先权高于其他配置文件但低于命令行的), 这样就能知道要连接那个mysql server, 同时记录在.mylogin.cnf的密码不是明文的有一定安全性(但是不要认为它是牢不可破,因为无法阻挡有决心的攻击者), 有多个mysql服务器时方便连接切换
 
