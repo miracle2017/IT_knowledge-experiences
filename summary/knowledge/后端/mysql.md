@@ -47,7 +47,13 @@
   2. >mysql source test_file 或 >mysql  \. test_file
 
 #### 4.5.3 mysqlcheck — A Table Maintenance Program
->mysqlcheck能check checks, repairs, optimizes, or analyzes tables. mysqlcheck和myisamchk差不多, 在mysql serve运行时使用mysqlcheck, 关闭时使用myisamchk
+>mysqlcheck是checks, repairs, optimizes,analyzes tables sql语句方便调用的一个工具. mysqlcheck和myisamchk差不多, 在mysql serve运行时使用mysqlcheck, 关闭时使用myisamchk
+- quick: prevents the check from scanning the rows to check for incorrect links.这是最快的check方式. 如果使用该方式去repair表, 则只repair index tree, 这是最快的repair方式.
+- fast: 仅检查为正确关闭的表
+- check: check table for error
+- repair:  fix almost anything except unique keys that are not unique
+- analyze: 分析表
+- optimize: 优化表
 
 #### 4.6.6 mysql_config_editor — MySQL Configuration Utility
 >管理名为.mylogin.cnf(默认在用户home目录下)的模糊登录路径文件, 当如mysql. mysqladmin等客户端工具使用--login-path=.mylogin.cnf启动时, 这些客户端会读取其中的[client], [mysql], [mypath]块配置(优先权高于其他配置文件但低于命令行的), 这样就能知道要连接那个mysql server, 同时记录在.mylogin.cnf的密码不是明文的有一定安全性(但是不要认为它是牢不可破,因为无法阻挡有决心的攻击者), 有多个mysql服务器时方便连接切换
@@ -76,6 +82,38 @@
   - BINARY(N) columns: 
     - 插入时: 当插入值与N时, 尾部不上0x00 bytes(就是(N-插入值)个00); 读取时, 不会任何移除, 原样返回
     
+##### 13.7.2.1 ANALYZE TABLE Syntax    
+>performs a key distribution analysis and stores the distribution. 而MySQL会使用stored key distribution决定表join的顺序(join对象是constant 情况除外); 以及查询语句中表的哪个index被使用
+
+##### 13.7.2.2 CHECK TABLE Syntax
+>检测表错误.对于MyISAM表,the key statistics are updated as well.
+
+##### 13.7.2.3 CHECKSUM TABLE Syntax
+>对于表内容检验和, 可用于检测backup, rollback等操作前后表的内容是否一致
+
+##### 13.7.2.4 OPTIMIZE TABLE Syntax
+>reorganizes the physical storage of table data and associated index date, to reduce storage space and improve I/O efficiency
+
+- 支持的存储引擎: InnoDB, MyISAM,ARCHIVE
+
+
+- 可在如下场合中使用
+  1. after doing substantial insert, update, or 
+  delete operations on an InnoDB table.( innodb_file_per_table配置要是ON)
+  2. After doing substantial insert, update, or delete operations on columns that are part of a FULLTEXT index in an InnoDB table.
+  3. After deleting a large part of a MyISAM or ARCHIVE table, 或者 making many changes to a MyISAM or ARCHIVE table with variable-length rows (tables that have VARCHAR, VARBINARY, BLOB, or TEXT columns). deleted rows are maintained in a linked list之后的insert操作会reuse old row positions.使用OPTIMIZE TABLE可对未使用的空间进行回收和整理data file的碎片.
+
+##### 13.7.2.5 REPAIR TABLE Syntax
+>修复可能损坏的表. 通常你永远都不必执行该语句, 但如果发生灾难, 该语句可能能让你从MyISAM表中取回所有数据
+- 支持的存储引擎:MyISAM, ARCHIVE, and CSV，不支持视图
+
+- 重要事项 
+  - 在修复表前请先备份backup表, 因为可能会导致数据的丢失
+  - 在修复表时服务器崩溃了, 在重启服务器后请必须马上先再执行修复表命令, 在做其他操作之前. 在最坏的情况, 你可能会有一个新的索引文件而没有包含任何数据文件信息 所以这就是提前备份的价值.
+  - 如果修复一张在master的损坏表, 其对原始表的修改变化不会被传播到slaves上
+  
+- 参数选项
+  - QUICK: 仅仅修复索引文件, 不会修复数据文件  
     
 ## 14.innoDB storage Engine
 
