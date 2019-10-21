@@ -58,8 +58,21 @@
 #### 4.5.4 mysqldump — A Database Backup Program
 > mysqldump施行的是逻辑备份(即是sql语句), 也可以导出为其他的定界文本如csv
 
+　- --opt: 导出时默认使用该选项, 其为多个选项集合的缩写, 性能也不错
+  - 一键复制到远程:mysqldump --opt db_name | mysql --host=remote_host -C db_name
+
+#### 4.5.5 mysqlimport — A Data Import Program
+>为`load data` sql语句提供一个命令行界面
+
 #### 4.6.6 mysql_config_editor — MySQL Configuration Utility
 >管理名为.mylogin.cnf(默认在用户home目录下)的模糊登录路径文件, 当如mysql. mysqladmin等客户端工具使用--login-path=.mylogin.cnf启动时, 这些客户端会读取其中的[client], [mysql], [mypath]块配置(优先权高于其他配置文件但低于命令行的), 这样就能知道要连接那个mysql server, 同时记录在.mylogin.cnf的密码不是明文的有一定安全性(但是不要认为它是牢不可破,因为无法阻挡有决心的攻击者), 有多个mysql服务器时方便连接切换
+
+#### 4.5.7 mysqlslap — Load Emulation Client
+>负载仿真测试工具
+
+#### 4.6.1 innochecksum — Offline InnoDB File Checksum Utility
+>  prints checksums for InnoDB files. 
+
 
 ## 10 
 ### 10.8   
