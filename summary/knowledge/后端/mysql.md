@@ -83,7 +83,7 @@
 #### 4.6.8 mysqlbinlog — Utility for Processing Binary Log Files
 
 - 使用mysqldump + mysqlbinlog for Backup and Restore
-  事先使用mysqldump导出备份文件作为快照, 使用mysqlbinlog备份binlog二进制文件
+  事先使用mysqldump导出备份文件作为快照, 使用 mysqlbinlog备份bin log二进制文件(可以永不断开的持续实时备份). 在万一数据丢失了,先导入备份文件, 然后执行二进制备份,可执行类似如下命令 `mysqlbinlog --start-position=27284 binlog.001002 binlog.001003 binlog.001004 | mysql --host=host_name -u root -p`
 
 ## 10 
 ### 10.8   
