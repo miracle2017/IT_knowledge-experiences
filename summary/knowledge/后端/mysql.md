@@ -60,6 +60,7 @@
 
 　- --opt: 导出时默认使用该选项, 其为多个选项集合的缩写, 性能也不错
   - 一键复制到远程:mysqldump --opt db_name | mysql --host=remote_host -C db_name
+  - --master-data[=value]: 会在导出的备份文件中会包含一个`CHANGE MASTER TO`语句以记录下binary log的坐标(日志文件名和位置), 后续要从二进制文件中恢复数据就知道从日志文件名的那个位置开始执行了.value为1时, 重新导入备份文件时,该CHANGE MASTER TO语句会被执行, 而value=2时, 语句只是显示信息而已不会被执行, 如果没有指定value默认为1.
 
 #### 4.5.5 mysqlimport — A Data Import Program
 >为`load data` sql语句提供一个命令行界面
@@ -81,6 +82,8 @@
 
 #### 4.6.8 mysqlbinlog — Utility for Processing Binary Log Files
 
+- 使用mysqldump + mysqlbinlog for Backup and Restore
+  事先使用mysqldump导出备份文件作为快照, 使用mysqlbinlog备份binlog二进制文件
 
 ## 10 
 ### 10.8   
