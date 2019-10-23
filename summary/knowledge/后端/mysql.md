@@ -64,14 +64,22 @@
 #### 4.5.5 mysqlimport — A Data Import Program
 >为`load data` sql语句提供一个命令行界面
 
-#### 4.6.6 mysql_config_editor — MySQL Configuration Utility
->管理名为.mylogin.cnf(默认在用户home目录下)的模糊登录路径文件, 当如mysql. mysqladmin等客户端工具使用--login-path=.mylogin.cnf启动时, 这些客户端会读取其中的[client], [mysql], [mypath]块配置(优先权高于其他配置文件但低于命令行的), 这样就能知道要连接那个mysql server, 同时记录在.mylogin.cnf的密码不是明文的有一定安全性(但是不要认为它是牢不可破,因为无法阻挡有决心的攻击者), 有多个mysql服务器时方便连接切换
-
 #### 4.5.7 mysqlslap — Load Emulation Client
 >负载仿真测试工具
 
 #### 4.6.1 innochecksum — Offline InnoDB File Checksum Utility
 >  prints checksums for InnoDB files. 
+
+#### 4.6.2 myisam_ftdump — Display Full-Text Index information
+>展示MyISAM表的索引(因为他是直接读取MyISAM索引文件,所以该程序要和表是在同一服务器上); 如果服务器是开启的请先执行flush tables在该命令执行之前
+
+####　4.6.5 myisampack — Generate Compressed, Read-Only MyISAM Tables
+>生成一个压缩只读的表. 在服务器停机后执行是最安全的
+
+#### 4.6.6 mysql_config_editor — MySQL Configuration Utility
+>管理名为.mylogin.cnf(默认在用户home目录下)的模糊登录路径文件, 当如mysql. mysqladmin等客户端工具使用--login-path=.mylogin.cnf启动时, 这些客户端会读取其中的[client], [mysql], [mypath]块配置(优先权高于其他配置文件但低于命令行的), 这样就能知道要连接那个mysql server, 同时记录在.mylogin.cnf的密码不是明文的有一定安全性(但是不要认为它是牢不可破,因为无法阻挡有决心的攻击者), 有多个mysql服务器时方便连接切换
+
+#### 4.6.8 mysqlbinlog — Utility for Processing Binary Log Files
 
 
 ## 10 

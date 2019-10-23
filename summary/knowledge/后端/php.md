@@ -209,6 +209,17 @@
     
 >##正则 PCRE
    [官方文档](https://www.php.net/manual/zh/reference.pcre.pattern.syntax.php)
+   
+## 加密扩展
+
+#### OpenSSL
+- 签名与验证签名(数据并没有被加密这是和以下数据加密的区别及应用场景)
+  - openssl_sign(): 计算给定数据的签名(使用私钥)
+  - openssl_verify(): 验证签名是否正确(使用公钥)
+
+- 使用公钥和密钥对数据进行加密
+  - openssl_public_decrypt() 用 openssl_private_encrypt() 解
+  - openssl_private_decrypt() 用 openssl_public_encrypt() 解
 
 >##其他:
 
