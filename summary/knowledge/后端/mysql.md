@@ -96,6 +96,13 @@
 #### 4.8.3 resolveip — Resolve Host name to IP Address or Vice Versa
 > 将ip解析成host names或者将host name解析成ip
 
+### 5.1 The MySQL Server
+#### 5.1.1 Configuring the Server
+最重要的配置变量: key_buffer_size and table_open_cache
+
+#### 5.1.6 Server Command Options
+
+
 ## 10 
 ### 10.8   
 
