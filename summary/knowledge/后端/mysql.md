@@ -94,7 +94,7 @@
 > 替换文件中字符串, 如 replace a b b a -- file_name(将a和b互换)
 
 #### 4.8.3 resolveip — Resolve Host name to IP Address or Vice Versa
-> 
+> 将ip解析成host names或者将host name解析成ip
 
 ## 10 
 ### 10.8   
