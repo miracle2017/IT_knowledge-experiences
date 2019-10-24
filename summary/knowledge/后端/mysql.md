@@ -85,6 +85,17 @@
 - 使用mysqldump + mysqlbinlog for Backup and Restore
   事先使用mysqldump导出备份文件作为快照, 使用 mysqlbinlog备份bin log二进制文件(可以永不断开的持续实时备份). 在万一数据丢失了,先导入备份文件, 然后执行二进制备份,可执行类似如下命令 `mysqlbinlog --start-position=27284 binlog.001002 binlog.001003 binlog.001004 | mysql --host=host_name -u root -p`
 
+#### 4.6.9 mysqldumpslow — Summarize Slow Query Log Files
+
+#### 4.7.3 my_print_defaults — Display Options from Option Files
+> my_print_defaults展示给定程序会使用配置文件中给定选项组的具体配置. 使用例子: my_print_defaults mysqlcheck client -uroot -p
+
+#### 4.8.2 replace — A String-Replacement Utility
+> 替换文件中字符串, 如 replace a b b a -- file_name(将a和b互换)
+
+#### 4.8.3 resolveip — Resolve Host name to IP Address or Vice Versa
+> 
+
 ## 10 
 ### 10.8   
 
