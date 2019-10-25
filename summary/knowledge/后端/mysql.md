@@ -514,22 +514,14 @@ b字段有索引时能用到索引,mysql能快速定位要更新的位置速度�
   [Case Sensitivity in String Searches](https://dev.mysql.com/doc/refman/5.6/en/case-sensitivity.html)
   - 以下2种情况大小写敏感
     - 被搜索字段与搜索字符串的排序规则(collation)如果是相同
-  
-  
-  
-  
-  
-    - 被搜索字段与搜索字符串至少有一个是binary(有一个是binary,就      当作binary比较, 被搜索的字段的collation有_bin后缀就是binary)
+    - 被搜索字段与搜索字符串至少有一个是binary(有一个是binary,就当作binary比较, 被搜索的字段的collation有_bin后缀就是binary)
   - 怎么才能用上大小敏感的搜索
       永久: 将表的字段的排序顺序(collate)设置为binary(即有_bin后缀就是, 如字符集(chart set为utf8, 那么utf_bin就是binary的))
       如果表中字段不是binary又不想改, 那么需将搜索字符串定义为binary. 例如 select * from table_name where binary name = "value" 或者 select * from table_name where name = binary "value";
   - 查看字段是否是大小敏感?
      show collation(column name);结果有_bin后缀或binary就是大小写敏感 (如show collation(version()) )
-  - binary collate string和nobinary string的比较?[参考](#
-  
-  
-  
-  1085)
+  - binary collate string和nobinary string的比较?[参考](#1085)
 
-  
-  
+- navicat使用技巧
+  在输入查询语句时按下esc为智能提示 
+ 
