@@ -102,6 +102,23 @@
 
 #### 5.1.6 Server Command Options
 
+#### 5.1.7 Server System Variables
+- back_log: mysql可以拥有未完成连接请求的数量, 默认50, -1自动调整. 当你短时间有很多请求才需要提高此值
+
+- big_tables: mysql server将所有临时表都存储在disk上而不是内存上, 可以避免需要大的临时表不够的情况, 但同时也降低原本在内存表就够的查询
+
+- bind_address: mysql server监听单个网络套接字上侦听TCP / IP连接. 有如下取值:
+  - `*`: 默认值. 所有服务主机的ipv4接口和ipv6接口(如果支持).(ps: 所有现有的mysql账号都可连接)
+  - `0.0.0.0`: 监听所有服务主机的ipv4接口
+  - `::` : 监听所有服务主机的ipv6接口
+  
+- bulk_insert_buffer_size: 
+
+- completion_type: 
+
+- concurrent_insert:
+
+- delay_key_write: 只对MyISAM表有效. 不会在每次索引更新时都为key buffer都进行刷新只在表关闭时.
 
 ## 10 
 ### 10.8   
