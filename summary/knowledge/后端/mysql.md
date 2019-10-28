@@ -111,14 +111,19 @@
   - `*`: 默认值. 所有服务主机的ipv4接口和ipv6接口(如果支持).(ps: 所有现有的mysql账号都可连接)
   - `0.0.0.0`: 监听所有服务主机的ipv4接口
   - `::` : 监听所有服务主机的ipv6接口
-  
+ 
 - bulk_insert_buffer_size: 
-
 - completion_type: 
-
 - concurrent_insert:
-
 - delay_key_write: 只对MyISAM表有效. 不会在每次索引更新时都为key buffer都进行刷新只在表关闭时.
+- flush: 
+- flush_time
+- foreign_key_checks
+- general_log: 
+- general_log_file: 
+- ignore_db_dirs:
+- init_connect: 在每个客户端(超级用户除外,因为以防sql有错误所有客户端都没能登录)连接初始时执行指定的sql语句(多个sql;分隔).
+
 
 ## 10 
 ### 10.8   
