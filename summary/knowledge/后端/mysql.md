@@ -123,6 +123,33 @@
 - general_log_file: 
 - ignore_db_dirs:
 - init_connect: 在每个客户端(超级用户除外,因为以防sql有错误所有客户端都没能登录)连接初始时执行指定的sql语句(多个sql;分隔).
+- init_file: server启动时从文件中读取sql语句并执行
+- interactive_timeout: 交互式连接多久没有活动关闭连接
+- join_buffer_size:
+- keep_files_on_create:该值off时,会有如下表现; 创建myisamI表如没有指定date directory, 而发现有相同的.MYD文件存在则会被覆盖而不产生错误.(同理没有指定index directory,存在的.MYI会被覆盖) 
+- key_buffer_size: 
+- lc_messages_dir: 错误消息存放目录
+- local_infile: 是否允许客户端执行load data语句
+- lock_wait_timeout: 获取元数据锁最多等待多少秒,默认31536000(1年)
+- log_error: 错误消息存放位置
+- log_output: 错误消息存放目标地, table,file,none(可多选)
+- log_queries_not_using_indexes:
+- log_slow_queries: 记录其他警告消息到错误日志中
+- long_query_time: 秒, 也定义为毫秒
+- low_priority_updates
+- lower_case_file_system: off时数据目录的文件名大小写敏感, on反之
+- lower_case_table_names: 表名或数据库名存储比较时大小写是否敏感; 在大小写不敏感的平台上此值不能设为0, 因为当你使用不正确的大小写访问表时有可能造成索引损坏. 有使用innodb表时, 在所有平台上都应该将此值设为1.
+- max_allowed_packet: 
+- max_connect_errors: 主机能连续尝试连接服务器不成功的次数, 超过则不能再登录, 除非flush host以清除记录
+- max_connections: 最大连接数
+- max_digest_length: 
+- max_heap_table_size: 限制用户创建的内存表大小
+- max_join_size:
+- max_length_for_sort_data:
+- max_seeks_for_key:
+- max_sort_length: 决定使用排序值的前几个字节进行排序
+- max_user_connections: 给定用户最大同时连接数
+- max_write_lock_count:
 
 
 ## 10 
