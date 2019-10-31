@@ -150,6 +150,11 @@
 - max_sort_length: 决定使用排序值的前几个字节进行排序
 - max_user_connections: 给定用户最大同时连接数
 - max_write_lock_count:
+- myisam_recover_options: 
+- myisam_sort_buffer_size:
+- net_buffer_length
+- net_retry_count
+- open_files_limit
 
 
 ## 10 
