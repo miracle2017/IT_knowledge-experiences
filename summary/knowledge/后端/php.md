@@ -50,13 +50,13 @@
 
 - substr_replace()	子字串替换
 
-- htmlspecialchars(); *
+- htmlspecialchars(); 只是转换特殊的几个html(',",<,>,&)为实体字符
 
-- htmlspecialchars_decode(); *
+- htmlspecialchars_decode(); 对htmlspecialchars()的还原
 
 - htmlentities: 将全部的html标签转化为实体字符, 这样就能在浏览器中原样输出
 
-- htmlspecialchars_decode: 将实体字符转换为html以便在浏览器中显示
+- htmlspecialchars_decode: 将实体字符转换为html以便在浏览器中显示, htmlentities()的还原
 
 - strip_tags($string [, $allow_tags]);       删除html和php的标签符号, 标签符号中的内容还在,始终会脱离html的注释     
 
