@@ -54,6 +54,10 @@
 
 - htmlspecialchars_decode(); *
 
+- htmlentities: 将全部的html标签转化为实体字符, 这样就能在浏览器中原样输出
+
+- htmlspecialchars_decode: 将实体字符转换为html以便在浏览器中显示
+
 - strip_tags($string [, $allow_tags]);       删除html和php的标签符号, 标签符号中的内容还在,始终会脱离html的注释     
 
 - strpos()			查找字串首次出现的位置.    stripos()	忽略大小写	strrpos() / strripos()
