@@ -155,6 +155,14 @@
 - net_buffer_length
 - net_retry_count
 - open_files_limit
+- optimizer_switch: 控制优化器行为
+- performance_schema_xxx: performance schema系统变量的设置
+- profiling: 
+- query_cache_limit: 当超过该值时, 不会缓存查询结果
+- query_cache_size:
+- query_cache_type
+- query_prealloc_size
+  
 
 
 ## 10 
