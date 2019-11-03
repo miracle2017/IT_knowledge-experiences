@@ -162,9 +162,36 @@
 - query_cache_size:
 - query_cache_type
 - query_prealloc_size
-  
+- read_only:
+- secure_file_priv
+- skip_external_locking
+- skip_name_resolve：是否解析主机名，　如果禁止就只能使用ip登录
+- skip_networking: 服务器是否允许通过tcp连接, 如果只要本地用户连接, 强烈推荐开启此项
+- slow_launch_time;
+- sort_buffer_size:　当show GLOBAL STATUS like "Sort_merge_passes per"每秒的值很大时, 可以提高sort_buffer_size可以提高无法通过查询优化或索引再提高的order by 或group by的运行速度
+- sql_buffer_result: 强制将select的查询结果存入临时表, 这有助于提前释放表锁或者发送数据给客户端需要长时间
+- sql_log_off:
+- sql_mode:
+- storage_engine：默认存储引擎
+- system_time_zone: 设置时区, 与time_zone变量不同(用于客户端连接时初始化时区)
+- table_open_cache: 
+- table_open_cache_instances:
+- thread_handling:　服务器对于连接线程的处理模型
+- thread_stack:
+- time_zone: 用于每个客户端连接时初始化时区
+- timestamp: 
+- tmp_table_size: 决定内部临时内存表的最大值, 该值不会影响用户能创建多大内存表的大小(因为它限制的是类似GROUP BY语句能创建表的大小. 实际能创建的内部临时内存表的上限是取决于tmp_table_size和 max_heap_table_size较小的值. 如果超过这个限制,mysql则会将其转化为硬盘上的myisam表.(可以比较 Created_tmp_disk_tables and Created_tmp_tables这两个status
+变量来看是否需要提高内部临时内存表的值)
+- tmpdir: 
+- transaction_prealloc_size
+- tx_isolation:
+- tx_read_only: 
+- unique_checks: 对innodb表的二级索引是否执行唯一性检测. 如果该值设置为关闭, 则引擎不需要ignore duplicate keys
+- version_comment: 
+- tx_isolation: 事务隔离性, 默认值为`REPEATABLE-READ` 
 
 
+    
 ## 10 
 ### 10.8   
 
