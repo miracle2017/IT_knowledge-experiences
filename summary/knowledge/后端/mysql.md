@@ -190,8 +190,14 @@
 - version_comment: 
 - tx_isolation: 事务隔离性, 默认值为`REPEATABLE-READ` 
 
-
-
+#### 5.1.9 Server Status Variables
+- Aborted_clients：没有正确关闭的连接数
+- Aborted_connects: 连接mysql服务器失败的尝试次数
+- Binlog_cache_disk_use:
+- Binlog_cache_use: 
+- Bytes_received: 所有客户端接收的字节数
+- Bytes_send: 发送给所有客户端的字节数
+- Com_xxx:　计算xxx语句的执行次数
     
 ## 10 
 ### 10.8   
