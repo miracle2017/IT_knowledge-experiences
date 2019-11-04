@@ -12,7 +12,7 @@ nginx支持pathinfo的配置:
  server {
         server_name www.baidu.com;
         root /home/wwwroot/baidu;
-        index index.php index.html index.htm;
+        index index.php index.html index.htm;#这行要不然只用网址访问时会报403错误, 因为只访问网址不会进入下面的location /模块
 
         location / {
             if (!-e $request_filename) {
