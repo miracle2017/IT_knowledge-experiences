@@ -187,7 +187,7 @@
 - tx_isolation:
 - tx_read_only: 
 - unique_checks: 对innodb表的二级索引是否执行唯一性检测. 如果该值设置为关闭, 则引擎不需要ignore duplicate keys
-- version_comment: 
+- version_comment:  
 - tx_isolation: 事务隔离性, 默认值为`REPEATABLE-READ` 
 
 #### 5.1.9 Server Status Variables
@@ -202,7 +202,33 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
 - Com_xxx:　计算xxx语句的执行次数
 - Handler_read_rnd: 基于固定位置读取行的请求数. 如果需要执行很多对结果进行排序的查询该值会很高;这可能是你执行了许多需要全表扫描或joins没有正确使用键的查询
 - Handler_read_rnd_next: 读取数据文件的下一行的请求数. 如果该值很高则说明做了很多的表扫描, 通常这表明未正确建立索引或你的查询没有很好利用索引
-    
+- Innodb_row_lock_current_waits: 现在需要等待行锁的数量
+- Innodb_row_lock_time: 花费在取得innodb行锁总的时间(单位毫秒)
+- Innodb_row_lock_time_avg: 取得innodb行锁的平均时间(毫秒)
+- Innodb_row_lock_time_max: 取得innodb行锁中耗时最大的时间(毫秒)
+- Key_blocks_unused:
+- Last_query_cost: 上次查询语句的总开销, 这对与对比同一查询语句的不同查询计划的开销很有帮助. 仅在简单语句中计算得精确, 对于复杂语句(如包含了子查询或union)该值为0
+- Last_query_partial_plans
+- Max_used_connections: 服务器开机以来最大的同时连接数量
+- Open_files:
+- Open_tables:
+- Select_full_join: join时执行了表扫描而没有使用到索引的次数, 如果该值不为0, 请注意检查表的索引
+- Select_range_check:　如果该值不为0, 请注意检查表的索引
+- Select_scan:　join时第一个表进行了全表扫描的数量
+- Slow_launch_threads: 开启线程花费的秒数比slow_launch_time值还大的次数
+- Slow_queries: 查询花费的时间比long_query_time值还大的次数
+- Sort_merge_passes
+- Sort_range:使用范围来完成排序的次数
+- Sort_scan: 扫描表来完成排序的次数
+- Table_locks_immediate: 可以立即授予对表锁定的请求的次数
+- Table_locks_waited: 无法立即授予对表锁的请求并且需要等待的次数. 如果该值很高并且有性能问题时, 你首先应该优化查询语句,
+然后将表进行拆分或者使用主从复制
+- Threads_connected: 当前打开的连接数
+- Threads_created; 
+
+##### 5.1.10 Server SQL Modes
+
+
 ## 10 
 ### 10.8   
 
