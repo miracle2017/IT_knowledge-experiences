@@ -191,6 +191,8 @@
 - tx_isolation: 事务隔离性, 默认值为`REPEATABLE-READ` 
 
 #### 5.1.9 Server Status Variables
+mysql服务器维护着许多个操作信息的状态变量. 许多变量在执行`FLUSH STATUS`语句后重置为0
+
 - Aborted_clients：没有正确关闭的连接数
 - Aborted_connects: 连接mysql服务器失败的尝试次数
 - Binlog_cache_disk_use:
@@ -198,6 +200,8 @@
 - Bytes_received: 所有客户端接收的字节数
 - Bytes_send: 发送给所有客户端的字节数
 - Com_xxx:　计算xxx语句的执行次数
+- Handler_read_rnd: 基于固定位置读取行的请求数. 如果需要执行很多对结果进行排序的查询该值会很高;这可能是你执行了许多需要全表扫描或joins没有正确使用键的查询
+- Handler_read_rnd_next: 读取数据文件的下一行的请求数. 如果该值很高则说明做了很多的表扫描, 通常这表明未正确建立索引或你的查询没有很好利用索引
     
 ## 10 
 ### 10.8   
