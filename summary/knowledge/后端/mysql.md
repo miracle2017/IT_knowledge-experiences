@@ -227,7 +227,39 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
 - Threads_created; 
 
 ##### 5.1.10 Server SQL Modes
+系统变量sql mode默认值为`NO_ENGINE_SUBSTITUTION`, 也可以设置为只对当前session有效.
+- 重要注意事项: 
+  - 当创建使用了用户自定义分区的表, 强烈建议永远不要改变sql mode.因为这有可能会造成数据丢失或数据损坏
+  - 当复制分区表时, 主从服务器的sql mode不同时也出现问题, 所以最好的方法就是主从服务器都是使用相同的sql mode
+- most important sql modes
+  > 本手册的`strict mode`是指启用了`STRICT_TRANS_TABLES`或`STRICT_ALL_TABLES`, 或者同时两者
+  - ANSI: 此模式更改语法和行为以更符合标准sql
+  - STRICT_TRANS_TABLES: 
+  - TRADITIONAL: 简单的描述就是当插入一个不正确的值时, 会产生一个错误而不是warning. 注意在插入或更新时,当一有错误发生就会马上中止.所以当你使用的是非事务型存储引擎时,这可能不是你想要的结果因为在错误之前的数据更改不会回滚,导致了部分完成更新 
+  
+- full list(笔记只做了部分))
+  - HIGH_NOT_PRECEDENCE: 提高not运算符的优先级
+  - NO_AUTO_VALUE_ON_ZERO: 该值影响着AUTO_INCREMENT列, 通常你可以插入0或null来生成下一个序列号.但是开启该值时插入0的行为将被抑制, 只有插入null才会生成下一个序列号. 这对于0被存储在AUTO_INCREMENT列(不建议存储0)上非常有用, 比如在导出表后又重新加载导入表时, 如果没有开启该值mysql在导入时如果遇到0值则会生成一个新的序号. 为此mysqldump在输出中自动包含了开启NO_AUTO_VALUE_ON_ZERO的语句
+  - NO_ENGINE_SUBSTITUTION: 该值开启时, 当create或alert语句指定了不能使用的或未编译的存储引擎时则会产生一个错误; 而关闭该值时, create语句会产生一个警告并使用默认引擎替代, alert语句则会产生一个warning但该表不会改变
+  - NO_UNSIGNED_SUBTRACTION: 当两个整数相减, 其中有一个是unsigned时, 则结果默认的也是unsigned的,所以当结果是负数时则会产生一个错误. 如果开启该变量则可以避免这个问题. 如果用该结果对一个unsigned整数列进行更新时,结果会被裁减为该列类型的最大值, 或者被裁减为0当NO_UNSIGNED_SUBTRACTION值开启时.
+  - NO_ZERO_DATE: 该值从5.6.17起不赞成. 该值没开启时, '0000-00-00'是一个有效的日期, 插入该值是允许的; 该值开启时'0000-00-00'是允许的插入时会产生一个warning; 如果strict mode和NO_ZERO_DATE同时开启, '0000-00-00'不允许, 插入产生一个错误除非使用insert ignore或update ignore则可以插入但会产生一个warning.
+  - STRICT_ALL_TABLES: 为所有引擎都开启strict mode
 
+- Combination SQL Modes
+  >以下提供了特殊模式作为上面模式值组合的简写
+  - ANSI
+  - TRADITIONAL: 等于 STRICT_TRANS_TABLES, STRICT_ALL_TABLES, NO_ZERO_IN_DATE, NO_ZERO_DATE, ERROR_FOR_DIVISION_BY_ZERO, NO_AUTO_CREATE_USER, 和NO_ENGINE_SUBSTITUTION.
+  
+- Strict SQL Mode
+  >在启用了STRICT_ALL_TABLES或STRICT_TRANS_TABLES, 或者两者同时, Strict SQL Mode生效
+  - STRICT_ALL_TABLES和STRICT_TRANS_TABLES的一些区别
+    - 对于事务型表, 两种模式都是会产生一个错误当更改数据语句中有无效或缺失的值, 该语句中止并回滚
+    - 非事务型表, 更改数据语句(insert,update)中有无效或缺失的值
+      - 该坏值出现在数据更改的第一行, 两种模式的行为都是是一样的, 语句被中止且数据表不会被改变
+      - 该值出现在数据更改的第二行及以后
+        - STRICT_ALL_TABLES模式, 返回一个错误并中止剩余的语句执行, 因为较早的行已被插入或更新,所以结果是部分更新. 为了避免该情况, 请使用单行语句, 可以在不更改表的情况下中止该语句
+        - STRICT_TRANS_TABLES模式会将无效值转换成最接近的有效值并插入, 如果是缺少的值则会使用隐私的默认值插入.在两种情况中都会产生一个警告而不是错误并且执行后续的语句
+  
 
 ## 10 
 ### 10.8   
