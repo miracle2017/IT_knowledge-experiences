@@ -269,9 +269,26 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
   3. 服务器停止接受新的连接.
      >服务器通过关闭通常监听的网络接口的程序来停止接收新的连接
   4. 服务器终止当前的活动 
+     >对于与客户端连接的每个线程, 服务器都断开和客户端的连接并将该线程标记为killed. 当线程注意到自己被标记时就会die掉, 对于空闲的连接线程可以很快die掉,当前正在处理语句的线程会定期检测其状态所以会花费更长的时间die掉.
+     - 对于具有开放事务的线程, 该事务会被回滚; 而一个更新非事务表的线程, 如多行的更新或插入的操作可能会留下部分更新,因为该操作可以在完成之前终止
+  5. 服务器关闭或关闭存储引擎
+     >该阶段服务器将刷新表缓存并关闭所有表.每个存储引擎都对其管理的表进行任何有必要的操作.innodb刷新缓冲池到磁盘, 将当前的LSN写入表空间,并终止自己的内部线程,MyISAM刷新表的所有未决索引写入(pending index write)
+  6. 服务器退出
   
+### 5.4 MySQL Server Logs
+- 服务器日志种类
+  - error log: 
+  - general query log: 建立的客户端连接和从客户端接收的语句
+  - binary log: 改变数据的语句
+  - relay log: 从复制主服务器接收到的数据更改
+  - slow query log:
+  - DDL log (metadata log): DDL执行的元数据操作
+  
+- log_output控制输出目的类型是file, table, none的任意组合; general_log和slow_query_log控制对应的日志是否开启;  general_log_file and slow_query_log_file控制着对应日志文件存放的路径(如果有给定的话)和文件名; sql_log_off控制general query logging是否关闭(这假定general query log为开启)
 
-
+- 使用log table(将日志存储在mysql表)的好处和特点
+  
+  
 
 ## 10 
 ### 10.8   
