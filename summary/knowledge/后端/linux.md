@@ -82,9 +82,12 @@
     -p: 建立相关链接的程序名及进程号
     
 - find [path]  (-name pattern(文件名查找)| -iname pattern(文件名不区分大小写)|-regex pattern(正则表达式))
-    例子 find . -name ".c"   找出当前目录下的.c文件
+  例子 find . -name ".c"   找出当前目录下的.c文件
     
 - mkdir: 创建文件夹
+
+- ln：设置链接
+  ln -s /usr/local /home/local(设置软链接, 将/usr/local(实际目录或文件)链接到/home/local)
 
 - wget url地址: 下载文件, 支付http(s),ftp协议
 
@@ -152,10 +155,10 @@
   su - username: 加-,表示环境变量进行切换
           命令行前的#表示超级用户, $表示普通用户
 
-- useradd 用户名  ：Linux下添加一个用户同时会在home下生成一个用户名的目录
+- useradd 用户名  ：Linux下添加一个用户同时会在home下生成一个用户名的目录, -s /sbin/nologin 选项为禁止远程登录
 
 - userdel -r 用户名  ：删除Linux用户，包含home下的用户目录， 不加-r 则只是删除用户名不会删除home下的用户目录
-
+  
 - linux参数前 - 和 -- 区别: - 后接单字符
 路径之间的 : 冒号做分隔符,分隔多个路径   
     

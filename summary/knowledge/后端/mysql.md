@@ -258,7 +258,7 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
       - 该坏值出现在数据更改的第一行, 两种模式的行为都是是一样的, 语句被中止且数据表不会被改变
       - 该值出现在数据更改的第二行及以后
         - STRICT_ALL_TABLES模式, 返回一个错误并中止剩余的语句执行, 因为较早的行已被插入或更新,所以结果是部分更新. 为了避免该情况, 请使用单行语句, 可以在不更改表的情况下中止该语句
-        - STRICT_TRANS_TABLES模式会将无效值转换成最接近的有效值并插入, 如果是缺少的值则会使用隐私的默认值插入.在两种情况中都会产生一个警告而不是错误并且执行后续的语句
+        - STRICT_TRANS_TABLES模式会将无效值转换成最接近的有效值并插入, 如k果是缺少的值则会使用隐私的默认值插入.在两种情况中都会产生一个警告而不是错误并且执行后续的语句
   
 #### 5.1.14 Server Response to Signals
 
@@ -287,9 +287,20 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
 - log_output控制输出目的类型是file, table, none的任意组合; general_log和slow_query_log控制对应的日志是否开启;  general_log_file and slow_query_log_file控制着对应日志文件存放的路径(如果有给定的话)和文件名; sql_log_off控制general query logging是否关闭(这假定general query log为开启)
 
 - 使用log table(将日志存储在mysql表)的好处和特点
+  便于查询是哪个客户端发起的查询, 只要能连接上服务器就能进行日志查询
   
-  
-在一个语句或事务后但在释放任何锁或任何提交(commit)之前立即执行二进制日志记录; 在执行对非事务表的更新后立即存储在二进制日志中。在未提交事务中, 所有改变事务表更新操作都会被缓存直到服务器接收commit语句, 此时在commit执行前将整个事务写入二进制日志; 对于非事务表的改变是无法被回滚,如果一个事务包含对非事务表的更改回滚了, 则二进制日志会在事务后记录所有rollback语句以确保这些表的更改
+#### 5.4.2 The Error Log  
+#### 5.4.2.2 Error Logging on Unix and Unix-Like Systems  
+- log-error没有指定值时则将错误信息输出到console(即是stderr), 如果指定了文件名或绝对路径就将日志写入对应文件中去
+- log-warning控制warning日志是否记录到error log中, 如果该值大于1则将新连接尝试连接但被拒绝访问的错误和中断连接写入错误日志中
+
+#### 5.4.2.5 Error Log File Flushing and Renaming
+- 使用FLUSH ERROR LOGS或FLUSH LOGS命令flush log,mysql服务器会关闭和重新打开任何他之前正在写入的错误日志文件. 如果要重命名错误日志文件名, 则进行如下的操作(以linux为例子, 在window上请用rename代替mv)
+
+  mv host_name.err host_name.err.old
+  mysqladmin flush-logs
+  mv host_name.err.old backup-directory//最后将其移动到备份目录中
+  注意: 如果错误日志文件的位置mysql服务器没有写入权限那么flush log操作就不能生成新的日志文件
 
 ##### 5.4.4.1 Binary Logging Formats
 - 二进制日志记录格式(3种): 
@@ -297,6 +308,20 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
   2. 基于行日志: 记录被影响的单个表行
   3. 混合(以上两种混合)日志: 默认是statement-based, 在特定情况下使用row-based保证可以被安全复制
 
+#### 5.4.4 The Binary Log
+- 二进制日志不记录想select或show之类不修改数据语句。如果要记录所有语句，请使用general query log。
+- log-bin系统变量控制是否开启错误日志，可以指定文件名或带绝对路径的文件名(后后缀会被忽略并由mysql自己生成. sql_log_bin(scope为session)可以设置当前的session的二进制日志是否开启
+- PURGE BINARY LOGS删除二进制日志
+- binlog_error_action系统变量控制二进制日志记录出错时所采用的动作
+  - IGNORE_ERROR(默认): 服务器会将继续进行中的事务并记录错误, 然后停止二进制日志记录,但会继续执行更新.排除错误要重启服务器才能从新记录二进制日志.这对于二进制日志是不重要的情况可以怎么做
+  - ABORT_SERVER(推荐): 停止二进制日志记录并关闭服务器.
+- sync_binlog控制每N个提交组后将二进制日志同步到磁盘. 最安全的值为1,但仍然存在二进制日志和表内容不一致的可能当宕机时
+  
+在一个语句或事务后但在释放任何锁或任何提交(commit)之前立即执行二进制日志记录; 在执行对非事务表的更新后立即存储在二进制日志中。在未提交事务中, 所有改变事务表更新操作都会被缓存直到服务器接收commit语句, 此时在commit执行前将整个事务写入二进制日志; 对于非事务表的改变是无法被回滚,如果一个事务包含对非事务表的更改回滚了, 则二进制日志会在事务后记录所有rollback语句以确保这些表的更改
+
+##### 5.4.4.4 Logging Format for Changes to mysql Database Tables
+  
+  
 ## 10 
 ### 10.8   
 
