@@ -183,7 +183,6 @@
 - 【linux修改配置文件不重启立即生效】如修改 ~/.bash_profile文件, 那么 .  /~/.bash_profile  或者 source ~/.bash_profile 即可 (source 又称点命令) 
       可以使用 alias 列出所有的别名
       
-
 ##【nginx】
 
 >- 重新nginx配置文件(不停服)
@@ -219,6 +218,35 @@
     wait  
     echo 'finish'
   
-##Linux下独立编译安装搭建nginx + php + mysql
+### linux的编译安装
+ - ./configure: 检测安装平台的目标特征的, 生成Makefile  
+ - make: 编译,从Makefile中读取指令,然后编译。
+ - make install: 也是从Makefile中读取指令, 将程序安装到指定目录
+ - make clean: 清除编译时产生的文件
+  
+## Linux下独立编译安装搭建nginx + php + mysql
+  
+[总指南](https://blog.csdn.net/faith306/article/details/78541974)
 
-  [指南](https://blog.csdn.net/faith306/article/details/78541974)
+  - 添加需要的用户
+    - 添加www用户: useradd -r -g www -s /bin/false www
+    - 添加mysql用户: useradd -r -g mysql -s /bin/false mysql
+    
+  - nginx
+    1. [下载地址](https://nginx.org/en/download.html)
+    2. 安装前准备: 下载pcre, zlib, openssl
+    3. [编译安装-官方指南](https://nginx.org/en/docs/configure.html) ./configure --prefix=/usr/local/nginx-1.17.5 --user=www --group=www --with-http_ssl_module --with-http_flv_module --with-http_mp4_module --with-http_stub_status_module --with-select_module --with-poll_module --with-pcre=/usr/local/lib64/pcre-8.43 --with-zlib=/usr/local/lib 然后make && make install
+    4. 加入系统服务: nginx包中没有提供相关脚本程序
+    
+  - php
+    1. [下载](https://www.php.net/downloads.php)
+    2. 编译安装
+    ./configure --prefix=/usr/local/php-7.1.11 --with-config-file-path=/alidata/server/php-7.1.11/etc --enable-fpm --with-mcrypt --enable-mbstring --enable-pdo --with-curl --disable-debug --disable-rpath --enable-inline-optimization --with-bz2 --with-zlib --enable-sockets --enable-sysvsem --enable-sysvshm --enable-pcntl --enable-mbregex --with-mhash --enable-zip --with-pcre-regex --with-mysqli --with-gd --with-jpeg-dir --with-freetype-dir --enable-calendar然后make && make install
+    3. 复制源码中的php.ini和php-fpm文件并做自行调整作为配置
+    4. 加入系统服务: 复制sapi/fpm/php-fpm.service到/etc.init.d/下
+    
+  - mysql
+    1. [社区下载地址](https://dev.mysql.com/downloads/mysql)
+    2. [初始化数据目录-官方手册](https://dev.mysql.com/doc/refman/5.6/en/binary-installation.html) mysql-path/script/mysql_install_db -user=mysql --basedir=customize-path --datadir=customize-path (5.7开始就使用mysqld -initialize程序参数一样)
+    3. 配置my.cnf
+    4. 加入系统服务, 复制/support/mysql.server到/etc/init.d/下

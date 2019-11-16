@@ -10,4 +10,4 @@
 
 >ctrl + space: 展示智能提示
 
-复制js变量到系统剪切板中: 命令行中键入copy(variable_name)
+- 复制js变量到系统剪切板中: 命令行中键入copy(variable_name)
