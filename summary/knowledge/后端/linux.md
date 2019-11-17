@@ -175,7 +175,7 @@
     systemctl status/restart/stop firewalld.service   // 状态/重启/停止防火墙服务
     
 - 【linux命令行快捷键，或叫配置环境变量】
->全局的环境变量在/etc/profile, 但是非常不推荐改这个文件, 而推荐在/etc/profile.d/下新建一个自己自定义的文件比如.bash_profile然后加入环境变量, 该配置也是全局; 而其他每个linux用户根目录下也会有一个.bash_profile环境变量配置文件仅对相应的用户有效
+>全局的环境变量在/etc/profile, 但是非常不推荐改这个文件, 而推荐在/etc/profile.d/下新建一个.sh后缀的自定义文件(比如bash_profile.sh)然后加入环境变量, 该配置也是全局; 而其他每个linux用户根目录下也会有一个.bash_profile环境变量配置文件仅对相应的用户有效
 
     方一(配置环境变量): vi ~/.bash_profile 可以看到 PATH=$PATH:$HOME/bin, 这个就是配置环境变量,在后面新增即可, 路径间用 : 冒号
     方二(使用别名):  vi ~/.bashrc    增加例如 alias mv='mv -i' 这样的格式,不重启立即生效方法 source ~/.bashrc 或者 \. ~/.bashrc
