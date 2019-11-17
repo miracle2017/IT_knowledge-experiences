@@ -166,6 +166,8 @@
   env: 查看所有环境变量
   set: 查看所有本地定义的环境变量
   export: 查看所有导出的环境变量
+  
+- wget: 强大的下载工具, 可以用其递归扒站
     
 - 【防火墙】
     firewall-cmd --zone=public --add-port=3306/tcp --permanent  //永久开放某个端口
