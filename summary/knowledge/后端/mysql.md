@@ -296,6 +296,8 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
 
 #### 5.4.2.5 Error Log File Flushing and Renaming
 - 使用FLUSH ERROR LOGS或FLUSH LOGS命令flush log,mysql服务器会关闭和重新打开任何他之前正在写入的错误日志文件. 如果要重命名错误日志文件名, 则进行如下的操作(以linux为例子, 在window上请用rename代替mv)
+#### 5.4.4 The Binary Log
+在一个语句或事务后但在释放任何锁或任何提交(commit)之前立即执行二进制日志记录; 在执行对非事务表的更新后立即存储在二进制日志中。在未提交事务中, 所有改变事务表更新操作都会被缓存直到服务器接收commit语句, 此时在commit执行前将整个事务写入二进制日志; 对于非事务表的改变是无法被回滚,如果一个事务包含对非事务表的更改回滚了, 则二进制日志会在事务后记录所有rollback语句以确保这些表的更改
 
   mv host_name.err host_name.err.old
   mysqladmin flush-logs

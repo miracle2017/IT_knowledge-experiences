@@ -213,6 +213,9 @@
     
 >##正则 PCRE
    [官方文档](https://www.php.net/manual/zh/reference.pcre.pattern.syntax.php)
+
+- 自己经验技巧
+  - 匹配所有字符(包括换行): [\s\S] (\s为空白字符, \S为非空白字符, 结合起来就是空白非空白字符都可以就是全部了)
    
 ## 加密扩展
 
