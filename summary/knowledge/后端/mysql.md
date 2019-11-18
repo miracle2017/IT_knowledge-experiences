@@ -1,6 +1,8 @@
 ﻿# MySQL官方手册
 
 ## 2.安装升级MySQL
+- 安装
+  - 二进制安装包安装:[地址](https://dev.mysql.com/doc/refman/5.6/en/binary-installation.html#binary-installation-layout)
 - Postinstallation Setup and Testing
   - mysql_secure_installation: 安装MySQL后, 运行此程序后会提供一些安全方面的建议 
   
@@ -443,9 +445,9 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
 
 ## mysql启动
 
-- Linux安装多个mysql
+- Linux安装多个mysql [二进制包安装方法](https://dev.mysql.com/doc/refman/5.6/en/binary-installation.html#binary-installation-layout)
   
-  下载mysql二进制包, 然后初始化, 初始化时务必使指定basedir和database格式, 这样就能避免与已安装的冲突
+  下载mysql二进制包[下载地址](https://dev.mysql.com/downloads/mysql/), 然后初始化, 初始化时务必使指定basedir和database格式, 这样就能避免与已安装的冲突
   `bin/mysqld --initialize --user=mysql --basedir=/opt/mysql/mysql --datadir=/opt/mysql/mysql/data`
 
 - 指定配置文件启动(Linux)
@@ -745,4 +747,6 @@ b字段有索引时能用到索引,mysql能快速定位要更新的位置速度�
 
 - navicat使用技巧
   在输入查询语句时按下esc为智能提示 
- 
+  
+- mysql5.6和mysql5.7区别
+  - 5.7以前使用mysql_install_d初始化数据目录, 5.7起使用mysqld的initialize
