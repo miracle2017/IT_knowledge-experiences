@@ -237,7 +237,8 @@
   - nginx
     1. [下载地址](https://nginx.org/en/download.html)
     2. 安装前准备: 下载pcre, zlib, openssl
-    3. [编译安装-官方指南](https://nginx.org/en/docs/configure.html) ./configure --prefix=/usr/local/nginx-1.17.5 --user=www --group=www --with-http_ssl_module --with-http_flv_module --with-http_mp4_module --with-http_stub_status_module --with-select_module --with-poll_module --with-pcre=/usr/local/lib64/pcre-8.43 --with-zlib=/usr/local/lib 然后make && make install
+    3. [编译安装-官方指南](https://nginx.org/en/docs/configure.html) 
+        ./configure --prefix=/usr/local/nginx-1.17.5 --user=www --group=www --with-http_ssl_module --with-http_flv_module --with-http_mp4_module --with-http_stub_status_module --with-select_module --with-poll_module --with-pcre=/usr/local/lib64/pcre-8.43 --with-zlib=/usr/local/lib --with-openssl=/usr/local/lib64/openssl-1.1.0b然后make && make install
     4. 加入系统服务: nginx包中没有提供相关脚本程序
     
   - php
@@ -251,4 +252,4 @@
     1. [社区下载地址](https://dev.mysql.com/downloads/mysql)
     2. [初始化数据目录-官方手册](https://dev.mysql.com/doc/refman/5.6/en/binary-installation.html) mysql-path/script/mysql_install_db -user=mysql --basedir=customize-path --datadir=customize-path (5.7开始就使用mysqld -initialize程序参数一样)
     3. 配置my.cnf
-    4. 加入系统服务, 复制/support/mysql.server到/etc/init.d/下
+    4. 加入系统服务, 复制/support/mysql.server到/etc/init.d/下 
