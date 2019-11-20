@@ -86,8 +86,12 @@
     
 - mkdir: 创建文件夹
 
-- ln：设置链接
+- ln: 设置链接
   ln -s /usr/local /home/local(设置软链接, 将/usr/local(实际目录或文件)链接到/home/local)
+
+- sed: 
+  sed -i "s/oldstring/newstring/g" `grep oldstring -rl path`: 在path中找出所有存在oldstring的文件, 然后将oldstring替换成newstring.
+  sed -i 's/user.*=.*nobody/user = www/g;s/group.*=.*nobody/group = www/g' w.cnf : 多个匹配替换
 
 - wget url地址: 下载文件, 支付http(s),ftp协议
 
@@ -245,7 +249,7 @@
     1. [下载](https://www.php.net/downloads.php)
     2. 编译安装
     ./configure --prefix=/usr/local/php-7.1.11 --with-config-file-path=/alidata/server/php-7.1.11/etc --enable-fpm --with-mcrypt --enable-mbstring --enable-pdo --with-curl --disable-debug --disable-rpath --enable-inline-optimization --with-bz2 --with-zlib --enable-sockets --enable-sysvsem --enable-sysvshm --enable-pcntl --enable-mbregex --with-mhash --enable-zip --with-pcre-regex --with-mysqli --with-gd --with-jpeg-dir --with-freetype-dir --enable-calendar然后make && make install
-    3. 复制源码中的php.ini和php-fpm文件并做自行调整作为配置
+    3. 复制源码中的php.ini和php-fpm.cnf文件并做自行调整作为配置
     4. 加入系统服务: 复制sapi/fpm/php-fpm.service到/etc.init.d/下
     
   - mysql
