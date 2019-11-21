@@ -89,7 +89,7 @@
 - ln: 设置链接
   ln -s /usr/local /home/local(设置软链接, 将/usr/local(实际目录或文件)链接到/home/local)
 
-- sed: 
+- sed: (stream editor)
   sed -i "s/oldstring/newstring/g" `grep oldstring -rl path`: 在path中找出所有存在oldstring的文件, 然后将oldstring替换成newstring.
   sed -i 's/user.*=.*nobody/user = www/g;s/group.*=.*nobody/group = www/g' w.cnf : 多个匹配替换
 
@@ -116,6 +116,8 @@
   
   `nohup ./myprogram.sh > result.log 2>&1 & echo $! > run.pid  //将输入和输出结果记录到result.log中, 将pid号记录到run.pid中`
   `nohup node server.js 1>log.out 2>err.out > & echo $! > run.pid` //将正常信息和错误信息分别对应输出到log.out和err.out文件, pid记录到run.pid文件中
+   &>file:将标准输出和标准错误输出都重定向到file中
+   2>&1: 将标准错误输出
   
 - HASH-TYPE名字+'sum'后缀 filename :(如sha1sum,sha512sum,md5sum等)计算文件(不能是文件夹, 要是单一文件, 文件夹可以先打包压缩)哈希值(sha1, sha512, md5等)  
  
