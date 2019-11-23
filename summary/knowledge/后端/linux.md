@@ -90,7 +90,7 @@
   ln -s /usr/local /home/local(设置软链接, 将/usr/local(实际目录或文件)链接到/home/local)
 
 - sed: (stream editor)
-  sed -i "s/oldstring/newstring/g" `grep oldstring -rl path`: 在path中找出所有存在oldstring的文件, 然后将oldstring替换成newstring.
+  sed -i "s/oldstring/newstring/g" `grep oldstring -rl path`: 在path中找出所有存在oldstring的文件, 然后将oldstring替换成newstring; g为全局匹配
   sed -i 's/user.*=.*nobody/user = www/g;s/group.*=.*nobody/group = www/g' w.cnf : 多个匹配替换
 
 - wget url地址: 下载文件, 支付http(s),ftp协议
