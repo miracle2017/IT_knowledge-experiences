@@ -323,9 +323,13 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
   
 在一个语句或事务后但在释放任何锁或任何提交(commit)之前立即执行二进制日志记录; 在执行对非事务表的更新后立即存储在二进制日志中。在未提交事务中, 所有改变事务表更新操作都会被缓存直到服务器接收commit语句, 此时在commit执行前将整个事务写入二进制日志; 对于非事务表的改变是无法被回滚,如果一个事务包含对非事务表的更改回滚了, 则二进制日志会在事务后记录所有rollback语句以确保这些表的更改
 
-##### 5.4.4.4 Logging Format for Changes to mysql Database Tables
+###### 5.4.4.4 Logging Format for Changes to mysql Database Tables
   
-  
+#### 5.4.5 The Slow Query Log  
+
+- 默认的慢日志不记录管理语句和不使用索引的语句, 但是log_slow_admin_statements 和 log_queries_not_using_indexes进行设置
+
+          
 ## 10 
 ### 10.8   
 
