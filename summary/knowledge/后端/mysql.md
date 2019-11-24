@@ -329,6 +329,18 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
 
 - 默认的慢日志不记录管理语句和不使用索引的语句, 但是log_slow_admin_statements 和 log_queries_not_using_indexes进行设置
 
+#### 5.4.7 Server Log Maintenance
+
+ mysqladmin flush-logs刷新日志时: 1.二进制日志会重新创建一个文件, 2 而一般日志(general log)和慢日志只会关闭再重新打开
+ 
+#### 5.5 MySQL Server Plugins 
+从INFORMATION_SCHEMA.PLUGINS table 或 SHOW PLUGINS获取插件的信息及状态, mysql.plugins表查看注册了的插件
+#### 5.6 MySQL Server User-Defined Functions 
+
+#### 5.7 Running Multiple MySQL Instances on One Machine 
+一台机器上运行多个mysql实例(有这两种情况 1.同个二进制文件不同data目录; 2.不同二进制文件的) 
+          
+## 6 Security   
           
 ## 10 
 ### 10.8   
