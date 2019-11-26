@@ -405,8 +405,10 @@ user表中设置全局的基础权限, 比例授权了全局的delete权限,那�
 
 #### 6.2.7 Adding Accounts, Assigning Privileges, and Dropping Accounts
 
-创建用户: create user "username"@"hostname"
+创建用户: create user "username"@"hostname" identified by 'password'; 
 删除用户: drop use "username"@"hostname"
+修改密码: set password for "username"@"hostname" = password("password")
+修改当前用户密码: set password = password("password")
 用户授权: GRANT all on "." to "username"@"hostname"
 撤销权限: revoke all on "." from "username"@"hostname"
 
