@@ -378,9 +378,12 @@ rainbow table破解hash加密
 
 6.2.3 Grant Tables
 
+可以使用SHOW GRANTS FOR 'root'@'pc84.example.com';查看对应用户名和主机名被授予的权限
+服务器在启动时会将几个权限组合起来加载到内存中, 如需重新加载可以使用mysql命令行中输出flush privileges 或 mysqladmin flush-privileges 或mysqladmin reload命令
+
 - Grant Table Overview
   以下这些表包含授权信息
-  - user: 用户账号, 全局权限, 和其他没有权限的;列
+  - user: 用户账号, 全局权限, 和其他没有权限的列
   - db: 数据库级别权限
   - tables-priv: 表级别权限
   - columns-priv: 列级别权限
