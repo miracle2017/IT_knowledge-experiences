@@ -376,7 +376,7 @@ rainbow table破解hash加密
 
 - PROCESS: 能够查看当前正执行语句的纯文本, 包括设置和更改密码语句
 
-6.2.3 Grant Tables
+#### 6.2.3 Grant Tables
 
 可以使用SHOW GRANTS FOR 'root'@'pc84.example.com';查看对应用户名和主机名被授予的权限
 服务器在启动时会将几个权限组合起来加载到内存中, 如需重新加载可以使用mysql命令行中输出flush privileges 或 mysqladmin flush-privileges 或mysqladmin reload命令
@@ -389,6 +389,39 @@ rainbow table破解hash加密
   - columns-priv: 列级别权限
   - procs_priv: 存储过程函数的权限
   - proxies_priv: 代理用户权限
+
+host, proxy_host在存到授权表前转换为小写,权限表User, Proxied_user, Password, Db, and Table_name列大小敏感, Host, Proxied_host, Column_name, and Routine_name 大小写不敏感
+ 
+##### 6.2.5 Access Control, Stage 1: Connection Verification         
+ 
+""@"%":表示任何用户名字从任何主机名进行连接只要能匹配上密码都能连接, ""表示匹配任何用户名字
+
+当user表被加载到内存时都会对其进行排序, 越具体的行排行越前. 所有当一个用户名和host连接进来可能会匹配到多个行时, mysql只会使用匹配中排序最靠前的那一行进行登录认证
+查看当前登录用户名和host: SELECT CURRENT_USER(); 
+ 
+#### 6.2.6 Access Control, Stage 2: Request Verification
+
+user表中设置全局的基础权限, 比例授权了全局的delete权限,那么他delete任何database的数据即使设置了默认的database. 所以如非必要, user表的权限都设置为N, 在颗粒级别更具体的地方设置权限
+
+#### 6.2.7 Adding Accounts, Assigning Privileges, and Dropping Accounts
+
+创建用户: create user "username"@"hostname"
+删除用户: drop use "username"@"hostname"
+用户授权: GRANT all on "." to "username"@"hostname"
+撤销权限: revoke all on "." from "username"@"hostname"
+
+#### 6.2.8 When Privilege Changes Take Effect
+
+修改权限表何时生效? 
+- 使用账号管理语句(如GRANT, REVOKE, SET PASSWORD, and RENAME USER等)这种间接方式修改表的方式, mysql服务器会在一注意到变化时立即从新加载到内存; 而直接通过insert, update语句(不推荐)对表直接修改则要需要flush privileges使其生效.
+
+授权表的重新加载对现有客户端会话权限的影响?
+- 对于表级和列级的权限, 会在下一个请求生效
+- database权限需要在用户执行use db_name语句时生效
+- 对于全局权限和密码对已连接的会话不会有影响, 只有当下次重连时才会生效.
+
+对于使用--skip-grant-tables选项开启服务器的, 不会有任何的访问权限检查, 若想使其重新开启访问检查,flush privileges.
+
 
           
 ## 10 
