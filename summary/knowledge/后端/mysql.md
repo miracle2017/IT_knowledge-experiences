@@ -277,6 +277,24 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
      >该阶段服务器将刷新表缓存并关闭所有表.每个存储引擎都对其管理的表进行任何有必要的操作.innodb刷新缓冲池到磁盘, 将当前的LSN写入表空间,并终止自己的内部线程,MyISAM刷新表的所有未决索引写入(pending index write)
   6. 服务器退出
   
+### 5.3 The mysql System Database
+该部分为介绍mysql系统数据库, 就是名为`mysql`的数据库
+- 分类
+  - 授权表
+  - 对象信息系统表
+    - event: Information about Event Scheduler events.
+    - func: 用户定义的函数
+    - plugin: 服务器端的插件
+    - proc: Information about stored procedures and functions
+  - 日志系统表(使用csv存储引擎)
+    - general_log
+    - slow_log
+  - 服务端帮助系统表
+  - 时区系统表
+  - 复制(replication)系统表
+  - 优化器系统表
+  - 杂项系统表
+  
 ### 5.4 MySQL Server Logs
 - 服务器日志种类
   - error log: 
@@ -341,6 +359,34 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
 一台机器上运行多个mysql实例(有这两种情况 1.同个二进制文件不同data目录; 2.不同二进制文件的) 
           
 ## 6 Security   
+rainbow table破解hash加密
+          
+#### 6.2.2 Privileges Provided by MySQL          
+
+- Privilege Descriptions
+  - reload: 允许flush语句的操作: flush-hosts, flush-logs, flush-privileges, flush-status, flush-tables, flush-threads,refresh and reload. reload语句告诉服务器重新加载权限表到内存中, flush-privileges是reload的同义词. refresh操作是关闭和重新打开日志文件和刷新所有的的表. 其他的flush-xxx命令和refresh相似, 只不过是更具体, 如flush-log就只针对log操作.
+  
+- Privilege-Granting Guidelines
+
+对于 file权限和 管理员特权应该特别注意
+- file权限:
+  - 具有该权限的用户可以读取mysql服务器主机上的文件,这包括所有world-readable的文件和mysql服务器的data目录.用户可以使用select load_file("file_path")将服务器上的内容传输到用户本地上.应该特别注意.
+
+- 授权选项: 允许用户将自己的权限授予其他用户, 所以两个有不同权限的用户同时又具有授权特权(grant option)时能组合权限
+
+- PROCESS: 能够查看当前正执行语句的纯文本, 包括设置和更改密码语句
+
+6.2.3 Grant Tables
+
+- Grant Table Overview
+  以下这些表包含授权信息
+  - user: 用户账号, 全局权限, 和其他没有权限的;列
+  - db: 数据库级别权限
+  - tables-priv: 表级别权限
+  - columns-priv: 列级别权限
+  - procs_priv: 存储过程函数的权限
+  - proxies_priv: 代理用户权限
+
           
 ## 10 
 ### 10.8   
