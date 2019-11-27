@@ -408,6 +408,7 @@ user表中设置全局的基础权限, 比例授权了全局的delete权限,那�
 创建用户: create user "username"@"hostname" identified by 'password'; 
 删除用户: drop use "username"@"hostname"
 修改密码: set password for "username"@"hostname" = password("password")
+该用户名或主机名: rename user "old_username"@"old_hostname" to "new_username"@"new_hostname"
 修改当前用户密码: set password = password("password")
 用户授权: GRANT all on "." to "username"@"hostname"
 撤销权限: revoke all on "." from "username"@"hostname"
@@ -424,6 +425,19 @@ user表中设置全局的基础权限, 比例授权了全局的delete权限,那�
 
 对于使用--skip-grant-tables选项开启服务器的, 不会有任何的访问权限检查, 若想使其重新开启访问检查,flush privileges.
 
+#### 6.2.13 Setting Account Resource Limits
+对账号资源使用的限制; 可以从以下方面(同样的名字存在mysql.use表中)进行控制; 使用grent语句进行设置
+- max_queries_per_hour
+- max_updates_per_hour
+- max_connections_per_hour 
+- MAX_USER_CONNECTIONS: 该账号最大同时连接数量 
+
+per-hour的资源使用量可以被全局重置(置0)通过使用flush user_resource或者重载grant表(如flush privileges)
+
+#### 6.2.15 SQL-Based Account Activity Auditing
+user()和current_user()区别?
+- current_user()显示是当前登录用户对应配到mysql.user表中到user和host字段的值,有可能会包含通配符; 
+- user()是登录时实际的客户端提供的用户名和实际客户端的host值
 
           
 ## 10 
