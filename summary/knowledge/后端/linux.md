@@ -226,7 +226,7 @@
     wait  
     echo 'finish'
   
-### linux的编译安装
+### linux的编译安装程序
  - ./configure: 检测安装平台的目标特征的, 生成Makefile  
  - make: 编译,从Makefile中读取指令,然后编译。
  - make install: 也是从Makefile中读取指令, 将程序安装到指定目录
@@ -259,3 +259,5 @@
     2. [初始化数据目录-官方手册](https://dev.mysql.com/doc/refman/5.6/en/binary-installation.html) mysql-path/script/mysql_install_db -user=mysql --basedir=customize-path --datadir=customize-path (5.7开始就使用mysqld -initialize程序参数一样)
     3. 配置my.cnf
     4. 加入系统服务, 复制/support/mysql.server到/etc/init.d/下 
+    
+### redis     
