@@ -370,8 +370,7 @@ final 修饰;
  ##【Composer】
   
  - ###安装
- 
-    - Linux
+    - Linux [官网指南](https://getcomposer.org/download/)
         //安装composer
         php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');"
         php composer-setup.php
