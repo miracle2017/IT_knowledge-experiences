@@ -439,6 +439,11 @@ user()和current_user()区别?
 - current_user()显示是当前登录用户对应配到mysql.user表中到user和host字段的值,有可能会包含通配符; 
 - user()是登录时实际的客户端提供的用户名和实际客户端的host值
 
+#### 6.3.3.1 Creating SSL Certificates and Keys Using openssl
+[使用openssl创建ssl证书和密钥](https://dev.mysql.com/doc/refman/5.6/en/creating-ssl-files-using-openssl.html)
+
+#### 6.3.5 Connecting to MySQL Remotely from Windows with SSH
+window上通过ssh远程登录mysq: 如用navicat时, 配置mysql账号外还要再配置ssh登录服务器的账号密码
           
 ## 10 
 ### 10.8   
