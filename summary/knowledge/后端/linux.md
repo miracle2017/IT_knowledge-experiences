@@ -260,4 +260,12 @@
     3. 配置my.cnf
     4. 加入系统服务, 复制/support/mysql.server到/etc/init.d/下 
     
+## linux上php不需要重新编译php添加扩展?
+
+ 0. 如果你之前编译安装php的源码还在则忽略; 否则从官网下载当前安装php版本的源码
+ 1. 在源码的/ext下, 找到你要安装的扩展并进入, 运行phpize, 生成configure文件
+ 2. ./configure --with-php-config=你的php-config文件路径 
+ 3. make && make install
+ 4. php.ini引入刚生成的.so扩展文件
+    
 ### redis     

@@ -444,7 +444,51 @@ user()和current_user()区别?
 
 #### 6.3.5 Connecting to MySQL Remotely from Windows with SSH
 window上通过ssh远程登录mysq: 如用navicat时, 配置mysql账号外还要再配置ssh登录服务器的账号密码
+
+## Chapter 7 Backup and Recovery
+### 7.1 Backup and Recovery Types
+
+- 物理(原始) 与 逻辑   
+  - 物理备份
+    > 由复制原始的储存数据库内容的目录和文件的副本组成. 适合大型数据库, 需要快速恢复.
+    - 通常就是mysql的data目录一部分或所有的文件的备份
+    - 比逻辑备份快, 因只要复制文件而不需涉及转换
+    - 比逻辑备份更紧凑
+    - 备份和恢复的粒度从数据库到单个文件. 是否支持表级粒度取决于存储引擎, 如每个myisam表都是对应一组文件的, 而每个innodb表则可以独立也可以与其他表共享.
+    - 备份的工具: mysqlbackup, mysql表的mysqlhotcopy, 任何文件系统级命令(cp, scp, tar等)等
+    - 备份可在mysql没有运行时或在运行中执行相应的锁以防止数据修改
+  
+  - 逻辑备份
+  > 由sql语句组成
+  - 比物理备份速度慢, 体积大
+  - 逻辑备份与计算机无关可移植性更高
+  - 备份工具: select ... into outfile语句或mysqldump
+  - 恢复备份: load data语句或mysqlimport
+  
+- Online 与 Offline Backups
+  >区别在于mysql是否运行,也可称为热备份与冷备份(hot versus cold), 还有一种warm备份就是服务器仍运行,但是加锁了无法修改数据
+
+- 本地 与 远程
+  - mysqldump: 可从本地与远程登录, 备份在本地或远程转储到客户端上
+  - mysqlhotcopy: 只能本地
+  - SELECT ... INTO OUTFILE: 语句可由本地或远程发起, 但输出文件只会放在服务端
+  
+### 7.2 Database Backup Methods
+- 通过 mysqldump or mysqlhotcopy备份
+  mysqldump更加通用, mysqlhotcopy5.7将移除, 他是使用flush tables,lock tables, cp命令进行数据文件的备份, 且支持myisam.ARCHIVE存储引擎
           
+- 通过复制表文件备份
+  如myisam表, 可以复制表文件(*.frm, *.MYD, *.MYI)来做备份, 为了保证一致性, 需先停止mysql或lock和flush相关的table(语句如下)
+   `FLUSH TABLES tbl_list WITH READ LOCK;`
+
+- 通过开启二进制日志进行增量备份
+  当你做完一个完整备份后, 你应该flush logs语句来旋转(rotate)你的二进制日志,也就是重起一个二进制文件记录
+
+- 通过从服务器进行复制
+  为了在备份时mysql也不会有性能问题.那么从服务器复制是一个方案
+  
+  
+
 ## 10 
 ### 10.8   
 
