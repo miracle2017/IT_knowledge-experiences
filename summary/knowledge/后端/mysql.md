@@ -338,6 +338,7 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
   - IGNORE_ERROR(默认): 服务器会将继续进行中的事务并记录错误, 然后停止二进制日志记录,但会继续执行更新.排除错误要重启服务器才能从新记录二进制日志.这对于二进制日志是不重要的情况可以怎么做
   - ABORT_SERVER(推荐): 停止二进制日志记录并关闭服务器.
 - sync_binlog控制每N个提交组后将二进制日志同步到磁盘. 最安全的值为1,但仍然存在二进制日志和表内容不一致的可能当宕机时
+- max_binlog_size: 指定二进制单个文件最大值, 如果达到就旋转日志(即按序列重起一个文件存储)
   
 在一个语句或事务后但在释放任何锁或任何提交(commit)之前立即执行二进制日志记录; 在执行对非事务表的更新后立即存储在二进制日志中。在未提交事务中, 所有改变事务表更新操作都会被缓存直到服务器接收commit语句, 此时在commit执行前将整个事务写入二进制日志; 对于非事务表的改变是无法被回滚,如果一个事务包含对非事务表的更改回滚了, 则二进制日志会在事务后记录所有rollback语句以确保这些表的更改
 
@@ -486,8 +487,32 @@ window上通过ssh远程登录mysq: 如用navicat时, 配置mysql账号外还要
 
 - 通过从服务器进行复制
   为了在备份时mysql也不会有性能问题.那么从服务器复制是一个方案
-  
-  
+
+### 7.4 Using mysqldump for Backups  
+>mysqldump产生两种类型输出
+ - 不带--tab选项, 那么输出就是包含了输出对象的表结构和表内容等的sql语句  
+ - 带 --tab选项, 会输出两个文件一个是包含创建表的sql语句名为table_name.sql和名为table_name.txt文件以制表分隔符(tab-delimited)格式储存表内容, 每一个表行一个文本行.
+
+#### 7.4.1 Dumping Data in SQL Format with mysqldump 
+- 导出多个数据库
+  - mysqldump --databases db1 db2 db3 > dump.sql, 加上database选项mysql会将后面的内容都当作数据库
+  - mysqldump db1 db2 db3 > dump.sql: 与上一句比较不带--database, 导出文本不会包含创建数据库语句和use database语句, 所以你想事先创建和use
+- 只导出表格  
+  - mysqldump db1 t1 t3 t7 > dump.sq: 不加其他选项, mysql将第一个参数当作数据库, 后续的内容都作为表格
+#### 7.4.3 Dumping Data in Delimited-Text Format with mysqldump
+备份分隔符格式的备份最好还是服务器主机上操作, 如果你是从远程连接到服务器上,那么.sql文件(由mysqldump生成)将放在客户端上, .txt文件(由mysql服务器执行select...into outfile语句得到)将放在mysql服务主机上
+
+#### 7.4.5 mysqldump Tips
+>一些比较使用备份还原例子,可以看看
+##### 7.4.5.4 Dumping Table Definitions and Content Separately  
+-  --no-data:mysql服务器只会导出create table语句而不包含表内容
+- --no-create-info: 服务器只会导出表内容sql语句而不包含create table语句
+
+### 7.5 Point-in-Time (Incremental) Recovery Using the Binary Log
+- 7.5.1 Point-in-Time Recovery Using Event Times
+>指定开始的时间到结束的时间来做时间点恢复
+- 7.5.2 Point-in-Time Recovery Using Event Positions
+>指定事件位置来做时间点恢复, 同一时间有多个事务时则该模式可控制粒度更加精确
 
 ## 10 
 ### 10.8   
