@@ -509,10 +509,15 @@ window上通过ssh远程登录mysq: 如用navicat时, 配置mysql账号外还要
 - --no-create-info: 服务器只会导出表内容sql语句而不包含create table语句
 
 ### 7.5 Point-in-Time (Incremental) Recovery Using the Binary Log
+假设2019-12-4 9:00时误删除了一张大表, 不同恢复方式如下?
 - 7.5.1 Point-in-Time Recovery Using Event Times
 >指定开始的时间到结束的时间来做时间点恢复
+   
+ 恢复操作: 先将最近的一份全备份恢复, 然后指定时间截止时间2019-12-4 8:59的二进制日志进行回放, 如果你是过了很久之后才发现的这误删操作,那么你还需要执行开始时间为2019-12-4 9:01开始到现在的二进制日志进行回放
 - 7.5.2 Point-in-Time Recovery Using Event Positions
 >指定事件位置来做时间点恢复, 同一时间有多个事务时则该模式可控制粒度更加精确
+  
+  恢复操作: 先确定出那条删除语句的事件位置(如2000), 那么将二进制日志恢复到1999, 然后在从2001开始恢复剩下的
 
 ## 10 
 ### 10.8   

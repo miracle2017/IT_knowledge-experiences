@@ -216,6 +216,10 @@
 
 - 自己经验技巧
   - 匹配所有字符(包括换行): [\s\S] (\s为空白字符, \S为非空白字符, 结合起来就是空白非空白字符都可以就是全部了)
+  
+## XML(Document Object Model)
+>[官网](https://www.php.net/dom)
+获取dom树时,正则就有点无能为力了, 用xpath可以方便的找出
    
 ## 加密扩展
 
@@ -225,8 +229,8 @@
   - openssl_verify(): 验证签名是否正确(使用公钥)
 
 - 使用公钥和密钥对数据进行加密
-  - openssl_public_decrypt() 用 openssl_private_encrypt() 解
-  - openssl_private_decrypt() 用 openssl_public_encrypt() 解
+  - openssl_public_decrypt() -> 用 openssl_private_encrypt() 解
+  - openssl_private_decrypt() ->  用 openssl_public_encrypt() 解
 
 >##其他:
 
