@@ -519,6 +519,41 @@ window上通过ssh远程登录mysq: 如用navicat时, 配置mysql账号外还要
   
   恢复操作: 先确定出那条删除语句的事件位置(如2000), 那么将二进制日志恢复到1999, 然后在从2001开始恢复剩下的
 
+### 7.6 MyISAM Table Maintenance and Crash Recovery
+
+### 7.6 MyISAM Table Maintenance and Crash Recovery
+每个myisam表在数据目录中都对应着3个文件, 他们的含义分别如下:
+	file                purpose
+	tb1_name.frm     definition(format) table
+	tb1_name.MYD     Data file
+	tb1_name.MYI     index file
+	
+#### 7.6.3 How to Repair MyISAM Tables
+4个等级
+- 普通修复
+- .MYI的索引文件损坏
+- .frm定义文件损坏
+
+#### 7.6.4 MyISAM Table Optimization
+myisam表的优化
+
+#### 7.6.5 Setting Up a MyISAM Table Maintenance Schedule
+做定期维护mysql的计划(文中有个crontab例子)
+
+## Chapter 8 Optimization
+
+### 8.1 Optimization Overview
+- Optimizing at the Database Level
+  - 表结构是否合适? 特别是列是否设置了正确的数据类型,比如频繁更新的应用程序拥有较多的表,但表的列比较少; 而分析大量数据的应用程序通常有很少的表,但有较多的列
+  - 是否设置了正确的索引提高查询效率?
+  - 是否为每个表设置了适当的存储引擎, 并利用其的优势和功能? 
+  - 是否设置可适当的行格式?
+  - 应用程序是否使用了适当的锁策略?
+  - 用于缓存的所有内存区域大小是否设置正确? 即大到足以容纳经常访问的数据, 但太大会导致内存过载和分页. 最主要的内存配置是: InnoDB buffer pool, MyISAM key cache, MySQL query cache
+- Optimizing at the Hardware Level
+  - 磁盘搜索(disk seek). 磁盘需要花费时间去找到一条数据, 现代磁盘一次平均在10ms以下, 理论上100次/s. 对于单表这个时间非常难优化, 对于这种情况的优化, 可以将数据分发到不同磁盘上.
+  - 磁盘读和写. 现代的一个磁盘至少可以提供20~30MB/s的吞吐量. 你可以从多个磁盘中并行读来达到优化效果.
+  - 
 ## 10 
 ### 10.8   
 
