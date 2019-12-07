@@ -553,7 +553,27 @@ myisam表的优化
 - Optimizing at the Hardware Level
   - 磁盘搜索(disk seek). 磁盘需要花费时间去找到一条数据, 现代磁盘一次平均在10ms以下, 理论上100次/s. 对于单表这个时间非常难优化, 对于这种情况的优化, 可以将数据分发到不同磁盘上.
   - 磁盘读和写. 现代的一个磁盘至少可以提供20~30MB/s的吞吐量. 你可以从多个磁盘中并行读来达到优化效果.
-  - 
+  
+- Balancing Portability and Performance
+  在可移植的程序中,可以将mysql关键字写在/*!- */注释分割符中, 其他的sql语言会忽略掉
+
+### 8.2 Optimizing SQL Statements
+#### 8.2.1 Optimizing SELECT Statements
+>即使对于一个使用缓存而快速查询的语句, 你仍能进一步优化语句使用更少的缓存来使你的应用更具有扩展性. 扩展性意味着可处理更多的用户和更大的查询而不会出现性能大幅下降
+
+##### 8.2.1.1 WHERE Clause Optimization
+- 在查询中所有的常量表都将先被读取在其他表之前.常量表可以是以下任意一种:
+  - 一个空表或表中只包含一行    
+  - 一个表的基于PRIMARY KEY或UNIQUE KEY的where从句, 其中索引部分都直接与常量表达式进行比较并被定义为not null
+
+- 通过尝试所有的可能来找到最佳的联表联结组合.ORDER BY或GROUP BY从句中的所有列都来自同一个表,那么join时首先将放他前面  
+- 如果一个ORDER BY从句和一个不同的GROUP BY从句, 或者ORDER BY or GROUP BY从句中的列不是来自联表(join)顺序中第一个表的列, 怎都会创建临时表
+- 如果使用SQL_SMALL_RESULT修饰符,则mysql会使用一个内存中的临时表
+- mysql将查询表的索引, 并使用最佳索引除非优化器认为使用表扫描更加有效. 是否使用索引或者扫描, 看是否扫描30%以上, 但现在也基于固定的百分比, 也取决例如表大小,行数,I/O块大小
+- 在输出每一行之前将跳过与HAVING字句不匹配的行
+
+#### 8.2.1.2 Range Optimization     
+
 ## 10 
 ### 10.8   
 
