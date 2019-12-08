@@ -632,6 +632,9 @@ EXPLAIN输出中的Extra字段如果显示using index则表示使用了Index Con
     - 增加read_rnd_buffer_size变量值，以便一次读取更多行
     - 每行使用更少的内存: 可通过仅声明列上存储数据需要的大小的值, 如char(16)比char(200)好如果该列的值从未超过16字符(character)
     - 更改temdir系统变量指向具有大量可用空间的专用文件系统.该路径位置应该是不同的物理磁盘上, 而非同一物理磁盘的不同分区
+    
+- ORDER BY Execution Plan Information Available
+>EXPLAIN并不能区分filesort操作是否是在内存中完成,可通过optimizer trace输出信息查看
 
 ## 10 
 ### 10.8   
