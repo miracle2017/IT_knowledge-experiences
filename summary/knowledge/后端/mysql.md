@@ -567,12 +567,66 @@ myisam表的优化
   - 一个表的基于PRIMARY KEY或UNIQUE KEY的where从句, 其中索引部分都直接与常量表达式进行比较并被定义为not null
 
 - 通过尝试所有的可能来找到最佳的联表联结组合.ORDER BY或GROUP BY从句中的所有列都来自同一个表,那么join时首先将放他前面  
-- 如果一个ORDER BY从句和一个不同的GROUP BY从句, 或者ORDER BY or GROUP BY从句中的列不是来自联表(join)顺序中第一个表的列, 怎都会创建临时表
+- 如果一个ORDER BY从句和一个不同的GROUP BY从句, 或者ORDER BY or GROUP BY从句中的列不是来自联表(join)顺序中第一个表的列, 都会创建临时表
 - 如果使用SQL_SMALL_RESULT修饰符,则mysql会使用一个内存中的临时表
 - mysql将查询表的索引, 并使用最佳索引除非优化器认为使用表扫描更加有效. 是否使用索引或者扫描, 看是否扫描30%以上, 但现在也基于固定的百分比, 也取决例如表大小,行数,I/O块大小
 - 在输出每一行之前将跳过与HAVING字句不匹配的行
 
 #### 8.2.1.2 Range Optimization     
+
+#### 8.2.1.3 Index Merge Optimization
+
+#### 8.2.1.5 Index Condition Pushdown Optimization
+>Index Condition Pushdown (ICP)优化就是mysql使用index从表中获取行数据
+- 没有使用ICP情况下, 优化器工作步骤
+  1. 读取下一行是先读取索引, 然后使用索引去定位并读取完整的表行数据
+  2. 然后测试是否符合where条件, 有则接受没有拒绝
+- 使用ICP情况, 优化器的工作步骤
+  1. 读取一行是从索引中读取(不读取整个表行数据)
+  2. 然后只使用索引的字段测试是否满足用在此表上的where条件, 如果不满足则继续读取一个索引
+  3. 满足则才使用索引去定位并读取完整的表行数据
+  4. 然后在继续测试其他不在此表上的where条件, 满足接受否则拒绝
+  
+EXPLAIN输出中的Extra字段如果显示using index则表示使用了Index Condition Pushdown (ICP),反之就是没有使用到这个优化因为必须要读取完整的表行数据 
+
+#### 8.2.1.6 Nested-Loop Join Algorithms
+
+#### 8.2.1.7 Nested Join Optimization
+>外联表语句中的有些括号不能忽略(否则结果会不一样),具体看原文例子还不是很理解
+
+将括号内的逗号视为innner join如: 
+   `SELECT * FROM t1 LEFT JOIN (t2, t3, t4) ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c) ` 
+   等价于 
+   SELECT * FROM t1 LEFT JOIN (t2 INNER JOIN t3 INNER JOIN t4)  ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c)
+- 语句中只有内联结的可以忽略括号,从左到右评估连接, 其实表可以被评估为任意的顺序
+- 但是如果是外联或外联内联混合则不一定, 忽略有可能会造成结果不一致
+
+#### 8.2.1.8 Outer Join Optimization
+外联有left join和right join
+
+#### 8.2.1.9 Outer Join Simplification
+在解析阶段(parse stage), 带有right join的查询会被等效转换成只带有left join的语句
+
+#### 8.2.1.10 Multi-Range Read Optimization
+>Multi-Range Read (MRR)优化的目的是减少对磁盘的随机访问而是基于表数据进行连续的访问
+- EXPLAIN输出的extra字段为MRR就是使用了此优化
+- 在innoDB和MYISAM如果查询不需要读取全部表的所有字段则不会吃用MRR, 因为不能从中获益
+
+#### 8.2.1.11 Block Nested-Loop and Batched Key Access Joins
+
+#### 8.2.1.12 IS NULL Optimization
+
+#### 8.2.1.13 ORDER BY Optimization
+
+- Use of Indexes to Satisfy ORDER BY
+  - 默认的, mysql会对group by col1, col2, ...语句进行排序操作,所以你在语句后显式的指定相同列的order by col1, col2, ...语句, mysql会对于进行优化不会任何的速度损失,不管他是否排序(使用索引就不用排序(filesort), 因为索引本身就是顺序的). 如果想让包含group by的语句避免排序的开销, 加上order by null可以抑制排序,但是仅仅是抑制对结果的排序. 
+   - note: 需要排序时,明确的指出ASC还是DESC,而不能依赖于group by隐式的排序(ASC或DESC), 因为未来优化器的优化策略可能会有变.
+  
+- Use of filesort to Satisfy ORDER BY
+  order by语句使用了filesort,filesort操作事先需要文件排序的内存,优化器会分配固定的 sort_buffer_size字节(byte)内存(各个session可以改变这个值以避免过多的使用). 如果结果集太大无法放入内存中,那么就会创建一个临时表
+  
+- Influencing ORDER BY Optimization
+   
 
 ## 10 
 ### 10.8   
