@@ -626,7 +626,12 @@ EXPLAIN输出中的Extra字段如果显示using index则表示使用了Index Con
   order by语句使用了filesort,filesort操作事先需要文件排序的内存,优化器会分配固定的 sort_buffer_size字节(byte)内存(各个session可以改变这个值以避免过多的使用). 如果结果集太大无法放入内存中,那么就会创建一个临时表
   
 - Influencing ORDER BY Optimization
-   
+  - 没有使用filesort的order by(也就是使用索引)出现排序很慢的情况? 那么将max_length_for_sort_data系统变量值降低到合适值以便触发filesort.(该值设置太高的一个症状就是磁盘活动过多同时cpu活动率低,)
+  - 如果想要提高order by速度,先检查下能否使用索引而不是需要额外的排序阶段(用索引不用排序), 如果不可能,可尝试一下策略:
+    - 增加sort_buffer_size系统变量值.理想的该值应该足够大以装下整个结果集在sort buffer中(避免写入到磁盘和合并过程), 监视合并的次数(合并临时文件),可以查看Sort_merge_passes状态变量, 如果该值很大则应考虑增加sort_buffer_size的值
+    - 增加read_rnd_buffer_size变量值，以便一次读取更多行
+    - 每行使用更少的内存: 可通过仅声明列上存储数据需要的大小的值, 如char(16)比char(200)好如果该列的值从未超过16字符(character)
+    - 更改temdir系统变量指向具有大量可用空间的专用文件系统.该路径位置应该是不同的物理磁盘上, 而非同一物理磁盘的不同分区
 
 ## 10 
 ### 10.8   
