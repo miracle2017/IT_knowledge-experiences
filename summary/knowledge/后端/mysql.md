@@ -636,6 +636,8 @@ EXPLAIN输出中的Extra字段如果显示using index则表示使用了Index Con
 - ORDER BY Execution Plan Information Available
 >EXPLAIN并不能区分filesort操作是否是在内存中完成,可通过optimizer trace输出信息查看
 
+
+
 ## 10 
 ### 10.8   
 

@@ -34,7 +34,7 @@
     tar -czf jpg.tar.gz *.jpg    //压缩为.gz文件,首先将所有的jpg打包成jpg.tar文件, 在用gzip压缩成jpg.tar.gz文件
     tar -xf file.tar.gz //解压 >=1.15版本中解压就会自动识别, 无需像之前tar -xzf file.tar.gz明确指定解压那种
 
-- cp [-r] /home/a/目标文件  /home/b   带-r为复制目录
+- cp [-r] /home/a/目标文件  /home/b   带-r为复制目录; 递归合并目录只有目标目录没有才添加: cp -rui /source_dir /target_dir
 
 - scp 安全复制,可以跨服务器
 
