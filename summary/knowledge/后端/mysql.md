@@ -653,7 +653,30 @@ EXPLAIN输出中的Extra字段如果显示using index则表示使用了Index Con
   `SELECT c1, c2, c3 FROM t1 WHERE c1 = 'a' GROUP BY c2, c3;` //虽然不是由第一个索引开始, 但常量为该部分提供了条件
 
 #### 8.2.1.15 DISTINCT Optimization
-DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临时表
+DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临时表.因为DISTINCT可能使用到group by, 许多情况下DISTINCT从句可以看成一种特殊的group by
+
+#### 8.2.1.16 LIMIT Query Optimization
+- 可以使用limit 0可以快速的返回空集
+
+#### 8.2.1.17 Function Call Optimization
+
+#### 8.2.1.18 Row Constructor Expression Optimization
+
+#### 8.2.1.19 Avoiding Full Table Scans
+- 当EXPLAIN输出的type字段为all时则mysql使用了全表扫描来处理查询,这通常会在以下情况发生:
+  - 当表很小,全表扫描比索引还快时.对于小于10行或行长度较短的这个常见的.
+  - 在索引列上on或where语句没有可用的限制
+  - 将索引和常量比较时,mysql计算到常量占用表很大一部分而全表扫描会更快
+  - 键的基数较低(即一个键值会匹配到许多行),此情况下, mysql假设使用键(key)时需要执行许多的键查找,而全表扫描会更快
+
+- 对于小表来说,全表扫描更恰当,其对性能的影响可忽略不计.而对于大表, 可以使用技术来避免优化器错误地选择表扫描
+  - 使用ANALYZE TABLE tbl_name去更新扫描表的键值分布
+  - 对扫描表使用FORCE INDEX去告诉mysql使用表扫描比使用给定索引贵
+  - 设置系统变量max_seeks_for_key=1000来告诉优化器如果没有键扫描将1000个键查找
+  
+### 8.3 Optimization and Indexes
+
+
 
 ## 10 
 ### 10.8   

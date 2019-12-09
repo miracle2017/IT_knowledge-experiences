@@ -178,6 +178,10 @@
 
 - getdate();			获取一个日期信息数组
 
+- time_sleep_until($timestamp); 使脚本睡眠到指定时间, 然后被唤起
+
+- time_nanosleep($seconds, $nanoseconds); 休眠若干秒和若干纳秒
+
 >##文件:
 
 - file_get_content(); 将文件读入一个字符串
@@ -235,6 +239,10 @@
 >##其他:
 
 - rand($min, $max); 产生一个在[$min, $max]闭区间随机数
+
+- mt_rand([$min, $max]); 生成更高更快的随机数
+
+- uniqid([$prefix, $more_entropy]); 生成一个唯一id, UUID生成可以基于此函数
 
 - eval();				将字符串code作为php代码执行
 
