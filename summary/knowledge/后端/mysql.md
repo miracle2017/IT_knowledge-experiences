@@ -636,7 +636,24 @@ EXPLAIN输出中的Extra字段如果显示using index则表示使用了Index Con
 - ORDER BY Execution Plan Information Available
 >EXPLAIN并不能区分filesort操作是否是在内存中完成,可通过optimizer trace输出信息查看
 
+#### 8.2.1.14 GROUP BY Optimization
+>group by最通常的做法是扫描整个表然后创建一个临时表, 其每组的所有行都是连续的, 然后使用此表发现组和应用聚合函数(如果有的话), 在某些情况下,mysql会做得更好, 通过访问索引而避免创建临时表. group by使用索引最重要的前提是所有group by列均使用同一索引属性, 并且索引是按顺序存储键值的(例如BTREE索引就是, 而HASH索引则不是)
 
+- Loose Index Scan
+  - 最左前缀列规则. 假设表t1在(c1, c2, c3)上具有索引, 则group by c1, c2情况下loose index scan适用, 如果group by c2,c3(列不是最左前缀) 或group by c1, c2, c4(c4不在索引中), 则不适合
+  - 选择列(select list)中使用了聚合函数且只有min()和max()时,它们必须是同一列, 该列必须在索引中同时必须马上紧跟group by中的列
+  - 必须整列值都被索引, 如有c1 varchar(20), index(c1(10)), 则索引只是使用c1值部分前缀, 所以不能用于loose index scan
+  - loose index scan支持聚合函数, 不同的函数有如下的区别:
+    - AVG(DISTINCT), SUM(DISTINCT), and COUNT(DISTINCT)是支持, 但除了 COUNT(DISTINCT col1 col2)可以接受多个参数外, 其他的只能接受一个参数
+    - 查询语句中必须没有group by或DISTINCT从句
+
+- Tight Index Scan
+>tight index scan可能是全索引扫描或范围扫描. 这取决与查询条件. 所有group by引用的键的各部分之前或之间都有常量等价条件. 如有一个index idx(c1,c2,c3)在表t1(c1,c2,c3,c4)上,以下语句可以不会使用loose index scan, 但tight index scan适用
+  `SELECT c1, c2, c3 FROM t1 WHERE c2 = 'a' GROUP BY c1, c3;` //group by有个缺口但被c2='a'覆盖
+  `SELECT c1, c2, c3 FROM t1 WHERE c1 = 'a' GROUP BY c2, c3;` //虽然不是由第一个索引开始, 但常量为该部分提供了条件
+
+#### 8.2.1.15 DISTINCT Optimization
+DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临时表
 
 ## 10 
 ### 10.8   
