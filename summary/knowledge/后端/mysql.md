@@ -703,6 +703,25 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - Index Prefixes
 当有一个字符串列col_name(N),你可以只索引前N个字符,这样会使索引更小.当你对BLOB或TEXT列作索引时, 你必须指定索引前缀长度.索引最长可达到1000字节(bytes)(innoDB最大767bytes,但 系统变量innodb_large_prefix被设置后可以更大). 前缀限制的长度以字节为单位, 而create table, alter table和create index语句的前缀长度被解释为非二进制字符串类型的字符数和二进制字符串类型.所以在为多字节集的非二进制字符串列指定前缀长度时,需要考虑到这点.
 
+- FULLTEXT Indexes
+>只有MyISAM和innoDB存储引擎支持全文索引,而且只有char,varchar和text列支持.全文索引只会对整列索引,不支持前缀索引
+
+- Spatial Indexes
+>可在空间数据类型(spatial data types)上创建空间数据类型索引, 只有MyISAM支持空间类型上的R-tree索引, 其他存储引擎使用B-trees索引空间类型(除了ARCHIVE,它不支持空间类型索引)
+
+- Indexes in the MEMORY Storage Engine
+>MEMORY存储引擎默认使用hash索引, 但也支持B-tree
+
+#### 8.3.5 Multiple-Column Indexes
+- mysql可以创建复合索引(即在多列上建索引).一个索引最多可以包含16列.对于复合索引的替代方法,在表上多建一列基于其他列组合的值的hash列, 如果此列较短,合理唯一并且已经建立索引则可能比复合索引快.
+- 复合索引只在符合最左前缀下生效
+
+#### 8.3.6 Verifying Index Usage
+>始终检查你的所有查询是否使用表中的索引.可以使用EXPLAIN语句
+
+#### 8.3.7 InnoDB and MyISAM Index Statistics Collection
+
+
 #### 8.3.7 InnoDB and MyISAM Index Statistics Collection
 - 存储引擎收集有关表的统计信息,以供优化器使用.表统计信息基于值组,其中值组是一组具有相同前缀值的行.出于优化目的,一个重要统计数据是平均值组的大小.
   - mysql会在以下方式中使用平均值组
