@@ -720,17 +720,29 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 >始终检查你的所有查询是否使用表中的索引.可以使用EXPLAIN语句
 
 #### 8.3.7 InnoDB and MyISAM Index Statistics Collection
-
-
-#### 8.3.7 InnoDB and MyISAM Index Statistics Collection
 - 存储引擎收集有关表的统计信息,以供优化器使用.表统计信息基于值组,其中值组是一组具有相同前缀值的行.出于优化目的,一个重要统计数据是平均值组的大小.
   - mysql会在以下方式中使用平均值组
     - 评估每个ref访问必须读取多少行
     - 估计部分联表(partial join)将产生多少行
   - 随着索引的平均值组的增大, 该索引在上述的两个方面中的用途越小, 因为每次查询到的行数增加.为了使索引更好的用于优化,每个索引最好对应着数据表中比较少的行数.当一个给定的索引值对应着大量的行时,则mysql不太可能使用它.
   - 平均值组的大小与表基数有关,表基数就是值数的数目.show index语句显示的基数值字段(cardinality)基于N/S, N为表的所有行数, S为值组的平均大小, 该比率指示着表中大约多少个值组.
-  - 对于基于<=>的join, null与其他任何值都一样: null<=>null, 就像N<=>N一样.
-  - 基于=运算符的join, null与其他non-null值不相等, 当expr1或expre2为null(或两者都是)时, expr1 = expr2不相等.这会影响到ref访问
+  - 对于基于<=>的join, null与其他任何值都一样: null<=>null(为true), 就像N<=>N(为true)一样.
+  - 基于=运算符的join, null与其他non-null值不相等, 当expr1或expre2为null(或两者都是)时, expr1 = expr2不为true.这会影响到ref访问以tabl_name.key = expr形式比较,如果expr值为null,则mysql不会访问表因为比较不会为真.
+- 对于=比较,表中有多少null值都无关紧要.出于优化目的,相关值是非null值组的平均大小, 目前mysql还不支持收集和使用该平均值.
+- 对于innoDB和MyISAM表,可以通过系统变量innodb_stats_method and myisam_stats_method来控制表统计信息的收集.这两个值有以下3个可能的值:
+  - nulls_equal,所有null值都会被认为相等(即它们是同一个值组)
+  - nulls_unequal,所有null都被认为不相等.每个null值单独组成大小为1的值组.
+  - nulls_ignored,null值会被忽略
+- 如果倾向使用许多<=>比较而不是=比较的联表(join),则nulls_equal是合适的统计方法.
+
+- innodb_stats_method有全局值,myisam_stats_method具有全局和会话值,所以可以设置myisam_stats_method的会话值来强制使用给定方法重新生成表的统计信息,而不影响其他客户端.你可以使用如下方法重新生成MyISAM表的统计信息:
+  - 执行myisamchk --stats_method=method_name --analyze
+  - 更改表以致表的统计信息过期(如插入一行再删除),然后set myisam_stats_method,最后执行ANALYZE TABLE语句
+- 一些关于使用innodb_stats_method和myisam_stats_method的警告  
+  - 无法确定表的统计信息是由那种方法生成
+  - 这两个变量分别仅对InnoDB和MyISAM表有效.其他的存储引擎只有一种收集统计信息的方法,它更接近nulls_equal方法
+  
+#### 8.3.8 Comparison of B-Tree and Hash Indexes  
   
 ## 10 
 ### 10.8   
