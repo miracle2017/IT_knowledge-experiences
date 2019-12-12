@@ -743,6 +743,28 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - 这两个变量分别仅对InnoDB和MyISAM表有效.其他的存储引擎只有一种收集统计信息的方法,它更接近nulls_equal方法
   
 #### 8.3.8 Comparison of B-Tree and Hash Indexes  
+
+- B-Tree Index Characteristics
+  - B-tree索引能被用于=,>,>=,<,<=,BETWEEN的比较,如果like的参数是不以通配符开头的常量字符串(如'Pat%_ck%')的like操作也可以使用索引
+  - col_name IS NULL语句也可以使用索引当col_name加了索引
+  - *(重要但没很看明白)没有覆盖where从句中所有and级别的任何索引都不会用于优化查询,也就是为了能够使用索引, 必须在每个and组中使用索引前缀.
+  - 有时,即是索引可用,mysql也不会使用索引.例如有种情况, 优化器估计使用索引将需要读取表中很大比例的数据行(这种情况, 表扫描可能会更快,因为他需要更少的查找).但是如果这样的语句使用limit只是检索某些行, 则mysql仍然会使用索引, 因为他可以更快找到并返回结果的几行.
+    
+- Hash Index Characteristics
+  - 只适用=或<=>的运算符比较(但非常快),不能使用比较运算符(如<)来查找值的范围.依赖于这种单值查找类型的系统称为"键值存储"(key-value stores)
+  - 无法使用hash索引加速order by操作(hash索引无法按顺序搜索下一条目)
+  - mysql无法确定两个值之间大约有多少行(范围优化器使用它来决定使用那个索引)
+  - 仅整个键可用于搜索表行(对于B-tree索引,任何键的最左前缀都可以用于查找表行)
+
+#### 8.3.9 Use of Index Extensions  
+- innoDB通过将每个二级索(secondary index)引后附上主键列来自动扩展每个二级索引.
+  - 比如i1, i2是主键, 则有一个名为k_d索引,则内部会扩展它并将他认为了(d, i1, i2)
+  - 在确定如何以及是否使用该索引时,优化器会考虑到二级索引的主键列, 这会导致更有效的执行计划和更好的性能.
+- 还可以通过flush status;(先清除状态计数器) SHOW STATUS LIKE 'handler_read%'语句查看使用了扩展索引的优化器行为上的差异
+-  optimizer_switch系统变量的use_index_extensions=on/off标志可以控制优化器是否对innoDB表的二级索引的主键列进行考虑.默认是启用的.
+  
+#### 8.3.10 Indexed Lookups from TIMESTAMP Columns
+  
   
 ## 10 
 ### 10.8   
