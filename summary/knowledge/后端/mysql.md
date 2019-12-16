@@ -871,7 +871,18 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 #### 8.4.7 Limits on Table Column Count and Row Size  
 - Column Count Limits
   - mysql硬性限制表最大4096列,但实际有效列可能比这小, 具体取决如下情况:
-  
+    - 最大行大小限制了列的数量(也可能是大小)
+    - 存储引擎可能施加其他的限制,比如innoDB限制每个表最大1017列
+- Row Size Limits
+  - mysql表内部表示形式最大行大小限制为65536字节,即使是存储引擎能提供更大的值也是如此.BLOB和TEXT列仅对行大小贡献9-12字节,因为它们的内容与行的其余部分分开存储
+  - innoDB(数据本地存储在一个数据页面中)的最大行大小略小于页的一半.例如,对于默认16kb的innodb页面大小(page size),最大行大小略小于8kb,该页面大小由innodb_page_size设置.
+    如果一个行中包含可变长度的列超出了innodb最大行大小,则innodb选择可变长度列进行页外存储,直到改行适合最大行大小限制.
+  - 不同存储格式使用不同数量的页面标题和尾部数据,这会影响到可用存储量.
+    - innodb行格式
+    - myisam存储格式  
+- Row Size Limit Examples    
+  - 对于myisam表, null列在行中需要占用额外的空间以记录其值是否为null,每个null列都要多加1bit,四舍五入到最近的字节.(比如一行有3个null列那么就是占用3bit舍入为1byte)
+    
 ## 10 
 ### 10.8   
 
