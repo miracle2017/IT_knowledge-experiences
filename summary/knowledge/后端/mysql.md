@@ -866,8 +866,11 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - mysql对表的数量没有限制,基础文件系统可能对文件数量有所限制;各个存储引擎可能会强加特定于引擎的约束,innodb最多40亿张表
 
 #### 8.4.6 Limits on Table Size
-  
-  
+- Windows用户,请注意FAT和VFAT（FAT32）不适用于MySQL。请改用NTFS.
+
+#### 8.4.7 Limits on Table Column Count and Row Size  
+- Column Count Limits
+  - mysql硬性限制表最大4096列,但实际有效列可能比这小, 具体取决如下情况:
   
 ## 10 
 ### 10.8   
