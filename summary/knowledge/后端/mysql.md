@@ -834,6 +834,41 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 ##### 8.4.3.2 Disadvantages of Creating Many Tables in the Same Database
 - 如果你有许多mysql在同一个数据库中, 如果你在许多不同的表上执行select语句,这会有些开销当你在table cache满了,因为对于要打开的每个表,另外一个表必须被关闭.
   
+##### 8.4.4 Internal Temporary Table Use in MySQL
+- 在一些情况中,mysql会创建内部的临时表当处理语句时.用户无法直接控制.mysql会在如下情况中创建临时表:
+  - 评估UNION语句 
+  - 一些视图中, 比如使用了TEMPTABLE算法,UNION或聚合的视图
+  - 评估派生表
+  - 为子查询或半联接(semijoin materialization)而创建的表
+  - 评估包含一个order by子句和另一个不同的group by子句, 或者对于order by或group by包含的列在联表(join)顺序中第一个表外.
+  - 评估DISTINCT与ORDER BY的结合可能需要临时表
+  - 查询中使用SQL_SMALL_RESULT修饰符查询则mysql会使用内存中临时表, 除非查询还包含需要在磁盘存储的元素
+  - 评估insert和select都是同一个表的INSERT ... SELECT语句,mysql需要一个临时表.
+  - 评估多表update语句时
+  - 评估GROUP_CONCAT()或COUNT(DISTINCT)的表达式时
+- 为了确定语句是否使用了临时表,使用EXPLAIN然后查看extra列是否标注了using temporary.对于派生表或物化的临时表( derived or materialized temporary tables)不一定会标出.
+- 当mysql创建一个内部临时表时(不管是在内存还是磁盘上),它会增加Created_tmp_tables状态变量.如果在磁盘的临时表(不管是最初的或者通过转换内存中的表),它会增加 Created_tmp_disk_tables状态变量
+- 某些查询条件会阻止使用内存中的临时表,而使用在磁盘上的临时表来替代如下:
+  - 表中存在BOLB或TEXT列,这包括被当作BLOB或TEXT(这取决于它们的值是二进制还是非二进制字符串)的用户自定义的字符串变量
+  - 任何在GROUP BY或DISTINCT中的字符串列大于512(二进制字符串大于512字节(bytes),非二进制字符串大于512字符(characters))
+  - 在union或union all中,select的列存在大于512字符串(二进制字符串大于512字节(bytes),非二进制字符串大于512字符(characters))
+  - show colums和describe语句某些列使用BLOB类型,因此用于结果的临时表是在磁盘上的.
+  - 
+- Internal Temporary Table Storage Engine
+  - 一个内部临时表可以存储在内存中,由MEMORY存储引擎处理;或者存储在磁盘上,由myisam存储引擎处理.如果一个在内存中内部临时表变得太大将会被自动转换为到磁盘表,最大的值由tmp_table_size或max_heap_table_size值决定,以较小为准,这不同使用create table显式创建的memory表,对于此表只有max_heap_table_size决定了表能增长的最大值,并且不会转换为磁盘格式.
+- Internal Temporary Table Storage Format
+  - 内存中的临时表由memory存储引擎管理,该引擎使用固定长度的行格式()fixed-length row format).VARCHAR和VARBINARY列被填充到最大列长度,实际上它们被存储为char和binary列
+  - 磁盘上的临时表由myisam存储引擎管理,该引擎使用动态长度的行格式(dynamic-width row format),列仅占用所需的存储空间; 与使用固定长度行格式的磁盘表相比,减少了磁盘I/O和空间需求以及处理时间
+  - 对于最初在内存中创建的内部临时表之后太大自动转换为磁盘上的表的语句,如果跳过转换步骤则一开始就在磁盘上创建表可能会获取更好的性能.big_tables变量可用于强制所有的内部临时表都使用磁盘存储
+  
+#### 8.4.5 Limits on Number of Databases and Tables
+- mysql对于数据的数量没有限制,基础文件系可能对目录数量有所限制.
+- mysql对表的数量没有限制,基础文件系统可能对文件数量有所限制;各个存储引擎可能会强加特定于引擎的约束,innodb最多40亿张表
+
+#### 8.4.6 Limits on Table Size
+  
+  
+  
 ## 10 
 ### 10.8   
 
