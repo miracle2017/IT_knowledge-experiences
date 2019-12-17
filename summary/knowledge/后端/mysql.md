@@ -777,7 +777,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 
 - Row Format
   - 在mysql5.6中, innoDB表默认使用COMPACT row存储格式(ROW_FORMAT=COMPACT).紧凑的行格式系列包括了COMPACT, DYNAMIC, COMPRESSED, 减少了行存储空间但增加默写操作的cpu使用率. 如果你的工作负载是典型的受缓存命中率和磁盘速度, 则会更快; 如果仅仅只是受限于cpu速度, 那么反而会更慢.
-     - 当使用可变长度字符集(入utf8mb3或utf8mb4时), 紧凑的行格式还可以优化char列存储.如果ROW_FORMAT=REDUNDANT,则char(N)占用N x 字符集最大字节长度. 许多语言主要可使用单字节utf8字符集编写, 所以一个固定的存储长度往往是浪费空间的.使用紧凑的行格式系列,InnoDB通过剥离尾部的空格, 在N到N x 该列字符集的最大字节长度的范围内分配存储长度.在典型情况下, 最小的存储长度为N字节以方便就地更新.
+     - 紧凑的行格式还可以优化使用了可变长度字符集(如utf8mb3或utf8mb4时)的char列存储.如果ROW_FORMAT=REDUNDANT,则char(N)占用N x 字符集最大字节长度. 许多语言主要可使用单字节utf8字符集编写, 所以一个固定的存储长度往往是浪费空间的.使用紧凑的行格式系列,InnoDB通过剥离尾部的空格, 在N到N x 该列字符集的最大字节长度的范围内分配存储长度.在典型情况下, 最小的存储长度为N字节以方便就地更新.
   - 要通过压缩的形式存储表数据来进一步减少空间,可在创建innoDB表时指定ROW_FORMAT=COMPRESSED,或对已存在的myisam表执行myisampack命令.(innoDB压缩表是可读写的,而myisam压缩表只能读)
   - 对于myisam表,如果没有任何可变长度列(varchar,text,blob),则使用固定大小的行格式.这样会比较快,但可能会浪费一些空间.
 - indexs
@@ -882,6 +882,14 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
     - myisam存储格式  
 - Row Size Limit Examples    
   - 对于myisam表, null列在行中需要占用额外的空间以记录其值是否为null,每个null列都要多加1bit,四舍五入到最近的字节.(比如一行有3个null列那么就是占用3bit舍入为1byte)
+    
+#### 8.5 Optimizing for InnoDB Tables
+- 一旦你的数据达到稳定大小或者增长了几十或几百兆字节,考虑使用OPTIMIZE TABLE语句重组表并压缩所有浪费的空间.重组后的表需要更少的磁盘I/O执行全表扫描.这是直接的技术(如改善索引使用或调整程序代码)在其他技术不可行时提高性能.
+- 对于innoDB表,如果主键很长(不管是单列有很长的值或多列的复合索引组成长值)这将会浪费许多磁盘空间,因为每一行的主键值都会附在该行所有的二级索引值后面.所以创建一个自增加的列作为主键如果你的主键很长或者索引较长VARCHAR列的前缀而不是整列
+- 存储变长字符串时或一列中有许多的null值时,使用varchar数据类型代替char类型, char(N)列始终使用N字符(character)存储数据,即使字符串较短或者存储值为null.较小的表更适合缓冲池并减少磁盘I/O. 当使用COMPACT行格式(innoDB默认格式)存储可变长字符集(如utf8)时, char(N)占用的空间大小为可变的,但至少N字节.
+
+#### 8.5.2 Optimizing InnoDB Transaction Management
+
     
 ## 10 
 ### 10.8   
