@@ -969,7 +969,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 #### 8.6.1 Optimizing MyISAM Queries
 >以下为一些加速myisam表查询的一般技巧
 - 在加载数据后使用ANALYZE TABLE或myisamchk --analyze,这将为每个索引部分更新上一个值,改值指示着具有相同值的平均行数.在不是恒定表达式(nonconstant express)的表join中优化器使用该值决定使用哪个索引.
-- 
+- 根据某个索引对数据和索引进行排序，myisamchk --sort-index --sort-records=1(假设你要对索引号为1的索引进行排序,索引号可从show index语句获得)
  
     
 ## 10 
