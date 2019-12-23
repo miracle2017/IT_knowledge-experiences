@@ -938,6 +938,38 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
      CREATE UNIQUE INDEX FTS_DOC_ID_INDEX on t1(FTS_DOC_ID);`
   2. 将数据导入表中
   3. 数据导入完创建fulltext索引    
+  
+#### 8.5.6 Optimizing InnoDB Queries
+- 为了调整innoDB表查询,可对表创建适当的索引.创建索引请参照一下准则:
+  - 为每个表指定一组主键列,这些列用于最重要或时间紧迫的查询
+  - 主键不宜包含太多列或列值太长,因为在主键都会自动附在二级索引后.
+  - 不要为每一列都单独创建索引,因为每个查询只能使用一个索引, 很少使用的列或列的值只有几个不同的值可能对查询帮助不大.如果对同一个表有许多不同的查询,测试不同的列组合,创建少量的串联列不是大量的单列索引.
+  - 如果一列不允许null值,则声明表时标明为not null,当优化器知道每列是否包含null时,可以更好决定用哪个索引最有效.
+  - 对于单查询(single-query)事务的优化,参见8.5.3,“Optimizing InnoDB Read-Only Transactions”.
+ 
+ #### 8.5.7 Optimizing InnoDB DDL Operations   
+ - 由于主键对于每个innodb表的存储布局是必不可少的,并且更改主键将涉及重新组织整个表,所以在create table时就应该包含主键设置并预先计划好,避免后续的更改或删除.
+    
+##### 8.5.8 Optimizing InnoDB Disk I/O    
+>如果你遵循了mysql数据设计的最佳实践和sql操作的调优技术,但是mysql还是因为I/O繁忙活动而很慢, 请考虑这些I/O优化.如果你使用top工具显示cpu的使用率低于70%,那么你的工作负载可能受限于磁盘. 
+  - 增加buffer pool大小
+    - 通过innodb_buffer_pool_size设置,此内存区域非常重要,因此建议配置为系统的50%-75%. 
+  - 调整flush方法
+  - 增加I/O容量避免积压
+    - 如果由于checkpoint操作造成吞出量周期性下降,请考虑增加innodb_io_capacity变量值,越高则flush越频繁,从而避免了积压的工作量
+  - 降低I/O容量如果flush没有落后  
+  - Disable logging of compressed pages
+
+#### 8.5.9 Optimizing InnoDB Configuration Variables    
+- 你可以执行的主要配置步骤如下(优化的目录,这里没有详细列出,要看原文)
+    
+### 8.6 Optimizing for MyISAM Tables
+>由于表锁定限制了同时更新的能力,因此myisam存储引擎在以只读数据为主要或低并发操作方面表现最佳.    
+
+#### 8.6.1 Optimizing MyISAM Queries
+>以下为一些加速myisam表查询的一般技巧
+- 在加载数据后使用ANALYZE TABLE或myisamchk --analyze,这将为每个索引部分更新上一个值,改值指示着具有相同值的平均行数.在不是恒定表达式(nonconstant express)的表join中优化器使用该值决定使用哪个索引.
+- 
  
     
 ## 10 
