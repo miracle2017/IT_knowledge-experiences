@@ -969,8 +969,14 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 #### 8.6.1 Optimizing MyISAM Queries
 >以下为一些加速myisam表查询的一般技巧
 - 在加载数据后使用ANALYZE TABLE或myisamchk --analyze,这将为每个索引部分更新上一个值,改值指示着具有相同值的平均行数.在不是恒定表达式(nonconstant express)的表join中优化器使用该值决定使用哪个索引.
-- 根据某个索引对数据和索引进行排序，myisamchk --sort-index --sort-records=1(假设你要对索引号为1的索引进行排序,索引号可从show index语句获得)
- 
+- 根据某个索引对数据和索引进行排序这会使得如果有一个唯一索引要从中按顺序读取所有的行的查询更快; myisamchk --sort-index --sort-records=1(假设你要对索引号为1的索引进行排序,索引号可从show index语句获得)
+- mysql支持并发插入数据,如果表的数据文件中间没有空闲块(free block),则可以在其他线程正在读取数据的同时,向其中插入新行.如果能够做到这一点对于你很重要,那么请考虑避免删除表行,另一个可能就是当你删除许多行后使用OPTIMIZE TABLE语句整理碎片.通过设置concurrent_insert系统变量可以控制并发插入行的行为,该变量可采用如下的值:
+  - NEVER: 禁止并发插入
+  - AUTO: (默认,但当服务以--skip-new选项启动则被设置为NEVER)当MyISAM表没有孔(holes)时,允许并发插入
+  - ALWAYS: 允许并发插入MyISAM表,即使这些表有holes.该模式下当一个有holes的MyISAM表被其它线程使用时,当前线程对其插入时则新行都被插入到表的最后.否则MyISAM表的插入,是mysql获取一个正常写锁并将行插入到hole中.
+- 对于频繁更改的MyISAM表,避免使用变长的列(varchar,blob,text),该表使用动态行格式(dynamic row format)即使该表只包含一个变长的列.
+- 通常,仅由于行太大而将表拆分不同的表是没用的.在访问一行时,最大的性能损失是查找该行第一个字节所需要的磁盘搜索,找到数据后,对于大多数现代磁盘都可以快速读取整个行.拆分表的唯一情况是:如果你能将动态行格式的myisam表更改为固定行大小(fixed row size);或者你需要经常扫描表但不需要其中大多数列.
+-     
     
 ## 10 
 ### 10.8   
