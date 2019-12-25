@@ -166,7 +166,7 @@
 - query_prealloc_size
 - read_only:
 - secure_file_priv
-- skip_external_locking
+- skip_external_locking: 禁止external locking(system locking),外部锁定仅对访问myisam表有影响
 - skip_name_resolve：是否解析主机名，　如果禁止就只能使用ip登录
 - skip_networking: 服务器是否允许通过tcp连接, 如果只要本地用户连接, 强烈推荐开启此项
 - slow_launch_time;
@@ -976,7 +976,16 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - ALWAYS: 允许并发插入MyISAM表,即使这些表有holes.该模式下当一个有holes的MyISAM表被其它线程使用时,当前线程对其插入时则新行都被插入到表的最后.否则MyISAM表的插入,是mysql获取一个正常写锁并将行插入到hole中.
 - 对于频繁更改的MyISAM表,避免使用变长的列(varchar,blob,text),该表使用动态行格式(dynamic row format)即使该表只包含一个变长的列.
 - 通常,仅由于行太大而将表拆分不同的表是没用的.在访问一行时,最大的性能损失是查找该行第一个字节所需要的磁盘搜索,找到数据后,对于大多数现代磁盘都可以快速读取整个行.拆分表的唯一情况是:如果你能将动态行格式的myisam表更改为固定行大小(fixed row size);或者你需要经常扫描表但不需要其中大多数列.
--     
+- 使用alter table table_name order by expr1, expr2,...对表进行按照索引的顺序将数据进行排序,这样会有利于后续你查询数据时以expr1,expr2..的顺序查询
+- 如果你需要基于大量行中的信息来计算结果(例如计数器), 则最好引入一个新表并实时更新它,如下例子更新表格就非常快:
+  `UPDATE tbl_name SET count_col=count_col+1 WHERE key_col=constant;`
+  这对于使用像myisam这种仅有表级锁(table-level locking)的存储引擎(表级锁即是同时可以一个写和多个读)非常重要,同时对于其他许多数据库系统也能获得更好的性能因为在这种情况下行级锁管理器的工作量减少了.
+- 定期的执行 OPTIMIZE TABLE语句避免动态格式的myisam表碎片化.
+- 使用DELAY_KEY_WRITE=1选项声明myisam表(该选项有仅适用于myisam),可以加快是索引更新更快因为在关闭表时才会将索引的更新刷新到磁盘.不足之处是当myisam表在打开时mysql服务被kill了,你必须保证表是正常的通过设置了myisam_recover_options系统变量的运行mysql服务器,或者在mysql服务器重启前使用myisamchk检测表.(即使在这种情况下,使用了DELAY_KEY_WRITE你也不会任何损失,因为你总能从数据行中生成键信息).
+- 字符串在myisam索引中自动进行前缀和结尾空间(end-space)压缩    
+- 
+    
+  
     
 ## 10 
 ### 10.8   

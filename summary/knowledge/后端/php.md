@@ -242,6 +242,8 @@
 
 - mt_rand([$min, $max]); 生成更高更快的随机数
 
+- array_rand($array [,$num]); 从数组中随机返回$num个键值, 如果要直接返回值并且你的值是唯一的:array_rand(array_flip($input_array), $num)
+
 - uniqid([$prefix, $more_entropy]); 生成一个唯一id, UUID生成可以基于此函数
 
 - eval();				将字符串code作为php代码执行
