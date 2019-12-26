@@ -1024,7 +1024,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 #### 8.8.2 EXPLAIN Output Format
 #### 8.8.3 Extended EXPLAIN Output Format
 - 使用explain EXTENDED时,输出信息会多包含一个filtered列(指示过滤的表行的估计的百分比);
-- 此外
+- 此外对于select语句还会产生一些其他信息但是不会包含explain输出中,但是可以通过在explain语句后马上执行show warning语句查看
 
 ## 10 
 ### 10.8   
