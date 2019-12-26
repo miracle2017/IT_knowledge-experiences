@@ -1021,10 +1021,26 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 
 ### 8.8 Understanding the Query Execution Plan
 #### 8.8.1 Optimizing Queries with EXPLAIN
+- explain可以运用在select,insert,delete,update,replace语句(对于相同操作的预处理语句不支持)
 #### 8.8.2 EXPLAIN Output Format
 #### 8.8.3 Extended EXPLAIN Output Format
 - 使用explain EXTENDED时,输出信息会多包含一个filtered列(指示过滤的表行的估计的百分比);
-- 此外对于select语句还会产生一些其他信息但是不会包含explain输出中,但是可以通过在explain语句后马上执行show warning语句来查看
+- 此外对于select语句(只有select有,其他update等都没有)还会有一些其他信息但是不会包含explain输出中,但是可以通过在explain语句后马上执行show warning语句来查看.
+#### 8.8.4 Obtaining Execution Plan Information for a Named Connection
+- 获取一个给定的连接名正在执行语句(需支持explainable的语句)的执行计划,用法如下:
+  `EXPLAIN [options] FOR CONNECTION connection_id;`
+  `小提示SELECT CONNECTION_ID();可以获取当前连接id`
+   有时候由于数据的改变(以及辅助的统计信息),这可能和你在等效的语句上执行explain会产生不同的结果.行为上的这种差异对于诊断更多瞬时性能问题很有帮助.假设你一个线程中有语句执行很慢,这时你可以在另一个线程中使用该语句查看到该语句执行慢的一些有用信息.必须是在该慢语句正在执行时同时该语句要支持explain
+
+#### 8.8.5 Estimating Query Performance
+- 在大多数情况下,你可以通过计算磁盘寻道次数来估计查询性能,对于小型表,通常寻找一行一个磁盘寻道(one disk seek)(因为索引可能已缓存);对于较大型表,使用B-tree索引,可以使用以下公式来评估寻找一行需要多少个磁盘寻道.
+  - log(row_count) / log(index_block_length / 3 * 2 / (index_length + data_pointer_length)) + 1. 
+    - 在mysql,index_block_length通常是1024bytes, data_pointer_length通常是4bytes
+  - 但是对于写,你需要4个磁盘寻道来定位何处放置新的索引值,通常需要2个磁盘寻道来更新索引并写入行数据    
+- 在前面的讨论中,性能并不会因为log N的增大而退化,只要所有操作系统或mysql服务器能缓存所有的内容,当表变大时只会稍微慢点.但当表太大而无法缓存时,就会变得缓慢很多直到你应用的性能仅受磁盘寻道(log N增长)的约束,为了避免此,请增加键缓存大小(ket cache size)当数据增长时.
+
+#### 8.9 Controlling the Query Optimizer   
+
 
 ## 10 
 ### 10.8   
