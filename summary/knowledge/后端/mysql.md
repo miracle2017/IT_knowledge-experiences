@@ -983,10 +983,49 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 定期的执行 OPTIMIZE TABLE语句避免动态格式的myisam表碎片化.
 - 使用DELAY_KEY_WRITE=1选项声明myisam表(该选项有仅适用于myisam),可以加快是索引更新更快因为在关闭表时才会将索引的更新刷新到磁盘.不足之处是当myisam表在打开时mysql服务被kill了,你必须保证表是正常的通过设置了myisam_recover_options系统变量的运行mysql服务器,或者在mysql服务器重启前使用myisamchk检测表.(即使在这种情况下,使用了DELAY_KEY_WRITE你也不会任何损失,因为你总能从数据行中生成键信息).
 - 字符串在myisam索引中自动进行前缀和结尾空间(end-space)压缩    
-- 
-    
+- 在自己的应用上缓存查询和答案(query and answers),然后一起执行许多插入或更新操作来提高性能.在此期间锁定表可确保在所有更新后索引缓存只flush一次.你也可以利用mysql的查询缓存达到类似的结果 
+
+#### 8.6.2 Bulk Data Loading for MyISAM Tables  
+>以下的一些性能提示补充8.2.4.1, “Optimizing INSERT Statements”中有关快速插入的一般准则
+- 使用INSERT DELAYED语句提升多个客户端插入许多行时.这对于myisam和其他引擎是有效的,但是innoDB不行.
+   - 注意 INSERT DELAYED已经不赞成使用,在将来的版本中将被移除,请使用 INSERT(不带DELAYED)语句代替
+- 通过一些额外的工作,当表具有许多索引时,可以使用load data以使myisam运行得更快.操作步骤如下:
+  1. 执行flush table语句或mysqladmin flush-tables命令
+  2. 执行myisamchk --keys-used=0 /path/to/db/tabl_name以在插入时禁止更新表的所有索引
+  3. 使用load data语句插入数据,该操作不更新任何索引所以很快
+  4. 如果将来只打算从表中读取,请使用myisampack对表进行压缩
+  5. 执行myisamchk -rq /path/to/db/table_name命令重新创建索引.该操作在写入磁盘前在内存中创建索引树,所以相比在load data时更新索引更快因为它避免许多磁盘的搜寻
+  6. 执行flush tables语句或mysqladmin flush-tables命令
+  - 如果要插入的myisam表为空,则load data会自动执行上述的优化操作,自动优化和程序指定     的区别是: 
+  - 你还可以通过以下语句禁用或启用myisam表的非唯一索引.
+    `ALTER TABLE tbl_name DISABLE KEYS;
+     ALTER TABLE tbl_name ENABLE KEYS;`
+
+- 对非事务表执行多条语句插入操作,锁定表会更快:
+	 `lock tables table_name write;
+	  insert sql;
+	  unlock tables;`
+   - 该操作提高性能得益于因为在所有insert语句完成后索引缓冲区(index buffer)才flush到磁盘上.通常地,索引缓冲区刷新与insert语句一样多.如果可以单个insert语句插入所有行则不需要显示的锁定语句.
+   - 插入时使用锁会减少多个连接中执行总的时间,尽管单个连接等待可能会增加.如下举个例子,插入时没有使用锁表,那么连接2,3,4会在连接1,5之前完成.如果加了表锁,那么连接2,3,4可能不会在连接1或5之前完成,但是总的耗时应该快了40%
+     - 连接1做1000个插入
+     - 连接2,3,4个做1个插入
+     - 连接5做1000个插入
+   - mysql中插入更新删除操作是很快的,但你可以在所有大约有5个以上的连续插入或更新的操作上加上锁来获得更好的整体性能.如果你要执行很多连续的插入,你可不时地使用lock table和unlock tables语句(每1000行左右)以使其他线程也能访问表,这也能获取不错的性能提升.但insert语句仍然比load data语句加载数据慢很多,即使是使用刚描述的策略.
+- 对于myisam表,增加key_buffer_size系统变量的值对于load data和insert语句都能带来性能提升.
+
+#### 8.6.3 Optimizing REPAIR TABLE Statements
+- 对myisam表使用REPAIR TABLE语句类似于myisamchk的修复操作,并且应用一些相同的性能优化
   
-    
+#### 8.7 Optimizing for MEMORY Tables  
+- 对于经常访问和只读或很少更新的非关键数据可以考虑使用MEMORY表,将应用程序与等效的innoDB或myisam表进行基准测试,以确认提升的性能是否值得冒丢失数据的风险,或当应用启动时从磁盘上的表复制数据的开销
+
+### 8.8 Understanding the Query Execution Plan
+#### 8.8.1 Optimizing Queries with EXPLAIN
+#### 8.8.2 EXPLAIN Output Format
+#### 8.8.3 Extended EXPLAIN Output Format
+- 使用explain EXTENDED时,输出信息会多包含一个filtered列(指示过滤的表行的估计的百分比);
+- 此外
+
 ## 10 
 ### 10.8   
 
