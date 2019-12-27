@@ -1064,10 +1064,28 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 ### 8.10 Buffering and Caching  
 #### 8.10.1 InnoDB Buffer Pool Optimization
 #### 8.10.2 The MyISAM Key Cache
+- 为了最小化磁盘I/O,myisam存储引擎,它使用了缓存机制将最常访问的表块数据保留在内存中.
+  - 对于index block(索引块),由于一种叫key cache(or key buffer)的特殊结构维护,
+  - 对于数据块(data block),myslq没使用特殊的缓存.相反,它们依赖于本机操作系统文件系统缓存.
+- 当key cache不可用时,仅使用操作系统提供的本机文件系统缓存来访问索引文件(index files)(即就像访问data block一样)
+-   
+  
+#### 8.10.2.1 Shared Key Cache Access
+- 线程间可以同时访问key cache buffers,但遵循以下条件:
+  - 没有被更新的buffer可以被多个会话同时访问
+  - 当一个会话要使用的buffer正在被更新时,则必须等待其更新完成后才能使用它
 
+#### 8.10.2.2 Multiple Key Caches
+- 对于key cache的共享访问并不能消除会话间的竞争关系.为了减少这种key cache访问的竞争,mysql提供了多个key caches,即允许将不同的表索引分配到不同的key caches.默认的,所有myisam表的indexs都被缓存(cache)在同一个key cache上.你可以使用cache index table_name[,table_name] in key_cache_name语句为表索引分配到指定名字的key cache上,同时还可以设置其大小. 当有一个key cache被销毁时,所有分配到这上的所有索引都将被重新分配到默认的key cache上.
 
- 
- 
+- 对于一个繁忙的服务器, 可以使用以下的三个key caches策略:
+  - 'hot' key cache:占所有为key cache分配空间的20%,该部分用经常搜索但是不更新的表
+  - 'cold' key cache:20%,该部分用于中等大小,密集修改的表,如临时表
+  - 'warm' key cache:60%,改部分最为默认的key cache,上述情况外都使用此区域
+
+- cache index设置了表和key cache的关联,但是这个关联在mysql服务重启后就将失去.
+  
+   
 ## 10 
 ### 10.8   
 
