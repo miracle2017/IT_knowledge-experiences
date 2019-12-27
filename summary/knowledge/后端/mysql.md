@@ -1039,9 +1039,35 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - 但是对于写,你需要4个磁盘寻道来定位何处放置新的索引值,通常需要2个磁盘寻道来更新索引并写入行数据    
 - 在前面的讨论中,性能并不会因为log N的增大而退化,只要所有操作系统或mysql服务器能缓存所有的内容,当表变大时只会稍微慢点.但当表太大而无法缓存时,就会变得缓慢很多直到你应用的性能仅受磁盘寻道(log N增长)的约束,为了避免此,请增加键缓存大小(ket cache size)当数据增长时.
 
-#### 8.9 Controlling the Query Optimizer   
+### 8.9 Controlling the Query Optimizer   
+#### 8.9.1 Controlling Query Plan Evaluation
+- 查询优化器的任务是找到最好的执行计划.最好和最坏的计划可能是相差几个级别.对于join查询,mysql优化器调查的可能计划的数量与查询中引用的表的数量成指数增长.对于少量的表(7-10个)这不是问题, 但是如果提交较大的查询时花在优化上的时间可能成为服务器性能的主要瓶颈.
+- 一种更灵活的查询优化方法,使用户可以控制优化器在搜索最佳查询评估计划时的详尽程度.通常想法是,优化器调查的计划越少则编译所花费的时间越少;另一方面,由于优化器跳过一些计划,这可能会错过最佳计划.可以使用如下两个系统变量对优化器评估计划的数量的行为:
+ - optimizer_prune_level: 改系统变量基于每个表访问的行数的估计值告诉优化器去跳过某些计划,根据我们的经验,这种有根据的很少错过最佳计划.可能会大大减少查询编译时间.这就是为什么(optimizer_prune_level=1)是默认值.如果你确信优化器错过了最佳执行计划,你可以关闭该功能(optimizer_prune_level=0).请注意,即使是这样,优化器仍会探索大约指数级别的计划.
+ - optimizer_search_depth: 该变量指示了查询优化器执行的深度,如果不知道该设置多少,可以设置为0让优化器自动确定该值.
+
+#### 8.9.2 Switchable Optimizations 
+- optimizer_switch系统变量控制优化器的一些行为.该值为一组标志,每个标志都为on或off.
+
+#### *8.9.3 Index Hints 
+- 在查询处理期间,index hint(索引提示)为优化器提供了如何选择索引的信息,索引提示仅对select,update语句有效.index hints跟在表后面
+   - USE INDEX (index_list)告诉优化器仅使用index_list其中一个索引去寻找行;相反的,ignore index (index_list)告诉优化器不使用index_list的索引;
+   - force index提示与use index类似
+   - 没有hint都需要一个索引名,要是主键使用PRIMARY
+   - index_name的值不需要必须是一个完整的索引名,可以是索引值不会混淆的前缀值,如果该前缀不唯一(会产生混淆)则会有错误产生.
+- index hints的语句有如下特征:
+  - 在语句上对于use index,省略index_list是有效的,这表示什么索引都不用;但force index,ignore index语句如果省略了index_list了就会产生语法错误
+  - 你可通过在hint后添加for从句来指定索引提示的范围,可以有for join,for order by,for group by
+  - 你可以指定多个索引提示, 如果 use index for order by (index1) ignore index for group by (index2)
+  - 如果你的index hints没有指定范围(for从句), 这等同于指定了for order by, for group by, for join这三个范围
+
+### 8.10 Buffering and Caching  
+#### 8.10.1 InnoDB Buffer Pool Optimization
+#### 8.10.2 The MyISAM Key Cache
 
 
+ 
+ 
 ## 10 
 ### 10.8   
 
