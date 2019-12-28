@@ -1068,14 +1068,18 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - 对于index block(索引块),由于一种叫key cache(or key buffer)的特殊结构维护,
   - 对于数据块(data block),myslq没使用特殊的缓存.相反,它们依赖于本机操作系统文件系统缓存.
 - 当key cache不可用时,仅使用操作系统提供的本机文件系统缓存来访问索引文件(index files)(即就像访问data block一样)
--   
+- 一个索引块(index block)是对myisam索引文件的连续访问单元.通常一个索引块大小等于索引B-tree的节点的大小.(索引在磁盘以B-tree数据结构表示.在树底部的节点(node)是叶节点leaf node, 叶节点以上都是非叶节点(nonleaf nodes)))
+- 当访问任何表索引块数据时,mysql服务器首先会检查在key cache中是否有可用的,如果是则读取和写入都是对key cache操作而不是操作磁盘.否则mysql服务器将选择一块cache block并用所需要表的索引替换它,后续就可以访问该新索引了.
+- 如果一块更改过的缓存被选中为被替换对象,则该块视为脏,所以在被替换之前,会先将更改过的数据刷新到其对应的表索引中.
+- 通常的mysql服务器遵循LRU(Least Recently Used)策略(最近最少使用),当选择一块作为替换对象时,它选择最近最少使用的索引块.为了使选择变得简单, key cache module维护着所有使用过的块在一个由使用的次数排序的特殊列表(LRU chain).当一个块访问时,它是最近访问所以放置到列表底部;当需要一个块被替换时,最经常使用的块置于该列表的底部,而该列表的开头成为第一个驱逐的候选者.
+- innoDB存储引擎同样也使用LRU策略管理buffer pool.
   
 #### 8.10.2.1 Shared Key Cache Access
 - 线程间可以同时访问key cache buffers,但遵循以下条件:
   - 没有被更新的buffer可以被多个会话同时访问
   - 当一个会话要使用的buffer正在被更新时,则必须等待其更新完成后才能使用它
 
-#### 8.10.2.2 Multiple Key Caches
+##### 8.10.2.2 Multiple Key Caches
 - 对于key cache的共享访问并不能消除会话间的竞争关系.为了减少这种key cache访问的竞争,mysql提供了多个key caches,即允许将不同的表索引分配到不同的key caches.默认的,所有myisam表的indexs都被缓存(cache)在同一个key cache上.你可以使用cache index table_name[,table_name] in key_cache_name语句为表索引分配到指定名字的key cache上,同时还可以设置其大小. 当有一个key cache被销毁时,所有分配到这上的所有索引都将被重新分配到默认的key cache上.
 
 - 对于一个繁忙的服务器, 可以使用以下的三个key caches策略:
@@ -1083,9 +1087,58 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - 'cold' key cache:20%,该部分用于中等大小,密集修改的表,如临时表
   - 'warm' key cache:60%,改部分最为默认的key cache,上述情况外都使用此区域
 
-- cache index设置了表和key cache的关联,但是这个关联在mysql服务重启后就将失去.
-  
+- cache index设置了表和key cache的关联,但是这个关联在mysql服务重启后就会丢失.如果你想在每次启动后都保持这种关联,有个办法是那么可以在my.cf文件中指定init_file=/path/mysqld_init.sql,在mysqld_init.sql中指定关联.
+
+##### 8.10.2.3 Midpoint Insertion Strategy
+- 默认的,mysql使用简单的LRU策略来选择需要驱逐的key cache block.而中点插入策略会将LRU链分为hot子列表和warm子列表两部分. 使用中点插入策略能够使得更有价值的blocks总是保留在cache中.如果仅想使用普通LRU,则将key_cache_division_limit设置它的默认值100.
    
+##### 8.10.2.4 Index Preloading   
+- 如果有足够的key cache block去容纳整个索引的块,至少是其对应的非叶节点的块.这在使用前将index blocks预先加载(preload)到key cache是有意思.这是将index blocks放入key cache最有效的方式,因为它从磁盘顺序读取.虽然没有preloading,index block也会因查询语句的需要而被加载到key cache中,也会一直保留(假设key cache足够),但是它们从磁盘中是以随机而非顺序读取的.
+- LOAD INDEX INTO CACHE语句可以预先加载index到cache中.例如:
+  `LOAD INDEX INTO CACHE t1, t2 IGNORE LEAVES;`
+   - IGNORE LEAVES表示仅预加载索引的非叶节点. 以上表示预加载t1表的所有索引,t2表的索引的非叶节点.
+   - 如果先前一个表的索引被CACHE INDEX语句指定到特定的key cache上,则preload操作时也会将索引放置到对应的缓存中.否则都是将索引预加载到默认key cache中
+   
+##### 8.10.2.5 Key Cache Block Size
+- 可以使用key_cache_block_size为指定的一个key cache设置block buffers size.这允许调整索引文件的I/O操作的性能.当read buffer size等于本机文件系统I/O buffer的大小时,可以实现I/O操作性能达到最佳.
+- 对于控制.MYI索引文件中的块大小, 可以在mysql服务器启动时通过--myisam-block-size(myisam索引页要使用的块大小)指定 
+   
+   
+##### 8.10.2.6 Restructuring a Key Cache   
+- 一个key cache可以随时通过设置它的key_buffer_size来达到重组.如果你设置了一个key cache的key_buffer_size或key_cache_block_size的值不同于当前的值,则mysql会销毁缓存旧的结构然后重新创建一个新的.如果cache包含任何脏数据块(dirty blocks),则在重新创建新的前会先将它们保存到磁盘.当你改变一个key cache的其他参数时,不会发生重建.
+- 当重建一个key cache时,服务器首先将任何dirty buffer刷新到磁盘中,之后cache内存变得不可用,虽然重建不会阻止需要将索引分配到cache中的查询,相反服务器使用本机文件系统缓存直接访问表索引.文件系统缓存效率不如key cache,所以可以预见尽管执行查询,但速度会变慢.key cach重构后,它被再次启用,并且不再使用文件系统缓存来存储索引.
+   
+#### 8.10.3 The MySQL Query Cache
+- 查询缓存将select语句和对应的发送到客户端的结果存储起来.以便后续有相同查询语句时可以直接从查询缓存获取而不必再解析执行.这对于表没有经常改而又经常用相同语句取数据的环境很有帮助.查询缓存不会返回陈旧的数据,当表被更改时,则对应的查询缓存条目都将被刷新. 分区表不支持查询缓存,涉及分区表的查询将自动禁止查询缓存.
+- 一些基础测试数据: 查询从只包含一行的表中查询一行(这被认为是接近了查询缓存加速最少的情况),这种情况下也比没有使用查询缓存快(快多少视服务器性能和配置)
+- 查询缓存具有显著提高性能的潜力,但并不是在所有情况下都会有提升,有时候甚至会降低.如下情况:
+  - 分配过大的查询缓存,增加维护查询缓存的开销.通常几十M是有益的.而几百M则可能是不好的.
+- 验证查询缓存是否有益,启用和关闭状态下测试mysql的工作,然后后期定期重新测试,因为查询缓存效率可能会随负载而变化.  
+
+#### 8.10.3.1 How the Query Cache Operates
+- 在解析前,将传入查询语句与查询缓存中的语句进行比较.查询语句必须完全相同(每字节都必须相同),如大小写不一样视为不想等.此外完全相同的查询在以下情况下也被视为不想等:使用的不是同一个数据库,不同的协议版本,不同的默认字符集(被分别缓存).
+- 在查询结果被取出先,mysq会先检测用户是否有结果中涉及到的库和表的select权限
+- 如果一个查询缓存命中则会增加Qcache_hits状态变量而不是Com_select的值.
+- 如果一个表更改了,则使用该表的所有缓存查询都将无效并被从cache中移除.
+- 查询缓存同样适用在innoDB表的事务内.
+- 视图上的select查询的结果会被缓存.
+- 包含以下函数则查询不被缓存
+
+- 以下情况下也不被缓存
+
+#### 8.10.3.2 Query Cache SELECT Options
+- 查询语句中可以指定两个与查询缓存相关的选项
+  - SQL_CACHE
+  - SQL_NO_CACHE
+  
+#### 8.10.3.3 Query Cache Configuration  
+
+#### 8.10.3.4 Query Cache Status and Maintenance  
+- flush query cache可以对查询缓存进行碎片整理.该操作不会从缓存删除任何查询.RESET QUERY CACHE则清除所有查询缓存.flush tables语句也一样会.
+- 使用SHOW STATUS LIKE 'Qcache%';来监视查询缓存的性能  
+
+
+
 ## 10 
 ### 10.8   
 
