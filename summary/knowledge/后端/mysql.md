@@ -1158,8 +1158,42 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
     1. 如果表上没有写锁,则加上读锁
     2. 否则,将锁请求放入读锁队列中
   - 表的更新权限比读高,因此当一个锁释放时,该锁先可用于写锁队列中请求,然后才是读锁队列中的请求.如果有许多更新则等到更新结束才能读取.SHOW STATUS LIKE 'Table%';可以查看表锁争用的信息.
-  - myisam存储引擎支持并行插入以减少与读取器和写入器之间的争用.myisam表的数据文件中没用空闲块时,则插入行总是位于数据文件后,在这种情况下, 你可以随意组合select和insert语句操作myisam表而不需要锁.
+  - myisam存储引擎支持并行插入以减少与读取器和写入器之间的争用.myisam表的数据文件中没用空闲块时,则插入行总是位于数据文件后,在这种情况下, 你可以随意组合select和insert语句操作myisam表而不需要锁.在这种情况下你就可以在插入表行的同时读取它.holes可以由于在表中间删除或更新了行导致的.如果显示的使用了lock tables,则可以在锁表时同时请求read local锁而不是read锁以使其他会话能够执行并发插入.
+  - 如果对于一个表无法执行许多插入或查询时当这个表不能并发插入时,此时你可以将数据插入到临时表,然后将临时表的数据更新到实际表上.
   
+#### 8.11.2 Table Locking Issues
+- 对于innodb表避免使用LOCK TABLES语句,因为该语句不会提供任何额外的保护反而减少了并发新性.
+
+- 锁性能问题的变通办法,以下列举些避免由于表争用的办法.
+  - 考虑使用innoDB表
+  - 优化select语句使其变快对表锁定的时间较短.你可能需要创建一些汇总表才能至执行此操作
+  - 使用--low-priority-updates选项启动mysql,对于只有使用表锁的表,这会使得所有对表的更新语句比select语句权限更低.
+  - 在会话中要使所有的更新语句都具有较低的权限,请在会话中设定low_priority_updates系统变量
+  - 要为特定的insert,update, delete语句赋予较低的优先级,请使用LOW_PRIORITY属性
+  - 要为特定的select语句赋予较高的权限,请使用HIGH_PRIORITY属性.
+  - select语句时加上SQL_BUFFER_RESULT,这会使得表锁定的时更短.
+  - 你也可以更改locking的代码(在mysys/thr_lock.c中)去使用单个队列,在这种情况下,读锁和写锁将具有相同的权限,这对于其他应用可能会有用.
+
+#### 8.11.3 Concurrent Inserts  
+- myisam存储引擎支持在向表末插入数据的同时读取表数据,如果有多个插入语句则顺序执行,与select语句同时执行.并发插入的结果可能不能马上可见.
+- 语句中的HIGH_PRIORITY属性覆盖系统的--low-priority-updates的值.
+- lock table,read local和read区别在于read local允许保持锁的同时执行无冲突的insert语句,
+   
+#### 8.11.4 Metadata Locking   
+   
+#### 8.11.5 External Locking   
+- 启用外部锁后,需要访问表的每个进程都需要先获取表文件的文件系统锁,如果无法获取所有所必需的锁,则会阻止该进程访问表,直到锁被释放了后.
+
+### 8.12 Optimizing the MySQL Server
+
+#### 8.12.1 System Factors
+- 一些系统级因素会在很大程度上影响性能
+  - 如果你有足够大的RAM,你可以移除所有交换设备(swap device).一些操作系统也会使用交换设备即使你空闲的内存在某些情况下.
+
+#### 8.12.2 Optimizing Disk I/O   
+   
+#### 8.12.3 Using Symbolic Links 
+#### 8.12.3.1 Using Symbolic Links for Databases on Unix    
    
 ## 10 
 ### 10.8   
