@@ -87,7 +87,8 @@
 - mkdir: 创建文件夹
 
 - ln: 设置链接
-  ln -s /usr/local /home/local(设置软链接, 将/usr/local(实际目录或文件)链接到/home/local)
+  ln -s target link_name
+  ln -s /usr/local/php /home/local(设置软链接, 将/usr/local(实际目录或文件)链接到/home/local，即是/home/local下会多出个php软连接)
 
 - sed: (stream editor)
   sed -i "s/oldstring/newstring/g" `grep oldstring -rl path`: 在path中找出所有存在oldstring的文件, 然后将oldstring替换成newstring; g为全局匹配; /为分界符, 如有冲突可选用|

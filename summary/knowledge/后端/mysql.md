@@ -1193,13 +1193,38 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 #### 8.12.2 Optimizing Disk I/O   
    
 #### 8.12.3 Using Symbolic Links 
-- 你可以将数据库或表从数据库目录移动到其他位置(如空间更大,更快的磁盘), 
+- 你可以将数据库或表从数据库目录移动到其他位置(如空间更大,更快的磁盘),推荐软链接整个数据库目录.软链接myisam表示最后的手段.
 
 #### 8.12.3.1 Using Symbolic Links for Databases on Unix    
-- 在UNIX上,符号链接数据库的方法是首先在有可用空间的磁盘上创建新的目录,然后从mysql数据目录创建到该目录的软连接
+- 在UNIX上,符号链接数据库的方法是首先在有可用空间的磁盘上创建新的目录,然后从mysql数据目录创建到该目录的软连接.mysql不支持一个目录链接多个数据库.
   `mkdir /dr1/databases/test
    ln -s /dr1/databases/test /path/to/datadir` 
+
+#### 8.12.3.2 Using Symbolic Links for MyISAM Tables on Unix   
+- 仅有myisam表完全支持符号链接.对于其他引擎使用的表文件,如果使用软链接可能会有奇怪的问题.innoDB表如果想要将表放置不同磁盘位置可以在create table时指定. `SHOW VARIABLES LIKE 'have_symlink';` 查看是否支持或开启软链接
+
+- myisam表是怎么处理软链接的?
+  - myisam表的索引文件(.MYI)和数据文件(.MYD)可以使用软链接,但表定义文件(.frm)不能.
+  - 可以将索引文件和数据文件独立的软链接到不同目录
+  - 正在运行的mysql服务器可以在create table语句上指定DATA DIRECTOR和INDEX DIRECTOR来使用软链接;如mysqld不在运行则可以手动使用ln -s
+  - myisamchk不会使用数据文件或者索引文件来代替软链接,它只能直接在真实文件上工作.任何临时文件都将创建在实际数据文件或索引文件所处的位置,执行alert table,optimize table,repair table语句的临时表的位置唯一同上.
+  - 如果你没有软链接,使用--skip-symbolic-links选项启动mysqld开确保没人可以使用mysqld来删除或者重命名data directory外的文件.
+
+#### 8.12.4 Optimizing Memory Use
+
+##### 8.12.4.1 How MySQL Uses Memory    
+
+##### 8.12.4.2 Enabling Large Page Support
    
+#### 8.12.5 Optimizing Network Use   
+
+##### 8.12.5.1 How MySQL Handles Client Connections   
+- Network Interfaces and Connection Manager Threads   
+  - 在谁有平台上,都有一个管理线程(manager thread)处理tcp/ip连接请求 
+  - 在UNIX上,管理线程还处理UNIX socket file连接的请求 
+  - 在window上,管理线程处理共享内存的连接请求;还需要另一个线程处理named-pipe的连接请求
+  - mysql服务器不为没有监听的接口创建进程.比如window上
+
    
 ## 10 
 ### 10.8   
