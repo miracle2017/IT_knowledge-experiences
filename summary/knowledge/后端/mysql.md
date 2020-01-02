@@ -1223,8 +1223,10 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - 在谁有平台上,都有一个管理线程(manager thread)处理tcp/ip连接请求 
   - 在UNIX上,管理线程还处理UNIX socket file连接的请求 
   - 在window上,管理线程处理共享内存的连接请求;还需要另一个线程处理named-pipe的连接请求
-  - mysql服务器不为没有监听的接口创建进程.比如window上
-
+  - note: mysql服务器不为没有监听的接口创建进程.比如window上不支持named-pipe连接的不会创建相应的线程.
+- Client Connection Thread Management
+ 
+ 
    
 ## 10 
 ### 10.8   
