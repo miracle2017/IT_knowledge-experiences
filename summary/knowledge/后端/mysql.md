@@ -1226,8 +1226,11 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - note: mysql服务器不为没有监听的接口创建进程.比如window上不支持named-pipe连接的不会创建相应的线程.
   
 - Client Connection Thread Management
- 
- 
+  - 连接管理器线程每个客户端线程与专用于该客户端连接的线程相关联,该线程处理身份验证和对该连接的请求处理.管理线程在需要时会创建一个新线程,但会通过先咨询线程缓存(thread cache)看是否有可用的线程尽量避免创建新线程.当一个线程结束时,在线程缓存没有满时会返回到线程缓存中.
+  - thread_cache_size系统变量决定线程缓存大小.默认改值在mysql服务器开启时自时调整;等于0则为禁止线程缓存,会为每个连接创建新的线程并在该线程在结束时被丢弃.通过Threads_cached和Threads_created系统变量来分别监视当前有多少个线程缓存和因为线程缓存不足而创建的线程数量.
+  - 当线程栈(thread stack)太小时,这将限制服务器能执行语句的复杂成程度,存储过程递归的深度以及其他一些消耗内存的操作.该值通过thread_stack系统变量控制. 
+- Connection Volume Management
+  - 可以通过设置max_connections系统变量控制允许的同时最大客户端连接数.mysql服务器实际上允许最大max_connections + 1个连接,额外的那个1是保留给super特权用户的.超级用户可以使用SHOW PROCESSLIST语句诊断问题即使已经达到了最大非特权用户客户端连接数量.当达到最大连接数量时,Connection_errors_max_connections状态变量会增加. 
    
 ## 10 
 ### 10.8   
