@@ -1230,8 +1230,21 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - thread_cache_size系统变量决定线程缓存大小.默认改值在mysql服务器开启时自时调整;等于0则为禁止线程缓存,会为每个连接创建新的线程并在该线程在结束时被丢弃.通过Threads_cached和Threads_created系统变量来分别监视当前有多少个线程缓存和因为线程缓存不足而创建的线程数量.
   - 当线程栈(thread stack)太小时,这将限制服务器能执行语句的复杂成程度,存储过程递归的深度以及其他一些消耗内存的操作.该值通过thread_stack系统变量控制. 
 - Connection Volume Management
-  - 可以通过设置max_connections系统变量控制允许的同时最大客户端连接数.mysql服务器实际上允许最大max_connections + 1个连接,额外的那个1是保留给super特权用户的.超级用户可以使用SHOW PROCESSLIST语句诊断问题即使已经达到了最大非特权用户客户端连接数量.当达到最大连接数量时,Connection_errors_max_connections状态变量会增加. 
-   
+  - 可以通过设置max_connections系统变量控制允许的同时最大客户端连接数.mysql服务器实际上允许最大max_connections + 1个连接,额外的那个1是保留给super特权用户的.超级用户可以使用SHOW PROCESSLIST语句诊断问题即使已经达到了最大非特权用户客户端连接数量.当服务器因为达到最大连接数量时而拒绝请求时,Connection_errors_max_connections状态变量会增加.Linux日常一般至少能支持500-1000个同时连接,最高10000,在你有许多GB内存并且每个连接负载很低或响应时间目标要求不高.
+  
+##### 8.12.5.2 DNS Lookup Optimization and the Host Cache
+- 改变host_cache_size会隐式的执行flush hosts操作(该操作会清除host cache),以及truncate的host_cahce表,取消阻止所有被阻止的主机;开启skip_name_resolve 禁止DNS host name查找;开启skip_networking可以禁止tcp/ip连接.
+
+### 8.13 Measuring Performance (Benchmarking)
+
+#### 8.13.1 Measuring the Speed of Expressions and Functions
+- 测试mysql执行一个表达或函数的速度, 可以使用 select BENCHMARK(count,expr);表示expr重复执行count次.
+
+#### 8.13.2 The MySQL Benchmark Suite
+-  免费的开源数据库基准测试工具:http://osdb.sourceforge.net/
+- 
+
+
 ## 10 
 ### 10.8   
 
