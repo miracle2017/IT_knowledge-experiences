@@ -1241,8 +1241,11 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 测试mysql执行一个表达或函数的速度, 可以使用 select BENCHMARK(count,expr);表示expr重复执行count次.
 
 #### 8.13.2 The MySQL Benchmark Suite
--  免费的开源数据库基准测试工具:http://osdb.sourceforge.net/
-- 
+- 免费的开源数据库基准测试工具:http://osdb.sourceforge.net/
+- 基准测试
+  - mysqlslap(mysql自带的)
+  - 其他如SysBench或DBT2;
+- 这些基准测试会使得系统崩溃,所以请仅在开发系统上测试  
 
 
 ## 10 
