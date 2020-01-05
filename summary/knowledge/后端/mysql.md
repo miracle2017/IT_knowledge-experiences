@@ -1305,7 +1305,10 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 不建议使用Me或MeN开头的名字(其中M,N为整数),因为比如1e+3这样的表达式就变得不明确.使用md5()生成一个表名也要注意, 因为这有可能产生上述的问题.
 
 ### 9.2.1 Identifier Length Limits
-
+- 在mysql中,因为databases,table,trigger在data目录都有对应的目录或者文件,所以底册操作系统的大小是否敏感对它们数据库名,表名,触发器名是否大小敏感起着作用.也就是说,wind上不区分大小写,而linux区分大小.table aliases在linux上大小敏感,而window上大小写不敏感.同时lower_case_table_names 系统变量也影响着mysql是否对标识符区分大小写. Column, index, stored routine, event names,column aliases.大小写不敏感在任何平台上.
+   - note:虽然在window上数据库名,表名,触发器名大小写不敏感,但是在同一个语句中使用不同的大小写对它们进行引用那么将出错.比如(`SELECT * FROM my_table WHERE MY_TABLE.col=1;`)
+- Lower_case_table_names影响着表名和数据库名在磁盘上的存储和在mysql中使用.但对触发器标识符是否区分大小写不影响的.默认的,该值在linux为0,window为1,macOS为2.
+  - 
 
 ## 10 
 ### 10.8   
