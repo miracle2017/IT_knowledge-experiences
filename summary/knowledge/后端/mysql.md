@@ -1332,8 +1332,30 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 ### 9.4 User-Defined Variables
 - 用户变量用@var_name来表示,var_name由字母和点(.)和下划线(_)和$组成.也可以包含其他字符当你将val_name引成字符串或标识符(如果@'my-var', @`my-var`).用户变量大小写不敏感
 - 用户变量只能在当前会话中使用,在其他会话或线程中无法使用,会话结束后自动释放.
-- 用户变量可用set语句赋值,在set语句中=或:=都可被当作赋值运算符
+- 用户变量可用set语句赋值,在set语句中=或:=都可被当作赋值运算符(但是在某些语句中=表示的是比较,所有可用:=代替)
   - `SET @var_name = expr [, @var_name = expr] ...`
+- select语句中每个选择表达式仅在发送给客户端时才进行求值,这意味着,在having,group by,order by语句中引用了选择表达式列表(select expression list)中分配值的变量不能按照预期的工作.
+- 用户变量不能直接在sql语句中作为标识符或者标识符的一部分.(例如用作表名,数据库名,或保留关键字如select都是不行),即使是加了quote也不行..当时对于该原则有个例外是当你构建字符串以用在预处理语句( prepared statement)中.
+
+### 9.5 Expressions
+- Temporal Intervals(时间间隔)
+  - 时间间隔的语法:INTERVAL expr unit;expr表示数量,unit为单位,时间间隔常用于某些函数,如果DATE
+  _ADD(),DATE_SUB();时间间隔表达式还可以用在与日期或日期时间的+,-操作(时间间隔为位于+左右两边都可以,在-运算中只能位于右边)
+
+### 9.6 Comment Syntax
+- mysql支持3中注释样式:
+  - 从#到行尾
+  - 从--到行尾,-- 后面必须仅跟着至少一个空格或控制字符(如果空格,tab等)
+  - 从/*和*/间
+- 默认的嵌套注释是不被支持(即使在某些情况下可能可以,但用户应该避免使用嵌套注释)
+- 对/*![version]  MySQL-specific code */形式的注释,其他sql语言会忽略,但是mysql会执行其中的语句,如果指定了version,则表示mysql版本大等于该版本才执行.
+
+## Chapter 13 SQL Statements
+
+###  13.1 Data Definition Statements
+####13.1.1 ALTER DATABASE Statement
+- alert语句允许你更改数据整体的特征.这些特征存储在该数据库目录下的da.opt文件中.
+
 
 ## 10 
 ### 10.8   
