@@ -1297,18 +1297,43 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - 表达式中包含null,结果永远都是null(如1+null结果还是null)(除非表达式中涉及的操作符和函数在文档有明确指出其他情况)
   - 聚合函数(如果sum(),count(),max()等)会对null值忽略.count()例外,它计算的是行值而不是列值.举个例子, count(*)和count(age)可能会产生不同的结果,前者计算表的行数而后者计算age列非null行的行数.
 - 对于使用LOAD DATA或SELECT ... INTO OUTFILE执行的文本文件导入或导出操作，NULL使用\N表示.
-
 - **在ORDER BY操作中,NULL值在升序中排在所有数据之前,在降序中排在所有数据之后.**
 
-###　9.2 Schema Object Names
+### 9.2 Schema Object Names
 - 在mysql中某些对象(括数据库，表，索引，列，别名，视图，存储过程，分区，表空间和其他对象名)称为标识符(identifiers).
 - 不建议使用Me或MeN开头的名字(其中M,N为整数),因为比如1e+3这样的表达式就变得不明确.使用md5()生成一个表名也要注意, 因为这有可能产生上述的问题.
 
 ### 9.2.1 Identifier Length Limits
 - 在mysql中,因为databases,table,trigger在data目录都有对应的目录或者文件,所以底册操作系统的大小是否敏感对它们数据库名,表名,触发器名是否大小敏感起着作用.也就是说,wind上不区分大小写,而linux区分大小.table aliases在linux上大小敏感,而window上大小写不敏感.同时lower_case_table_names 系统变量也影响着mysql是否对标识符区分大小写. Column, index, stored routine, event names,column aliases.大小写不敏感在任何平台上.
    - note:虽然在window上数据库名,表名,触发器名大小写不敏感,但是在同一个语句中使用不同的大小写对它们进行引用那么将出错.比如(`SELECT * FROM my_table WHERE MY_TABLE.col=1;`)
-- Lower_case_table_names影响着表名和数据库名在磁盘上的存储和在mysql中使用.但对触发器标识符是否区分大小写不影响的.默认的,该值在linux为0,window为1,macOS为2.
+- Lower_case_table_names影响着表名和数据库名在磁盘上的存储和在mysql中使用.但对触发器标识符是否区分大小写不影响的.默认的,该值在linux为0,window为1,macOS为2.以下是Lower_case_table_names取值对应的含义:
+  - 0:表名和数据库名在存储和使用时由create table或create database语句中指定的.名字比较是大小写敏感的.在大小写不敏感的文件系统中(如window或macOS),不应该设置为0,如果强制设置为0则如果用不同的字母访问myisam表时,索引有可能会被损坏
+  - 1:表名以小写存储在磁盘上并且名字比较不区分大小写.mysql在存储和查找时将所有表名转换为小写.以上行为也使用于数据库名和表别名.
+  - 2:在存储时使用create table和create database语句中指定的,但在查找时mysql将它们先转化为小写.名字比较时大小写不敏感.在大小写不敏感的文件系统上,innoDB表名以小写形式存储.
+- 默认的,如果只在一种平台上使用,通常你是不用更改其默认值.但是在两个大小写敏感不一的平台上转换时可能会遇到些困难.对此两种方案:
+  - 在所有平台上使用lower_case_table_names=1,主要的缺点就是当使用show tables或show databases时,你不会看到它们真实的大小写.
   - 
+- 在UNIX系统,想将lower_case_table_names=1前,必须先将旧的数据名和表名转换为小写在停止和用新的参数重新启动mysql前.为了达到此目的,有以下2中方案:
+  - 对于单个表可以用rename语句
+  - 对于转换一个或多个整个数据库.先将数据库一个一个的导出(dump);然后删除(drop)数据库;设置lower_case_table_names=1重启,然后导入数据库(在导入时会自动转换为小写).
+
+#### 9.2.4 Mapping of Identifiers to File Names
+- 数据库和表名标识符可以使用任何字符除了ascii NUl(X'00')
+
+#### 9.2.5 Function Name Parsing and Resolution
+
+- Function Name Resolution
+  - 自定义函数和存储函数在同一个命名空间,所以自定义函数和存储函数创建的名称不能相同.
+
+### 9.3 Keywords and Reserved Words
+- 允许非保留关键字作为标识符而无需引用(quoting),允许将保留关键字引起来(quote)作为标识符.
+- 是关键字但不是保留字作为标识符时可以不用引(quoting),因为关键字才要.
+
+### 9.4 User-Defined Variables
+- 用户变量用@var_name来表示,var_name由字母和点(.)和下划线(_)和$组成.也可以包含其他字符当你将val_name引成字符串或标识符(如果@'my-var', @`my-var`).用户变量大小写不敏感
+- 用户变量只能在当前会话中使用,在其他会话或线程中无法使用,会话结束后自动释放.
+- 用户变量可用set语句赋值,在set语句中=或:=都可被当作赋值运算符
+  - `SET @var_name = expr [, @var_name = expr] ...`
 
 ## 10 
 ### 10.8   
