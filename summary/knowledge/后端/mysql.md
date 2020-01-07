@@ -1350,13 +1350,6 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 默认的嵌套注释是不被支持(即使在某些情况下可能可以,但用户应该避免使用嵌套注释)
 - 对/*![version]  MySQL-specific code */形式的注释,其他sql语言会忽略,但是mysql会执行其中的语句,如果指定了version,则表示mysql版本大等于该版本才执行.
 
-## Chapter 13 SQL Statements
-
-###  13.1 Data Definition Statements
-####13.1.1 ALTER DATABASE Statement
-- alert语句允许你更改数据整体的特征.这些特征存储在该数据库目录下的da.opt文件中.
-
-
 ## 10 
 ### 10.8   
 
@@ -1381,9 +1374,23 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - BINARY(N) columns: 
     - 插入时: 当插入值为N时, 尾部补上0x00 bytes(就是(N-插入值)个00); 读取时, 不会任何移除, 原样返回
 
+## Chapter 13 SQL Statements
+
+###  13.1 Data Definition Statements
+####13.1.1 ALTER DATABASE Statement
+- alert语句允许你更改数据整体的特征.这些特征存储在该数据库目录下的da.opt文件中.
+
 
 #### 13.1.7 ALTER TABLE Statement
-    
+- Table Options    
+  - 为了保护因为疏忽而造成的数据丢失,alert table不允许将表存储引擎转换为MERGE和BLACKHOLE.
+  - 对于设置AUTO_INCREMENT值时,如果小于或等于当前最大值,则将值设置为当前值+1.
+- Performance and Space Requirements
+  - alert table操作有2种处理算法:(没有指定默认地为inplace)
+    - copy: 
+    - inplace:   
+  
+  
     
 ##### 13.7.2.1 ANALYZE TABLE Syntax    
 >performs a key distribution analysis and stores the distribution. 而MySQL会使用stored key distribution决定表join的顺序(join对象是constant 情况除外); 以及查询语句中表的哪个index被使用
