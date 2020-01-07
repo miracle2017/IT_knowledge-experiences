@@ -1380,6 +1380,10 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
     - 插入时: 当插入值小于N时, 尾部补上空格; 读取时: 去掉尾部的空格
   - BINARY(N) columns: 
     - 插入时: 当插入值为N时, 尾部补上0x00 bytes(就是(N-插入值)个00); 读取时, 不会任何移除, 原样返回
+
+
+#### 13.1.7 ALTER TABLE Statement
+    
     
 ##### 13.7.2.1 ANALYZE TABLE Syntax    
 >performs a key distribution analysis and stores the distribution. 而MySQL会使用stored key distribution决定表join的顺序(join对象是constant 情况除外); 以及查询语句中表的哪个index被使用
