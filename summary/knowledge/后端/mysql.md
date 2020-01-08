@@ -1380,7 +1380,6 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 ####13.1.1 ALTER DATABASE Statement
 - alert语句允许你更改数据整体的特征.这些特征存储在该数据库目录下的da.opt文件中.
 
-
 #### 13.1.7 ALTER TABLE Statement
 - Table Options    
   - 为了保护因为疏忽而造成的数据丢失,alert table不允许将表存储引擎转换为MERGE和BLACKHOLE.
@@ -1389,7 +1388,13 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - alert table操作有2种处理算法:(没有指定默认地为inplace)
     - copy: 
     - inplace:   
-  
+
+#### 13.1.8 ALTER TABLESPACE Statement
+- 添加新的数据文件或从表空间删除数据文件(data file),引擎只支持NDB和NDBCLUSTER..
+
+#### 13.1.10 CREATE DATABASE Statement
+
+ 
   
     
 ##### 13.7.2.1 ANALYZE TABLE Syntax    
