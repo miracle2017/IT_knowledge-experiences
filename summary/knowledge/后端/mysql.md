@@ -1394,8 +1394,17 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 
 #### 13.1.10 CREATE DATABASE Statement
 
- 
-  
+### 13.1.13 CREATE INDEX Statement 
+- create index映射到alert table以创建索引.create index无法创建主键,需要使用alter table语句.asc或desc关键字允许在将来中指定索引存储的顺序,虽然目前解析器会忽略asc和desc关键字并始终以asc顺序存储索引.
+- Column Prefix Key Parts
+  对于字符串列可以使用col_name(length)语法来创建仅使用列值开头的一部分作为索引.
+  - 可以为char,varchar,binary和varbinary键指定前缀
+  - blob和text键必须指定前缀,此外blob和text列只能为innoDB,myisam,blackhole表建立索引.
+- Unique Indexes
+  - 一个Unique Indexes创建了一个约束以使索引中所有值必须互不相同.如果为唯一索引指定前缀长度,那么列值在前缀内必须唯一.唯一索引允许多个null列值.
+- Full-Text Indexes
+  - 全文索引只支持innoDB和myisam表,并且只能是char,varchar,text列.索引总是在整列上进行的,所以不支持前缀索引,若指定了将忽略.
+    
     
 ##### 13.7.2.1 ANALYZE TABLE Syntax    
 >performs a key distribution analysis and stores the distribution. 而MySQL会使用stored key distribution决定表join的顺序(join对象是constant 情况除外); 以及查询语句中表的哪个index被使用
