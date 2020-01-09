@@ -1404,7 +1404,14 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - 一个Unique Indexes创建了一个约束以使索引中所有值必须互不相同.如果为唯一索引指定前缀长度,那么列值在前缀内必须唯一.唯一索引允许多个null列值.
 - Full-Text Indexes
   - 全文索引只支持innoDB和myisam表,并且只能是char,varchar,text列.索引总是在整列上进行的,所以不支持前缀索引,若指定了将忽略.
-    
+- Index Options
+  - 每个存储引擎支持索引类型
+    - innoDB: BTREE
+    - MYISAM：BTREE
+    - MEMORY/HEAP:HASH,BTREE
+    - NDB: HASH/BTREE
+
+#### 13.1.16 CREATE SERVER Statement
     
 ##### 13.7.2.1 ANALYZE TABLE Syntax    
 >performs a key distribution analysis and stores the distribution. 而MySQL会使用stored key distribution决定表join的顺序(join对象是constant 情况除外); 以及查询语句中表的哪个index被使用
