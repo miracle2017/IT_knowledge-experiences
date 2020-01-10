@@ -1378,7 +1378,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 
 ###  13.1 Data Definition Statements
 ####13.1.1 ALTER DATABASE Statement
-- alert语句允许你更改数据整体的特征.这些特征存储在该数据库目录下的da.opt文件中.
+- alert语句允许你更改数据整体的特征.这些特征存储在该数据库目录下的db.opt文件中.
 
 #### 13.1.7 ALTER TABLE Statement
 - Table Options    
@@ -1410,6 +1410,31 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
     - MYISAM：BTREE
     - MEMORY/HEAP:HASH,BTREE
     - NDB: HASH/BTREE
+- Table Options
+  - ENGINE
+    - innoDB:具有行锁和外键的事务安全表
+    - MyISAM:
+    - MEMORY:
+    - CSV:以逗号分隔值格式存储行的表
+    - ARCHIVE: 
+    - EXAMPLE:
+    - FEDERATED:访问远程表的存储引擎.
+    - HEAP:MEMORY表的同义词
+    - MERGE:myisam的集合用作一张表.也称为MRG_MyISAM.
+    - NDB:群集的，基于内存的容错表，支持事务和外键。也称为NDBCLUSTER
+  - COMMENT: 表注释,最大2048字符
+  - INSERT_METHOD:仅适用于MERGE表.定义怎么插入行,取值first,last,no分别表示插入表前,表后,和防止插入.
+  - STATS_AUTO_RECALC
+      - 指定是否为一个innoDB表重新计算统计持久信息,该值为`default`时,则一个表的持久统计信息设置由innodb_stats_auto_recalc决定(该值为1时: 当innoDB表的10%被更改时则重新计算统计信息;该值为0:防止自动计算表统计信息,所以你要手动执行analyze table语句以重新计算统计信息)
+  - STATS_PERSISTENT
+      - 是否为innoDB表开启持久统计信息(即存入到磁盘),该值为`default`时,则是否开启持久统计信息取决于 innodb_stats_persistent系统变量(该值1表示开启,0为关闭)
+  - STATS_SAMPLE_PAGES  
+- Table Partitioning  
+
+##### 13.1.17.1 CREATE TABLE Statement Retention
+- 创建表时,原始的create table语句(包含所有规范和表选项)都将被mysql存储起来,以便使用ALTER TABLE语句改变表存储引擎等其他信息时,之前指定的表选项还能保留着.
+- 由于是保存的是原始语句的文本.但是由于某些值或选项可以被静默的重新配置(如row_format),所以活动表的定义(通过describe或show table status获取)和表创建的字符串(通过SHOW CREATE TABLE获取)得到的值可能会有所不同. 
+    
 
 #### 13.1.16 CREATE SERVER Statement
 - Column Data Types and Attributes
