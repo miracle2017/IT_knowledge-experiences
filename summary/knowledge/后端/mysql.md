@@ -1613,6 +1613,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
      2. 再次尝试插入新行
      
 #### 13.2.11 UPDATE Statement
+- 有单表更新,多表更新
 
 
 ##### 13.7.2.1 ANALYZE TABLE Syntax    
