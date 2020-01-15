@@ -1626,8 +1626,34 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - ALL和DISTINCT表示是否返回相同的行.ALL(默认值)为全部返回,DISTINCT则表示从结果集中去除重复的行.DISTINCTROW为DISTINCT的同义词.
   - STRAIGHT_JOIN:强制优化器以from从句给定表的顺序进行联表,这在mysql优化器以非最佳顺序联表时,你可以这样强制指定来加快查询速度.
     - 一些较深的细节,此处先略过.要看原文.
-  - SQL_BIG_RESULT or SQL_SMALL_RESULT   
+  - SQL_BIG_RESULT或SQL_SMALL_RESULT:和GROUP BY或DISTINCT一起使用,该修饰符告诉优化器结果会是大还是小.对于SQL_BIG_RESULT,mysql会直接使用磁盘临时表(如果需要);对于SQL_SMALL_RESULT,mysql使用内存临时表.
   - SQL_BUFFER_RESULT:这会将结果强制放到临时表上,以便可以更早的释放表锁定,这对于需要较长的时间将结果集发送到客户端尤为有用.该修饰词只能用于顶级的select语句,不能用于子查询语句或UNION后 
+  - SQL_CALC_FOUND_ROWS:告诉mysql计算结果集会有多少行,而不管limit从句,该数值可使用SELECT FOUND_ROWS()获取.
+  - SQL_CACHE and SQL_NO_CACHE:表示是否缓存查询结果.
+  
+##### 13.2.9.1 SELECT ... INTO Statement  
+- SELECT ... INTO语句可以将查询结果保存到变量或文件中
+  - `SELECT ... INTO var_list`:保存到变量中
+  - `SELECT ... INTO OUTFILE`: 将选择行写入到文件中,可指定列和行的终止符来达到特地给格式的输出.file必须为一个不存在的文件(这是为了防止对如/etc/passwd文件或数据库表文件的更改)
+  - `SELECT ... INTO DUMPFILE`: 向文件写入单行,没有任何格式. 
+
+##### 13.2.9.2 JOIN Clause
+- 在mysql中,JOIN，CROSS JOIN和INNER JOIN是等效的,它们可以互相替换.
+- 单个连接(join)中最多引用61个表  
+- 在没有连接的条件下, 逗号(,)和INNER JOIN语义上是等效的,虽然逗号(,)运算级别比inner join低.
+- 通常on从句是指示表如何连接,where从句则限制要在结果集中包含哪些行.
+- USING(join_column_list)从句:join_column_list列出的列名必须存在两个联表中(如`a LEFT JOIN b USING (c1, c2)`)
+- 为了移植性建议将right join替换为left join
+- { OJ ... }语法仅于为了与ODBC兼容而存在.
+- NATURAL [LEFT] JOIN语义等效为使用了using从句的inner join或left join,using中列出两个表都共有的所有列名.
+- NATURAL [LEFT] JOIN和带有using从句的join对冗余列的消除和列排序规则
+  1. 首先为两表都有的公共列(而这些公共列顺序则按在第一表总出现的顺序)
+  2. 其次为第一个表的唯一列
+  3. 最后为第二个表的唯一列
+- STRAIGHT_JOIN与join类似,不同在于左边的表总是先于右边表被读取.这可用于优化器使用的联表顺序不是最优的情况(不过这种情况很少),以指示优化器使用最优的联表顺序.
+- USING从句能被重写为指定了比较相应列的ON子句.但尽管USING和ON相似,但它们并不完全相等(在查询哪行满足条件时是相等;但是选取列可能会有不同,因为using语句是会去除重复列的)
+  
+  
   
      
 #### 13.2.11 UPDATE Statement
