@@ -1652,7 +1652,6 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 
 - 支持的存储引擎: InnoDB, MyISAM,ARCHIVE
 
-
 - 可在如下场合中使用
   1. after doing substantial insert, update, or 
   delete operations on an InnoDB table.( innodb_file_per_table配置要是ON)
