@@ -1664,6 +1664,38 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 #### 13.2.10 Subqueries  
 - 子查询(subquery)是在另外一个语句中的select语句.一个子查询必须由括号括起来.
 - 
+
+##### 13.2.10.3 Subqueries with ANY, IN, or SOME
+- 语法:
+  `operand comparison_operator [ANY|SOME] (subquery)
+   operand IN (subquery)` 
+- SOME关键字为ANY的别名
+- IN等效于 = ANY 
+- NOT IN等效与<> ALL,而不是<> ANY
+
+##### 13.2.10.4 Subqueries with ALL
+- `operand comparison_operator ALL (subquery)`
+
+##### 13.2.10.5 Row Subqueries   
+- 表达式(1,2)和ROW(1,2)是等效的.
+
+##### 13.2.10.6 Subqueries with EXISTS or NOT EXISTS        
+
+##### 13.2.10.7 Correlated Subqueries
+-  correlated subquery就是子查询语句中引用外部的表(在子查询引用一个from从句没有指定的表,则mysql会从子查询语句向外部开始查找该表.)
+
+##### 13.2.10.8 Derived Tables
+- 派生表(derived table): 查询语句的from从句中的子查询是派生表,如`SELECT ... FROM (subquery) [AS] tbl_name ...` AS关键字是强制要有的.
+
+##### 13.2.10.9 Subquery Errors
+- 事务型存储引擎子查询失败会导致整个语句失败;而非事务型存储引擎保留了在遇到错误之前所做的数据修改
+   
+##### 13.2.10.10 Optimizing Subqueries
+- 使用x = ANY (table containing (1,2))代替 x=1 OR x=2.
+- 使用= ANY代替EXISTS.
+- mysql本身做的一些优化
+  - 
+
      
 #### 13.2.11 UPDATE Statement
 - 有单表更新,多表更新
