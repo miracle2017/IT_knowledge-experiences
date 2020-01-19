@@ -1784,8 +1784,9 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - LOCK TABLES和UNLOCK TABLES不用在存储程序中
   - performance_schema数据库不能lock tables语句锁定,除了setup_xxx表
   - 通常的,你不需要表锁,因为所有单个UPDATE语句都是原子性的,不会受到其他会话并行执行sql语句的影响.但是以下有一些情况是锁定表能带来的好处:
-    - 如果你要对myisam表执行许多操作,则锁定后操作会更快.锁定myisam表会加快插入,更新或者删除因为mysql不用flush key cache.
-
+    - 如果你要对myisam表执行许多操作,则锁定后操作会更快.锁定myisam表会加快插入,更新或者删除因为mysql不用flush key cache直到执行unblock tables.通常地key cache在每个sql语句后都会被flush.锁表的坏处是:没有会话可以更新一个加了读锁的表(包括持有该表读锁的会话),除了持有读锁的会话没有其他会话可以会话可以访问加了读锁的表.
+    
+##### 13.3.6 SET TRANSACTION Statement
     
   
 
