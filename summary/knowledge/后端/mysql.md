@@ -1843,7 +1843,20 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 #### 13.6.5 Flow Control Statements
 - mysql支持if,case,iterate,leave loop,while,repeat,return构造,以在存储程序中进行流程控制.mysql不支持for循环.
 
+### 13.8 Utility Statements
+#### 13.8.1 DESCRIBE Statement 
+- DESCRIBE和EXPLAIN语句是同义词(mysql对待它们完全相同),通常使用于获取表结构或查询语句的执行计划
+
+#### 13.8.2 EXPLAIN Statement
+- EXPLAIN EXTENDED:加了EXTENDED修饰词,则会额外产生用show warnings语句才会生成的执行计划信息.
+- EXPLAIN中的FORMAT修饰词指示了结果是以表格还是json格式展示.
+
+#### 13.8.4 USE Statement
+- 告知mysql使用给定的数据库作为默认数据库以便手续的语句可以使用.
+
 ##### 13.6.5.2 IF Statement
+
+### 13.7 Database Administration Statements
 
 ##### 13.7.2.1 ANALYZE TABLE Syntax    
 >performs a key distribution analysis and stores the distribution. 而MySQL会使用stored key distribution决定表join的顺序(join对象是constant 情况除外); 以及查询语句中表的哪个index被使用
