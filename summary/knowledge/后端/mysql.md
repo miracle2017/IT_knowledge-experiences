@@ -1843,20 +1843,11 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 #### 13.6.5 Flow Control Statements
 - mysql支持if,case,iterate,leave loop,while,repeat,return构造,以在存储程序中进行流程控制.mysql不支持for循环.
 
-### 13.8 Utility Statements
-#### 13.8.1 DESCRIBE Statement 
-- DESCRIBE和EXPLAIN语句是同义词(mysql对待它们完全相同),通常使用于获取表结构或查询语句的执行计划
-
-#### 13.8.2 EXPLAIN Statement
-- EXPLAIN EXTENDED:加了EXTENDED修饰词,则会额外产生用show warnings语句才会生成的执行计划信息.
-- EXPLAIN中的FORMAT修饰词指示了结果是以表格还是json格式展示.
-
-#### 13.8.4 USE Statement
-- 告知mysql使用给定的数据库作为默认数据库以便手续的语句可以使用.
-
 ##### 13.6.5.2 IF Statement
 
 ### 13.7 Database Administration Statements
+
+### 13.7.2 Table Maintenance Statements
 
 ##### 13.7.2.1 ANALYZE TABLE Syntax    
 >performs a key distribution analysis and stores the distribution. 而MySQL会使用stored key distribution决定表join的顺序(join对象是constant 情况除外); 以及查询语句中表的哪个index被使用
@@ -1871,7 +1862,6 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 >reorganizes the physical storage of table data and associated index date, to reduce storage space and improve I/O efficiency
 
 - 支持的存储引擎: InnoDB, MyISAM,ARCHIVE
-
 - 可在如下场合中使用
   1. after doing substantial insert, update, or 
   delete operations on an InnoDB table.( innodb_file_per_table配置要是ON)
@@ -1881,18 +1871,39 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 ##### 13.7.2.5 REPAIR TABLE Syntax
 >修复可能损坏的表. 通常你永远都不必执行该语句, 但如果发生灾难, 该语句可能能让你从MyISAM表中取回所有数据
 - 支持的存储引擎:MyISAM, ARCHIVE, and CSV，不支持视图
-
 - 重要事项 
   - 在修复表前请先备份backup表, 因为可能会导致数据的丢失
   - 在修复表时服务器崩溃了, 在重启服务器后请必须马上先再执行修复表命令, 在做其他操作之前. 在最坏的情况, 你可能会有一个新的索引文件而没有包含任何数据文件信息 所以这就是提前备份的价值.
   - 如果修复一张在master的损坏表, 其对原始表的修改变化不会被传播到slaves上
-  
 - 参数选项
   - QUICK: 仅仅修复索引文件, 不会修复数据文件  
+
+### 13.8 Utility Statements
+#### 13.8.1 DESCRIBE Statement 
+- DESCRIBE和EXPLAIN语句是同义词(mysql对待它们完全相同),通常使用于获取表结构或查询语句的执行计划
+
+#### 13.8.2 EXPLAIN Statement
+- EXPLAIN EXTENDED:加了EXTENDED修饰词,则会额外产生用show warnings语句才会生成的执行计划信息.
+- EXPLAIN中的FORMAT修饰词指示了结果是以表格还是json格式展示.
+
+#### 13.8.4 USE Statement
+- 告知mysql使用给定的数据库作为默认数据库以便手续的语句可以使用.
+
     
 ## 14.innoDB storage Engine
+### 14.1 Introduction to InnoDB
+- innoDB是一个兼顾了高可靠性和高性能的通用存储引擎,在mysql5.6中为默认存储引擎.
+- Key Advantages of InnoDB(主要优势)
+  - 它的DML操作遵循ACID模型,并具有commit,rollback,crash-recovery功能的事务,以保护用户数据.
+  - 行锁和Oracle-style的读一致可提高多用户并发性和性能
+  - innoDB表将数据安排在磁盘上,以基于主键优化查询.每个innoDB表都有一个主键索引称为聚簇索引的(ps:clustered index(中文聚簇索引)术语表示innoDB的主键索引),该索引组织书以最小化主键查找的I/O.
+  - 为了维护数据的一致性,innoDB支持外键(FOREIGN KEY)限制,以确保不同表间的一致性.
 
-### 14.6innoDB On-Disk Structures
+### 14.1.2 Best Practices for InnoDB Tables
+- 不要使用lock tables语句.innoDB能处理多个会话的对于同个表的同时读和写.如果要获取一组行的排他性写访问权限,请使用select ... for update语法锁定要更新的行.
+- 启动innodb_file_per_table,这可将单个表的数据和索引放入单独的文件中而不是系统表空间.
+
+### 14.6 innoDB On-Disk Structures
 
 #### 14.6.1 Tables
 #### 14.6.1.4 AUTO_INCREMENT Handling in InnoDB
@@ -1915,6 +1926,14 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
      
  - InnoDB AUTO_INCREMENT Counter Initialization
    在InnoDB中, 自增计数器存储内存中; 空表默认1(auto_increment_offset可以设置)开始; 当服务器重启了, 自增计数器会在第一次插入操作或show table status时初始化(做类似的操作: SELECT MAX(ai_col) FROM table_name FOR UPDATE;)
+
+
+# mysql术语
+- adaptive hash index(自适应哈希索引)
+  - 一种能加速在innoDB表中=或in运算符的查找,它通过在内存中构建一个哈希索引(hash index).mysql监视innoDB表的索引查询,如果能够从哈希索引中获益,则mysql会自动为经常被访问的index pages创建一个.该特性由于innodb_adaptive_hash_index系统变量控制,因为该特性对于有些负载能从中获益而有些不能,而用于哈希索引的内存保留在buffer pool中,所以你应该在该功能开启和关闭下进行基测比较下.
+- buffer pool:  
+  - 存有innoDB表数据和索引数据缓存的内存区域.为了高效的读取,该缓冲池被分为多个页面(pages),这些页面可能包含多个行.为了提高缓存管理效率,缓冲池被使实现为页面的链接列表(a linked list of pages).使用的是LRU算法的变体.在有大内存的系统上,可以将缓存池划分为多个缓冲池实例来提高并发性. 
+  - 从5.6起,可通过在mysql服务器关闭时间保存缓存池状态并在启动时恢复到相同的状态来避免重启mysql后漫长的预热.
  
  
 ##命令行命令
