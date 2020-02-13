@@ -5,7 +5,6 @@
   - 二进制安装包安装:[地址](https://dev.mysql.com/doc/refman/5.6/en/binary-installation.html#binary-installation-layout)
 - Postinstallation Setup and Testing
   - mysql_secure_installation: 安装MySQL后, 运行此程序后会提供一些安全方面的建议 
-  
   - Upgrading MySQL
 
 ## 4.MySQL Programs
@@ -15,20 +14,18 @@
 #### 4.2.2 Specifying Program Options
  
 ##### 4.2.2.1 Using Options on the Command Line
-    
   - 命令行中指定程序选项
-    
-    - 横杠(-): 可以紧接值, 或者空格在接值.(唯独 -p 例外, 必须马上接值, 不然空格会当成密码)
+    - 横杠(-): 可以紧接值, 或者空格后再接值.(唯独 -p 例外, 必须马上接值, 不然空格会当成密码)
     - 双横杠(--): 后面必须紧接 =值(其间不能有空格), 或者一个空格再紧接值(不建议, 选项有默认值就不会起作用甚至报错)
     - 短横杠开头的选项为简写, 双横杠开头的选项为全称格式
-    - 指定系统变量时, 横杠与下划线等价(开头横杠不行);(如 --skip-grant-tables 等价 --skip_grant_tables;) 但在运行中设置系统变量时(如set, select), 必须使用下划线格式(如SET GLOBAL general_log = ON;)
+    - 指定系统变量时, 横杠与下划线等价(开头横杠除外);(如 --skip-grant-tables 等价 --skip_grant_tables;) 但在运行中设置系统变量时(如set, select), 必须使用下划线格式(如SET GLOBAL general_log = ON;)
     - 选项的值中有空格时,必须使用引号, 如果是多条mysql语句用;分隔(如mysql -u root -p -e "SELECT VERSION();SELECT NOW()")
     
 ##### 4.2.2.2 Using Option Files
    - Option File Processing Order
      window, Linux读取配置文件的顺序[链接](https://dev.mysql.com/doc/refman/5.7/en/option-files.html#option-file-order),后面的配置优先前者
    - Option File Syntax
-     - #和;为注释符, #注释可以出现在句中
+     - '#'和';'为注释符,#注释可以出现在句中
      - [group] group选项配置应用于同名的程序上(如[mysql] 应用与mysql客户端程序)
    - Option File Inclusions
      - !include /home/mydir/myopt.cnf : 引入配置文件
@@ -49,7 +46,7 @@
   2. >mysql source test_file 或 >mysql  \. test_file
 
 #### 4.5.3 mysqlcheck — A Table Maintenance Program
->mysqlcheck是checks, repairs, optimizes,analyzes tables sql语句方便调用的一个工具. mysqlcheck和myisamchk差不多, 在mysql serve运行时使用mysqlcheck, 关闭时使用myisamchk
+>mysqlcheck是checks,repairs,optimizes,analyzes tables sql语句方便调用的一个工具. mysqlcheck和myisamchk差不多, 在mysql serve运行时使用mysqlcheck, 停机时用myisamchk
 - quick: prevents the check from scanning the rows to check for incorrect links.这是最快的check方式. 如果使用该方式去repair表, 则只repair index tree, 这是最快的repair方式.
 - fast: 仅检查为正确关闭的表
 - check: check table for error
@@ -1903,20 +1900,80 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 不要使用lock tables语句.innoDB能处理多个会话的对于同个表的同时读和写.如果要获取一组行的排他性写访问权限,请使用select ... for update语法锁定要更新的行.
 - 启动innodb_file_per_table,这可将单个表的数据和索引放入单独的文件中而不是系统表空间.
 
-### 14.6 innoDB On-Disk Structures
+### 14.2 InnoDB and the ACID Model
 
+### 14.3 InnoDB Multi-Versioning
+- innoDB是一个多版本控制的存储引擎,它保存保存了被更改行的旧版本信息,以便支持如并发和回滚的事务功能.该信息以称为回滚段(rollback segment)数据结构存储在表空间中.innoDB使用这些信息来在回滚事务中执行撤销操作,同时也被用于构建行的早期版本以实现读一致.
+- 内部的,innoDB向存储在数据库中每行添加三个字段.6字节的DB_TRX_ID字段指示插入或更新该行的最后一个事务标识符,此外删除在内部被视为更新,在该更新中,行中的特殊位(bit)被置为将其标记为已删除行;每行还包含一个7字节的DB_ROLL_PTR字段,称为滚动指针,该滚动指针指向一个写入在回滚片段中撤销日志记录(undo log record),如果行被更新,撤销日志记录包含了重建更新前的行的内容所必要的信息;6字节的DB_ROW_ID字段包含行ID,该行ID随着插入新行而单调增加,如果innoDB自动生成聚集索引,则该索引包含ID值,否则DB_ROW_ID列不会出现在任何索引中.
+- 回滚段中的撤销日志分为插入和更新撤销日志.插入撤销日志仅在事务回滚时需要,并且在事务一提交后就立即丢弃.更新撤销日志也用于一致读,但只有当不存在事务中有需要更新撤销日志信息去创建早期的数据库行版本的innoDB分配的事务,才可丢弃该更新撤销日志.
+- 回滚段中的撤销日志记录的物理大小通常小于相应的插入或更新的行,你可以用此信息来计算回滚段所需要的大小.
+- 在innoDB多版本方案中,当你删除语句时,并不会立即从数据库中物理删除该行,innoDB只会在丢弃了为删除而编写的更新撤销日志记录时,才会物理地删除相应的行以及索引.此清除(removal)操作称为清除(purge),它非常快,通常和执行删除操作的sql语句顺序相同.
+- Multi-Versioning and Secondary Indexes
+ - InnoDB multiversion concurrency control(MVCC)对二级索引的处理不同于聚簇索引( clustered indexes).聚簇索引中的记录是就地更新,它隐藏着系统列指向了撤销日志条目,该条目可用于重建行的早期版本.而二级索引(secondary index)则没有包含隐藏的系统列,也就无法就地更新.当一个二级索引更新时,旧的索引记录会被标记为删除,插入新记录,并最终清除(purge)带有删除标记的记录
+
+### 14.5 InnoDB In-Memory Structures
+#### 14.5.1 Buffer Pool
+- 缓冲池(buffer pool)是一个内存中一个区域,访问innoDB表和索引数据时会缓存在该内存中.缓冲池允许直接冲内存中处理经常使用的数据,从而加快处理速度.在专用的服务器上,通常将多达80%的物理内存分配给缓冲池.为了提高大容量读取操作的效率,缓冲池分为多页面,这些页面可以潜在的容纳多行.为了高效的管理缓存,缓冲池被实现为页面的链接列表,使用LRU算法的变体将很少使用的数据老化掉.
+- Buffer Pool LRU Algorithm
+  - 缓冲池被作为列表进行管理,使用最近最少使用算法(LRU)的变体.当需要添加新的页面到缓冲池中,则最少使用的页面被驱逐,然后新页面加入到列表的中间.中间点插入策略将列表视为两个子列表对待: 一个是新子列表包含最近访问的页面,另一个是旧子列表包含了最近最少访问的页面,作为驱逐的候选对象.
+  - 默认地,该算法运行方式如下:
+    - 缓冲池的3/8分配给旧页子列表
+    - 当innoDB读取一个页面到缓冲池时,它首先如插入到列表中间点(旧子列表的头部).一个页面会被读取到缓冲池是在用户启动的操作(如sql查询),或innoDB自动执行的预读操作的一部分.
+    - 访问旧子列表的页面,该页面会被标记为新的并被移到新子列表的头部.如果页面的读取是由于用户发起的操作,则第一次访问会马上将页面标记为新的;如果页面的读是由于预先读(read-ahead)操作,则第一次访问不会马上发生(标记为新的),甚至该页面被驱逐了都不会.
+  - 通常,由查询语句读取的页面会别马上被移动到新子列表中.表扫描,比如一个mysqldump操作或没有加where的select语句,会将大量数据写入到缓冲池中并驱逐同等量的旧数据,即使新数据从不会被使用.相同地,由后台预读取线程加载的页面并只被访问一次而被移到新子列表的头部.在这些情况中会将频繁访问页面推到旧页中.对此优化可参照14.8.3.2“Making the Buffer Pool Scan Resistant”和Section 14.8.3.3“Configuring InnoDB Buffer Pool Prefetching (Read-Ahead)”.
+- Buffer Pool Configuration
+  - 在有足够内存的64位系统上,可将缓冲池分为多个以最小化并发操作之间的内存结构的争用.
+  - 可控值在后台flush时是否根据工作负载动态调整flush速率.
+  - 可控制innoDB如何保存当前缓存池状态来避免在服务器启动后需要长时间的预热.
+- Monitoring the Buffer Pool Using the InnoDB Standard Monitor
+  - 可使用SHOW ENGINE INNODB STATUS语句来查看innoDB标准监视输出,缓冲池指标位于该输出中 BUFFER POOL AND MEMORY部分.
+- Monitoring the Buffer Pool Using the InnoDB Standard Monitor
+  - 使用SHOW ENGINE InnoDB STATUS语句查看innoDB的标准监视输出.
+  - 注意:
+    - 在没有进行大扫描时,如果youngs/s很低,则可能要减少延时间或增加用于旧子列表的缓冲池百分比.增加百分会使旧子列表的缓冲池变大,因此该子列表中的页面需要更长的时间才能移到尾部,这增加了再次使用它们并是它们变新的可能性.
+    - non-youngs/s指标只应用在旧页面.如果在执行大表扫描时该值没有较高(和较高的youngs/s)则请增加延迟值.
+
+### 14.5.2 Change Buffer    
+- change buffer是一种特殊的数据结构,它是缓存(cache)对二级索引页面的更改并且这些页面没有存在缓冲池中.更改的缓冲(buffered changes)是由insert,update,delete操作结果引起,更改的缓冲会(buffered changes)与相关的页面被以后其他读的操作加载到缓冲池时而合并然后再放入到缓冲池中.不像聚簇索引,二级索引值通常不是唯一的,插入到二级索引通常是随机的顺序,同样地,删除和更新二级索引页面在索引树上可能不是相邻的.缓存的更改(cached changes)会在之后合并,即当其他读操作将受影响的页面读取到缓冲池中才会合并,这避免了从磁盘中将二级索引读取到缓冲池所需要的大量随机I/O访问. 定期地,purge操作会在系统大部分空闲时或者缓慢关机时将已更新了的索引页面写入到磁盘上,这比一有数据更新就写入磁盘高效.change buffer的合并在受影响行数很多和被更新的二级索引很多时有可能需要花费几个小时.在内存上,change buffer占据一部分缓冲池(buffer pool).在磁盘上,change buffer是系统表的一部分,当数据库服务器关闭时缓冲索引的更改.change buffer由 innodb_change_buffering系统变量控制.当索引列中包含降序列或主键包含降序索引列则Change buffering不支持secondary index.
+  - 自己理解总结:change buffer就是缓存那些对二级索引页面的更改且这些页面没有在缓冲池中(因为这些页面没有在缓冲池中所以没办法直接合并),当后面有读操作将相关的页面读取到缓冲池时才合并.更新的页面会后面刷新(flush)到磁盘中,
+- Configuring Change Buffering
+  - change buffer能减少磁盘的读和写,特别是受限于I/O的负载最有价值(例如具有大量DML操作(如批量插入)的应用),但是如果change buffer占了缓冲池太多的内存或表的二级索引相对较少,那么禁止change buffer可能会更有帮助.为此可通过innodb_change_buffering设置change buffer缓冲程度:可以开启或禁止插入,删除操作(索引记录最初被标记为删除)和purge操作(索引记录被物理删除).更新操作即为插入和删除的组合.具体取值如下:
+    - all: 默认值,缓冲insert,delete-marking和purge操作.
+    - none: 不缓冲任何操作
+    - inserts: 缓冲插入操作
+    - deletes: 缓冲标记删除(delete-marking)操作
+    - changes: insert和delete-making操作
+    - purges: 缓冲后台执行物理删除操作. 
+- Configuring the Change Buffer Maximum Size
+  - innodb_change_buffer_max_size系统变量为设置change buffer占总缓冲池的最大百分比值,默认为25,最大为50(即50%).在有大量插入,更新和删除的服务器上,change buffer的合并可能会跟不上新增的change buffer条目,从而达到change buffer的最大上限所以要增大innodb_change_buffer_max_size值; 如果change buffer占据太多缓冲池的空间而导致页面比期望的更快逐出缓冲池.使用一个代表性工作负载下测试不同的设置以确定最佳配置.
+- Monitoring the Change Buffer
+  - 使用`SHOW ENGINE INNODB STATUS\G`语句查看innoDB标准监视输出,change buffer信息位于该输出中的INSERT BUFFER AND ADAPTIVE HASH INDEX部分中.
+
+### 14.5.3 Adaptive Hash Index  
+- adaptive hash index特性使innoDB在具有适当工作负载组合和足够的缓冲池内存系统上更像一个内存数据库而不用牺牲事务功能特性和可靠性.innodb_adaptive_hash_index变量控制是否开启.基于对搜索的模式,使用索引前缀构建哈希索引,前缀可以是任意长度.哈希索引是根据经常访问的索引页面的需要而自动建立的.但在有些负载下,adaptive hash index反而没有帮助,如繁重的工作负载(例如多个并发连接).使用like和%通配符的查询也往往不受益,为此在这个负载下应关闭以减少开销.由于很难事先预测开启是否会受益所以要事先在开启和关闭下都进行基准测试下.
+- `SHOW ENGINE INNODB STATUS`语句输出结果的SEMAPHORES部分可以对adaptive hash index的使用和争用进行监视.
+
+#### 14.5.4 Log Buffer
+- log buffer是一个内存区域,它保存着要写入磁盘上的日志文件的数据.大小由innodb_log_buffer_size变量控制,默认16MB.log buffer的内容定期的flush到磁盘中.较大的log buffer可以使大型事务无需在commit前将redo日志写入到磁盘,因此对于有更新,插入或删除许多行的事务,需要加大log buffer以节省磁盘I/O.
+- innodb_flush_log_at_trx_commit变量控制log buffer内容怎么写入磁盘. innodb_flush_log_at_timeout变量控制定期flush到磁盘的频率.
+
+### 14.6 innoDB On-Disk Structures
 #### 14.6.1 Tables
+##### 14.6.1.1 Creating InnoDB Tables
+- 当你创建一个innoDB表时,mysql会在mysql的数据目录下的数据库目录中创建一个.frm文件,对于在 file-per-table选项下创建的,mysql会在数据库目录下创建一个.ibd表空间文件,如果该选择没有开启,则表会创建在innoDB系统表空间中,即在mysql数据目录下在已存在的ibdata文件中创建该表
+- InnoDB Tables and .frm Files
+  - mysql将表的数据字典信息存储在数据库目录下的.frm文件中,不像其他存储引擎,innoDB还会在系统表空间内的自己内部数据词典中存储编码(encode)了的有关表的信息.所以当mysql删除一个表或者数据库时,它会删除.frm文件同时还会删除innoDB数据字典中相应的条目.为此你不能通过简单的移动.frm来完成innoDB表的移动.
+- InnoDB Tables and Primary Keys  
+  - 虽然一个表没有主键可以正确运行,但是主键经常被使用到并且与涉及到许多方面的性能,所以强烈推荐指定一个主键.
+  
 #### 14.6.1.4 AUTO_INCREMENT Handling in InnoDB
  - InnoDB AUTO_INCREMENT Lock Modes
    1. innodb_autoinc_lock_mode = 0 ("traditional" lock mode)
       会产生表锁
    2. innodb_autoinc_lock_mode = 1 ("consecutive" lock mode)
-      
    3. innodb_autoinc_lock_mode = 2 ("interleaved" lock mode)
-      速度最快(有些情况也会产生表级锁), 但是it is not safe whenusing statement-based replication or recovery scenarios when SQL statements are replayed from the binary log
-
+      速度最快(有些情况也会产生表级锁), 但是it is not safe when using statement-based replication or recovery scenarios when SQL statements are replayed from the binary log
  - InnoDB AUTO_INCREMENT Lock Mode Usage Implications
-
    - Using auto-increment with replication
      - 使用statement-based replication: 设置innodb_autoinc_lock_mode为0或1同时master和slaves必须同一个值, 这样是安全的
      - row-based or mixed-format replication: innodb_autoinc_lock_mode的所有模式都安全
@@ -1927,14 +1984,142 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
  - InnoDB AUTO_INCREMENT Counter Initialization
    在InnoDB中, 自增计数器存储内存中; 空表默认1(auto_increment_offset可以设置)开始; 当服务器重启了, 自增计数器会在第一次插入操作或show table status时初始化(做类似的操作: SELECT MAX(ai_col) FROM table_name FOR UPDATE;)
 
+##### 14.6.1.6 AUTO_INCREMENT Handling in InnoDB
+- InnoDB AUTO_INCREMENT Lock Mode Usage Implications
+  - 主从复制AUTO_INCREMENT的使用
+    - 对于使用基于语句(statement-based)复制,那么主服务器和从服务器innodb_autoinc_lock_mode的值相同且为0或1,这样的复制是安全的.而对于使用innodb_autoinc_lock_mode=2,或者主机和从机使用不同的innodb_autoinc_lock_mode值的情况则无法保证主机从机的Auto-increment值是相同. 
+    - 对于使用row-based的mixed-format复制,则所有的innodb_autoinc_lock_mode值(共有0,1,2)都是安全
+  - auto-increment的丢失和序列的缺口
+    - 在innodb_autoinc_lock_mode所有的值下,如果生成auto-increment值的事务回滚,则这些auto-increment值会"丢失",即一旦一个值分配给自动增加列,即使事务回滚了这些值还是无法复用的(除了重启服务器以重新计算计数器值或者更改自增值计数器值),因此自增列上可能会有间隙.
+  - 为自增列指定NULL或者0
+    -  在innodb_autoinc_lock_mode所有的值下,为自增列指定NULL或者0,那么innoDB当作它仿佛没有被指定并自动生成一个新值给它.
+  - 如果一个自增列值超过该列定义的整数类型
+    - 则会报重复键(duplicate-key)的错误(如最大值为127那么报错提示会是:为主键值插入重复值127.(ps:innoDB表只能有一个自增列且必须是主键))  
+  - 批量插入下的自增值的间隙  
+    - innodb_autoinc_lock_mode为0或者1下,自增(auto-increment)值是连续的不会有间隙 
+  - 修改自增列值可能会导致的问题
+    - **如果修改自增列的值大于当前自增值的最大值,后续的insert语句可能会在自增列上产生重复值的错误.** 演示:比如a为自增列,当前一行数据,a列为1,现更改为2,然后插入一行(a列不指定值使用自增值),则结果会报2重复.
+- InnoDB AUTO_INCREMENT Counter Initialization    
+  - 如果为innoDB表指定自增列,则innoDB数据字典中的表句柄将包含了一个称为自增值计数器,该计数器用于为该自增列分配新增.该计数器仅存于主内存中,而不是在磁盘上.当对包含自增列的表第一次插入时初始化该计数器值.默认地,自增值增量为1,可通过设置auto_increment_increment更改,如果表示空的,则从1开始,也设置auto_increment_offset自定义起始值.重启会取消CREATE TABLE和ALTER TABLE语句中AUTO_INCREMENT = N选项的影响,即重启后AUTO_INCREMENT会重新计算可能不是你指定的N了.
+  - notes: 当重启服务器后,innoDB可能会重用哪些分配的自增值因事务回滚而没有使用的自增值
 
+#### 14.6.2 Indexes    
+##### 14.6.2.1 Clustered and Secondary Indexes
+- 每个innoDB表都有一个特殊的索引称为聚簇索引(clustered index),用于存储行数据.通常地,聚簇索引与主键是同义的.
+  - 当你为表定义一个主键时,innoDB使用它作为聚簇索引.
+  - 如果你没有为表定义一个主键,则mysql会定位第一个所有键列都为not null的唯一索引(unique index)并且innoDB将该唯一索引作为聚簇索引.
+  - 如果一个表没有主键和合适的唯一索引(所有键列都为not null的唯一索引),innoDB内部会在包含行ID的合成列上产生一个隐藏的聚簇索引名为GEN_CLUST_INDEX.这些行由innoDB分配给此表中的行ID排序.行ID是一个6字节的字段,随着插入新行而单调增加.因此,按行ID排序实际上是为插入的顺序.
+- How the Clustered Index Speeds Up Queries
+  - 通过聚簇索引访问行会更快,因为索引搜索将直接指向包含所有行数据的页面.     
+- How Secondary Indexes Relate to the Clustered Index    
+  - 除了聚簇索引外的所有索引都是二级索引(secondary indexs).二级索引中每个记录都包含该行的主键列以及二级索引指定的列.innoDB使用该主键值在聚簇索引中搜索行.
+
+##### 14.6.2.2 The Physical Structure of an InnoDB Index    
+- 所有的innoDB索引都是B-trees,索引记录存储在树的叶子页中.索引页默认大小为16KB.当新记录插入到innoDB聚簇索引中,innoDB会尝试让的页面的1/16空闲,以供将来插入和更新索引记录.如果索引记录的插入是按顺序的(升序或降序),则索引页面大约15/16满.如果索引页下降到1/2以下,则innoDB会尝试收缩索引树以释放页面.
+- 可在初始化mysql实例前通过innodb_page_size设置索引页大小,而之后如果要该值需要重新初始化mysql实例.该值支持16KB,8KB,4KB.
+- 页面大小(InnoDB page size)不同的两个mysql实例,数据文件和日志文件(data files and log file
+s)不能相互使用. 
+
+#### 14.6.3 Tablespaces
+##### 14.6.3.1 The System Tablespace
+- 系统表空间(system tablespaces)是一个存储innoDB数据字典(data dictionary),双写缓冲区(doublewrite buffer),更改缓冲区(change buffer),撤消日志(undo log).此外,它还可能包含包表和索引数据(即该表是在file-per-table选项关闭情况下创建的,所有表和索引数据都包含在系统表空间内).系统表空间位于mysql的data目录下,名称类似ibdata1,ibdata2(系统表空间可以有多个文件).系统表空间数据文件的数量和大小由innodb_data_file_path在mysql启动时定义的.
+- Resizing the System Tablespace    
+  - 增加系统表空间大小
+    - 最简单的方法就是在配置文件中设置innodb_data_file_path选项为最后一个系统表空间文件为autoextend(自动扩展),每次自动扩展大小由innodb_autoextend_increment设置,然后重启mysql服务器生效.(ps:表空间有个大小最大64TB的限制)
+    - 此外,你也可以增加新的系统表空间数据文件来扩展系统表空间大小.
+      - 停止mysql
+      - 修改配置文件中的innodb_data_file_path值.在innodb_data_file_path定义中如果最后一个系统空间数据文件(文件名类似ibdata1)有autoextend属性则移除,然后将文件大小设置为当前该文件大小转化为M单位并四舍五入后的值
+      - innodb_data_file_path值后附上新的系统表空间数据文件名称,以及新数据文件的大小,autoextend属性为可选,与前一个数据文件用;间隔.(修改类似长这样innodb_data_file_path = /ibdata/ibdata1:900M;/disk2/ibdata2:50M:autoextend,这个例子就是增加新的文件名为ibdata2,初始大小为50M,会只能扩展.具体语法innodb_data_file_path=file_name:file_size[:autoextend[:max:max_file_size]])
+      - 重启mysql以生效配置
+  - Decreasing the Size of the InnoDB System Tablespace     
+    - 对于减小系统表空间的值不能采用移除文件的做法,应使用如下方法:
+      - 使用mysqldump导出所有innoDB表,包括位于mysql数据下的
+      - 停止mysql服务器
+      - 移除所有存在的表空间文件(*.ibd),包含ibdata和ib_log文件.不要忘了也移除mysql数据库下*.ibd文件.
+      - 移除所有innoDB表的.frm文件
+      - 在mysql配置文件中配置新的系统表空间数据文件.(方法类似本节的Resizing the System Tablespace)
+      - 重启mysql服务器
+      - 导入导出的文件
+      - note:如果数据仅使用innoDB存储引擎那么可以直接简单的导出所有表(dump all databases),停止mysql,移除所有数据库和innoDB日志文件,然后重启导入文件
+      - 为了避免系统表空间太大,考虑开启file-per-table配置,对于表空间类型为file-per-table的表,当截断(truncate)或删除(drop)该表后,磁盘空间会返还给操作系统.
+
+##### 14.6.3.3 Undo Tablespaces    
+- 撤消表空间(undo tablespaces)包含着撤消日志(undo logs).撤消日志是撤消日志记录的集合,撤消日志记录包含了有关如何撤消事务对聚簇索引记录的最新更改的信息.撤消日志(undo logs)存在于撤消日志段(undo log segments)中,撤消日志段包含在回滚段(rollback segments)中.innodb_rollback_segments系统变量定义了为每个撤消表空间(undo tablespaces)分配多少个回滚段.撤消日志能被存储在一个或者多个撤消表空间而不是系统表空间中,此布局与默认配置不同,默认地撤消日志位于系统表空间中. innodb_undo_tablespaces变量设置了innoDB使用的撤消表空间的数量,该选项只能在mysql实例化时配置,之后便不能再更改.
+- Configuring Undo Tablespaces
+  - 为了找到最佳值你需要事先在测试实例上测试(该测试实例应与实际生产环境相同,数据量相似). 对于innodb_undo_tablespaces数量,如果不确定可以估值高点,然后是确定innodb_rollback_segments:先赋个比较小的值,然后定期增加该值(最大128)并查看I/O性能是否提升,一直重复直到I/O性能没有再提升.
+
+##### 14.6.4 InnoDB Data Dictionary
+- InnoDB数据字典由内部系统表组成，这些内部系统表包含了用于跟踪对象（例如表，索引和表列）的元数据。元数据位于InnoDB系统表空间中(数据字典位于系统表空间中)。由于历史原因，数据字典元数据在某种程度上与InnoDB表元数据文件（.frm文件）中存储的信息重叠。
+
+#### 14.6.5 Doublewrite Buffer
+- doublewrite缓冲区是系统表空间中的存储区域，InnoDB会在其中写入从缓冲池中刷新的页面，然后再将它们写入数据文件中的适当位置。仅在刷新页面并将其写入doublewrite缓冲区后，InnoDB才会将页面写入其适当位置。如果在页面写入过程中发生操作系统，存储子系统或mysqld进程崩溃，则InnoDB可以在崩溃恢复期间从doublewrite缓冲区中找到该页面的良好副本。
+- 尽管数据总是被写入两次，但是双写缓冲区不需要两倍的I / O开销或两倍的I / O操作。通过对操作系统的单个fsync（）调用，数据将作为一个大的顺序块写入doublewrite缓冲区。
+- 默认情况下，双写缓冲区处于启用状态。要禁用双写缓冲区，请将innodb_doublewrite设置为0。
+
+#### 14.6.6 Redo Log
+- 重做日志(redo log)是一种基于磁盘的数据结构,在崩溃恢复期间用于纠正不完整事务写入的数据.在正常操作期间，重做日志对更改表数据的请求进行编码，这些请求是由SQL语句或低级别的API调用引起的。在初始化过程中以及接受用户连接之前，将自动重播在意外关闭之前未完成更新数据文件的修改.
+- 默认地,重做日志物理上由名为ib_logfile0和ib_logfile1两个在磁盘上的文件表示.mysql以循环的方式写入重做日志.
+- Changing the Number or Size of Redo Log Files
+- Group Commit for Redo Log Flushing
+
+#### 14.6.7 Undo Logs    
+- 与单个读写事务关联的撤消日志记录的集合是撤消日志.一个撤消日志记录包含着怎么撤消一个事务对聚簇索引的最新更改的信息,如果另一个事务需要查看原始数据,则将从该撤消日志记录中检索未修改的数据.撤消日志存在与撤消日志段(undo log segments)中,而撤消日志段存在于回滚段(rollback segments)中.默认地,回滚段存放与系统表空间中,但同样也可以存放在撤消表空间中(undo tablespaces).
+- 回滚段支持的事务数量取决于回滚段上的撤消插槽(undo slot)的数量和每个事务需要的撤消日志数量.一个事务最多分配2个撤消日志:一个为插入操作,另一个为更新或删除操作.
+- 基于以上的讨论我们可以估算出innoDB支持多少个并发读写事务.
+  - 假设每个事物都是只有插入操作或者更新,删除操作(即这种情况只要分配一个撤消日志),则并发数公式如下:(innodb_page_size单位byte)
+    `(innodb_page_size / 16) * innodb_rollback_segments`
+  - 假设每个事务都有插入操作和更新或删除操作,公式如下:(innodb_page_size单位byte)
+    `(innodb_page_size / 16 / 2) * innodb_rollback_segments`
+
+### 14.17 InnoDB Monitors
+#### 14.17.2 Enabling InnoDB Monitors  
+- 当innoDB监视器被开启时,innoDB大约每15秒会将结果写入mysql服务器的标准错误输出(stderr)中.开启的方式如下2中
+  - 创建一个名为innodb_monitor的innoDB表.
+  - 开启innodb_status_output或innodb_status_output_locks系统变量,前者变量为InnoDB Standard Monitor out,后者为Lock Monitor Output,区别就是后者比前者多了关于lock的信息
+- Obtaining Standard InnoDB Monitor Output On Demand
+  - 作为启动innoDB Standard Monitor定期输出的替代方法,可以使用`SHOW ENGINE INNODB STATUS`语句按照需要查询
+      
+#### 14.17.3 InnoDB Standard Monitor and Lock Monitor Output      
+- Lock Monitor与Standard Monitor的输出是相同,除了多了锁(lock)信息.
+      
 # mysql术语
 - adaptive hash index(自适应哈希索引)
   - 一种能加速在innoDB表中=或in运算符的查找,它通过在内存中构建一个哈希索引(hash index).mysql监视innoDB表的索引查询,如果能够从哈希索引中获益,则mysql会自动为经常被访问的index pages创建一个.该特性由于innodb_adaptive_hash_index系统变量控制,因为该特性对于有些负载能从中获益而有些不能,而用于哈希索引的内存保留在buffer pool中,所以你应该在该功能开启和关闭下进行基测比较下.
 - buffer pool:  
   - 存有innoDB表数据和索引数据缓存的内存区域.为了高效的读取,该缓冲池被分为多个页面(pages),这些页面可能包含多个行.为了提高缓存管理效率,缓冲池被使实现为页面的链接列表(a linked list of pages).使用的是LRU算法的变体.在有大内存的系统上,可以将缓存池划分为多个缓冲池实例来提高并发性. 
   - 从5.6起,可通过在mysql服务器关闭时间保存缓存池状态并在启动时恢复到相同的状态来避免重启mysql后漫长的预热.
- 
+- clustered index  
+  - 聚簇索引(clustered index)是对innoDB主键的术语.
+- data dictionary 
+  - innoDB数据字典(data dictionary)由内部系统表组成,这些系统表包含了跟踪与innoDB相关的对象(例如表,索引和表列)的元数据.元数据位于innoDB系统表空间中.由于历史原因,词典元数据在某种程度上与innoDB表元数据文件(.frm文件)中存储的信息重叠.
+- data files 
+  - data files是物理上包含表和索引数据的文件.
+  - innoDB系统表空间,保存着innoDB数据字典(data dictionary)并且能够保存多个innoDB表数据,系统表空间用一个或多个.ibdata数据文件表示.
+  - file-per-table表空间保存着单个innoDB表的数据,用一个.ibd数据文件表示.
+  - 通用表空间(在mysql5.7.6引入),它能保存多个的innoDB表数据,同样使用一个.ibd数据文件表示.
+- .ibd file
+  - .ibd是file-per-table表空间(tablespaces)和通用表空间(general tablespaces)的数据文件. file-per-table表空间.ibd文件包含单个表和相关的数据文件.常规表空间.ibd文件可能包含多个表的表和索引数据,常规表空间(general tablespaces)在mysql5.7.6引入. .ibd不同于系统表空间(system tablespaces),系统表空间是由一个或多个ibdate文件组成的.
+- ibdata file  
+  - ibdata file是一系列名字如ibdata1,ibdata2等的文件,这一系列文件组成了innoDB的系统表空间(system tablespace).这些文件包含了innoDB表的元数据,(innoDB data dictionary(数据词典))和一个或多个的undo logs(撤消日志)、change buffer、doublewrite buffer(双写缓冲)的存储区域.这些文件包含了部分或全部表的数据(部分还是全部这取决于所有表创建时innodb_file_per_table选项是否关闭),启用innodb_file_per_table时,新建表的数据和索引将单独存储在.ibd文件中,而不是系统表空间中.ibdata文件的增长受innodb_autoextend_increment配置影响.
+- ib_logfile
+  - 形成redo log(重做日志)的一组文件,通常命名为ib_logfile0和ib_logfile1.有时也被称为log group(日志组).这些文件记录着尝试更改innoDB表中数据的语句.这些语句会在系统崩溃之后的启动时自动重播(replay)以更正由不完整事务写入的数据.当然ib_logfile文件是不能被用于手动恢复的,若需要手动恢复请使用binary log.
+- LSN
+  - log sequence numberde首字母缩写,这个不断增加的值表示着与重做日志(redo log)中操作记录对应的时间点.(此时间点不受事务边界限制,它可以落在一个或多个事务的中间).在崩溃恢复期间,innoDB在内部使用它来管理缓冲池.
+  
+- rollback segment
+  - 一个包含撤消日志(undo logs)的存储区域.回滚段(rollback segment)传统上位于系统表空间中.从mysql5.6起回滚段可以驻留在撤消表空间(undo tablespaces)中,mysql5.7开始,回滚段也分配给全局临时表空间.  
+- secondary index
+  - 一种innoDB索引,表示着表列的子集.一个innoDB表可以有零个,一个或多个secondary index(不像聚簇索引(clustered index),每个innoDB表都要有聚簇索引).secondary index能被用在仅查询索引列就能满足查询条件;或更复杂的,能被用于定位表中相关行,然后再用聚簇索引来获取要查询的行信息.
+- tablespace
+  - 一个数据文件,可以保存一个或多个innoDB表及关联的索引.系统表空间(system tablespace)包含了innoDB的数据字典(data dictionary)
+
+
+# 一些外部辅助理解mysql的文章
+- 索引结构
+  - https://www.kancloud.cn/kancloud/theory-of-mysql-index/41850
+  - https://zhuanlan.zhihu.com/p/35811482
+- 好的优化文章
+  - https://www.jianshu.com/p/d7665192aaaf 
  
 ##命令行命令
 >mysql命令行键入: `help`, 可以获取全部可用的命令信息 
