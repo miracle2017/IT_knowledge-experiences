@@ -81,8 +81,9 @@
     -a: 全部
     -p: 建立相关链接的程序名及进程号
     
-- find [path]  (-name pattern(文件名查找)| -iname pattern(文件名不区分大小写)|-regex pattern(正则表达式))
+- find [path]  (-name pattern(文件名查找)| -iname pattern(文件名不区分大小写)|-regex pattern(正则表达式)|-exec 命令(对找到的内容执行命令))
   例子 find . -name ".c"   找出当前目录下的.c文件
+  只对目录下所有文件修改权限为644,而子目录不动: `find /home/wwwroot -type f -exec chmod 644 {} \;` {}表示匹配到的内容,旁边一定要有空格,\;表示结束.
     
 - mkdir: 创建文件夹
 
