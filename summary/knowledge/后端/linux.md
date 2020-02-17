@@ -200,18 +200,19 @@
 >- /usr/local/nginx/sbin/nginx -s reload  :重新加加载配置文件(-s有stop的意思)
 
 ##【网站压力测试】
-
 >- Apache自带强大网站测试工具：ab
     常用用法： 进入Apache的ab.exe(用于请求http,而abs.exe用于请求https)文件所在目录  打开命令行 ab -n 1000 -c 200 http://www.baidu.com
     (-n 请求总数量, -c并发数)
 
 ##【PHP-FPM】
-
+- 参考:线程和进程的区别:https://blog.csdn.net/kuangsonghan/article/details/80674777, https://blog.csdn.net/mxsgoden/article/details/8821936
 >- Nginx 是非阻塞IO & IO复用模型，通过操作系统提供的类似 epoll 的功能，可以在一个线程里处理多个客户端的请求。
 >- Nginx 的进程就是线程，即每个进程里只有一个线程，但这一个线程可以服务多个客户端。
 
 >- PHP-FPM 是阻塞的单线程模型，pm.max_chfirewallildren 指定的是最大的进程数量，pm.max_requests 指定的是每个进程处理多少个请求后重启(因为 PHP 偶尔会有内存泄漏，所以需要重启).
 >- PHP-FPM 的每个进程也只有一个线程，但是一个进程同时只能服务一个客户端。
+
+>- mysql是单进程多线程的架构.每个客户端连接(会话)都会在服务器进程中拥有一个线程,这个连接的查询只会在这个单独的线程中执行.一个mysql实例会有一个管理线程的线程池.
 
 ##shell并发执行
 

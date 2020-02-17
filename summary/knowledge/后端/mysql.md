@@ -29,7 +29,7 @@
      - [group] group选项配置应用于同名的程序上(如[mysql] 应用与mysql客户端程序)
    - Option File Inclusions
      - !include /home/mydir/myopt.cnf : 引入配置文件
-     - !includedir /home/mydir : 在指定目录查找.cnf后缀的配置文件(Unix系统); .ini或.cnf后缀文件(window系统), 不使用引号,路劲中不能有转义字符, 
+     - !includedir /home/mydir : 在指定目录查找.cnf后缀的配置文件(Unix系统); .ini或.cnf后缀文件(window系统), 不使用引号,路径中不能有转义字符, 
      例子(`!include C:\\ProgramData\\MySQL\\MySQL Server\\myopts.ini`)
    
 #### 4.2.5 Connection Compression Control
@@ -37,8 +37,7 @@
    因为会降低性能所以仅在低网速(网络传输消耗大于压缩解压缩)才会有收益.
  
 ##### 4.5.1.3 mysql Client Logging
-命令行交互式语句默认都会被记录在home目录下默认名字为.mysql_history的文件中, 也可以设置为不记录
-需注意, 设置密码时, 明文可能会被记录, 所以需确认设置密码会不会被记录以提高安全性
+命令行交互式语句默认都会被记录在home目录下默认名字为.mysql_history的文件中,也可以设置为不记录. 需注意,设置密码时,明文可能会被记录, 所以需确认设置密码会不会被记录以提高安全性
 
 ##### 4.5.1.5 Executing SQL Statements from a Text File
 > 从文件读取sql语句并执行, 如下2种方法
@@ -46,20 +45,19 @@
   2. >mysql source test_file 或 >mysql  \. test_file
 
 #### 4.5.3 mysqlcheck — A Table Maintenance Program
->mysqlcheck是checks,repairs,optimizes,analyzes tables sql语句方便调用的一个工具. mysqlcheck和myisamchk差不多, 在mysql serve运行时使用mysqlcheck, 停机时用myisamchk
+>mysqlcheck是checks,repairs,,optimizesanalyzes tables sql语句方便调用的一个工具. mysqlcheck和myisamchk差不多, 在mysql serve运行时使用mysqlcheck,停机时用myisamchk
 - quick: prevents the check from scanning the rows to check for incorrect links.这是最快的check方式. 如果使用该方式去repair表, 则只repair index tree, 这是最快的repair方式.
-- fast: 仅检查为正确关闭的表
+- fast: 仅检查未正确关闭的表
 - check: check table for error
 - repair:  fix almost anything except unique keys that are not unique
 - analyze: 分析表
 - optimize: 优化表
 
 #### 4.5.4 mysqldump — A Database Backup Program
-> mysqldump施行的是逻辑备份(即是sql语句), 也可以导出为其他的定界文本如csv
-
+> mysqldump实行的是逻辑备份(即是sql语句), 也可以导出为其他的定界文本如csv
 　- --opt: 导出时默认使用该选项, 其为多个选项集合的缩写, 性能也不错
   - 一键复制到远程:mysqldump --opt db_name | mysql --host=remote_host -C db_name
-  - --master-data[=value]: 会在导出的备份文件中会包含一个`CHANGE MASTER TO`语句以记录下binary log的坐标(日志文件名和位置), 后续要从二进制文件中恢复数据就知道从日志文件名的那个位置开始执行了.value为1时, 重新导入备份文件时,该CHANGE MASTER TO语句会被执行, 而value=2时, 语句只是显示信息而已不会被执行, 如果没有指定value默认为1.
+  - --master-data[=value]: 会在导出的备份文件中会包含一个`CHANGE MASTER TO`语句以记录下binary log的坐标(日志文件名和位置), 后续要从二进制文件中恢复数据就知道从日志文件名的那个位置开始执行了.value为1时, 重新导入备份文件时,该CHANGE MASTER TO语句会被执行, 而value=2时, 语句只是显示信息而已不会被执行.如果没有指定value默认为1.
 
 #### 4.5.5 mysqlimport — A Data Import Program
 >为`load data` sql语句提供一个命令行界面
@@ -71,16 +69,15 @@
 >  prints checksums for InnoDB files. 
 
 #### 4.6.2 myisam_ftdump — Display Full-Text Index information
->展示MyISAM表的索引(因为他是直接读取MyISAM索引文件,所以该程序要和表是在同一服务器上); 如果服务器是开启的请先执行flush tables在该命令执行之前
+>展示MyISAM表的全文索引(因为他是直接读取MyISAM的索引文件,所以该程序要和表是在同一服务器上); 如果服务器是开启的请先执行flush tables在该命令执行之前
 
-####　4.6.5 myisampack — Generate Compressed, Read-Only MyISAM Tables
+#### 4.6.5 myisampack — Generate Compressed, Read-Only MyISAM Tables
 >生成一个压缩只读的表. 在服务器停机后执行是最安全的
 
 #### 4.6.6 mysql_config_editor — MySQL Configuration Utility
->管理名为.mylogin.cnf(默认在用户home目录下)的模糊登录路径文件, 当如mysql. mysqladmin等客户端工具使用--login-path=.mylogin.cnf启动时, 这些客户端会读取其中的[client], [mysql], [mypath]块配置(优先权高于其他配置文件但低于命令行的), 这样就能知道要连接那个mysql server, 同时记录在.mylogin.cnf的密码不是明文的有一定安全性(但是不要认为它是牢不可破,因为无法阻挡有决心的攻击者), 有多个mysql服务器时方便连接切换
+>管理名为`.mylogin.cnf`(默认在用户home目录下,名字最前面是有点的)的模糊登录路径文件, 当如mysql. mysqladmin等客户端工具使用--login-path=.mylogin.cnf启动时, 这些客户端会读取其中的[client], [mysql], [mypath]块配置(优先权高于其他配置文件但低于命令行的), 这样就能知道要连接那个mysql server, 同时记录在.mylogin.cnf的密码不是明文的有一定安全性(但是不要认为它是牢不可破,因为无法阻挡有决心的攻击者), 有多个mysql服务器时方便连接切换
 
 #### 4.6.8 mysqlbinlog — Utility for Processing Binary Log Files
-
 - 使用mysqldump + mysqlbinlog for Backup and Restore
   事先使用mysqldump导出备份文件作为快照, 使用 mysqlbinlog备份bin log二进制文件(可以永不断开的持续实时备份). 在万一数据丢失了,先导入备份文件, 然后执行二进制备份,可执行类似如下命令 `mysqlbinlog --start-position=27284 binlog.001002 binlog.001003 binlog.001004 | mysql --host=host_name -u root -p`
 
@@ -97,26 +94,26 @@
 
 ### 5.1 The MySQL Server
 #### 5.1.1 Configuring the Server
-最重要的配置变量: key_buffer_size and table_open_cache
+在调优mysql服务器时,最重要的配置变量:key_buffer_size和table_open_cache,你首先应该确信自己已经对这两个值设置适当值在修改参数前.
+table_open_cache: 所有线程的打开表数量,增大该值将增加mysql所需的文件描述符的数量.可通过opened_tables状态变量查看是否修改增加table_open_cache值,如果你没用经常执行flush tables(flush tables会强制将所有的表关闭重新打开)而opened_tables值很大时你就需要增加table_open_cache值了.
+key_buffer_size: 缓冲MyISAM表的索引块(这些缓冲是并被所有线程共享的).(只缓冲MyISAM表,同时他是只缓冲索引不缓冲数据的,对于innoDB表缓冲的是索引和数据是一起的)
+一些配置参考的例子:(见官网上)...
 
 #### 5.1.6 Server Command Options
 
 #### 5.1.7 Server System Variables
 - back_log: mysql可以拥有未完成连接请求的数量, 默认50, -1自动调整. 当你短时间有很多请求才需要提高此值
-
-- big_tables: mysql server将所有临时表都存储在disk上而不是内存上, 可以避免需要大的临时表不够的情况, 但同时也降低原本在内存表就够的查询
-
+- big_tables: mysql server将所有临时表都存储在disk上而不是内存上, 可以避免需要大的临时表不够的情况, 但同时也会降低原本在内存表就够的查询
 - bind_address: mysql server监听单个网络套接字上侦听TCP / IP连接. 有如下取值:
   - `*`: 默认值. 所有服务主机的ipv4接口和ipv6接口(如果支持).(ps: 所有现有的mysql账号都可连接)
   - `0.0.0.0`: 监听所有服务主机的ipv4接口
   - `::` : 监听所有服务主机的ipv6接口
- 
 - bulk_insert_buffer_size: 
 - completion_type: 
 - concurrent_insert:
-- delay_key_write: 只对MyISAM表有效. 不会在每次索引更新时都为key buffer都进行刷新只在表关闭时.
+- delay_key_write: 只对MyISAM表有效.不会在每次索引更新时都为key buffer都进行刷新只在表关闭时.
 - flush: 
-- flush_time
+- flush_time:
 - foreign_key_checks
 - general_log: 
 - general_log_file: 
@@ -157,12 +154,16 @@
 - optimizer_switch: 控制优化器行为
 - performance_schema_xxx: performance schema系统变量的设置
 - profiling: 
-- query_cache_limit: 当超过该值时, 不会缓存查询结果
+- query_cache_limit:如果一个查询结果超过此字节数(byte),则不会缓存.
 - query_cache_size:
-- query_cache_type
+- query_cache_type:
 - query_prealloc_size
-- read_only:
-- secure_file_priv
+- read_only:当该权限开启时,mysql服务器不会允许任何客户端更新操作除了超级用户.但即使该值开启,mysql服务器仍然允许如下操作:
+  - 由从线程(slave threads)执行的更新,**如果是从服务器上,则开启read_only很有帮助这能确保从服务器只接受主服务器的更新而不是其他客户端的.**
+  - read_only设置的目的是保护表的结构和内容被更改,但是对于优化和分析(analysis and optimization)操作不是属于这种更改操作,所以是允许的.
+  - 对于临时表的操作
+  
+- secure_file_priv:
 - skip_external_locking: 禁止external locking(system locking),外部锁定仅对访问myisam表有影响
 - skip_name_resolve：是否解析主机名，　如果禁止就只能使用ip登录
 - skip_networking: 服务器是否允许通过tcp连接, 如果只要本地用户连接, 强烈推荐开启此项
