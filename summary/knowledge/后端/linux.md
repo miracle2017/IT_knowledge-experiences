@@ -92,8 +92,9 @@
   ln -s /usr/local/php /home/local(设置软链接, 将/usr/local(实际目录或文件)链接到/home/local，即是/home/local下会多出个php软连接)
 
 - sed: (stream editor)
-  sed -i "s/oldstring/newstring/g" `grep oldstring -rl path`: 在path中找出所有存在oldstring的文件, 然后将oldstring替换成newstring; g为全局匹配; /为分界符, 如有冲突可选用|
+  sed -i "s/oldstring/newstring/g" `grep oldstring -rl path`: -i为直接修改内容; 在path中找出所有存在oldstring的文件, 然后将oldstring替换成newstring; g为全局匹配; /为分界符, 如有冲突可选用| 
   sed -i 's/user.*=.*nobody/user = www/g;s/group.*=.*nobody/group = www/g' w.cnf : 多个匹配替换
+  sed -n 's/old/new/p': n和p组合表示打印出匹配的内容不会修改内容
 
 - wget url地址: 下载文件, 支付http(s),ftp协议
 
@@ -134,29 +135,18 @@
 
 - linux常规操作
     - ctrl + z： 挂起
-    
     - ctrl + c： 终止
-    
     - ctrl + \: 退出
-    
     - ctrl + r: 历史命令搜索
-    
     - ctrl + u: 当前位置删除到行首
-    
     - ctrl + a/e : 光标移到行首/行尾
-    
     - tab: 自动补全
 
 - Linux下的vi编辑器基本操作:
-
   - i 进入插入,模式
-
   - esc + :(冒号) 进入命令行模式
-
   - wq保存并退出
-
   - u： 撤销
-
   - ctrl + r： 反撤销
 
 - su root:服务器上切换用户, su(switch user)
@@ -176,6 +166,9 @@
   export: 查看所有导出的环境变量
   
 - wget: 强大的下载工具, 可以用其递归扒站
+
+- 多个文件合并成一个
+  方法1: `cat data* > merge.sql`  #将所有data开头的文件合并成名为merge.txt的文件 
     
 - 【防火墙】
     firewall-cmd --zone=public --add-port=3306/tcp --permanent  //永久开放某个端口
