@@ -185,6 +185,9 @@
     
 - 【linux修改配置文件不重启立即生效】如修改 ~/.bash_profile文件, 那么 .  /~/.bash_profile  或者 source ~/.bash_profile 即可 (source 又称点命令) 
       可以使用 alias 列出所有的别名
+
+- 【误删数据恢复】参考:https://blog.csdn.net/zonghua521/article/details/78200239
+      
       
 ##【nginx】
 

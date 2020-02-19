@@ -163,7 +163,6 @@ key_buffer_size: 缓冲MyISAM表的索引块(这些缓冲是并被所有线程�
   - read_only设置的目的是保护表的结构和内容被更改,但是对于优化和分析(analysis and optimization)操作不是属于这种更改操作,所以是允许的.
   - 对于临时表的操作
   - 插入log表(mysql.general_log和mysql.slow_log)
-  
 - secure_file_priv:
 - **skip_external_locking: 禁止external locking(system locking),外部锁定仅对访问myisam表有影响**
 - skip_name_resolve：是否解析主机名，如果禁止就只能使用ip登录
@@ -177,6 +176,7 @@ key_buffer_size: 缓冲MyISAM表的索引块(这些缓冲是并被所有线程�
 - system_time_zone: 设置时区, 与time_zone变量不同(用于客户端连接时初始化时区)
 - **table_open_cache:mysql所有线程允许的打开表数量,增加该值将增加mysql所需的文件描述符**
 - table_open_cache_instances:
+- **thread_cache_size: mysql缓存多个线程(thread)以用于复用.默认-1为自动调整.**
 - thread_handling:服务器对于连接线程的处理模型
 - thread_stack:
 - time_zone: 用于每个客户端连接时初始化时区
@@ -187,13 +187,12 @@ key_buffer_size: 缓冲MyISAM表的索引块(这些缓冲是并被所有线程�
 - transaction_prealloc_size
 - tx_isolation:
 - tx_read_only: 
-- unique_checks: 对innodb表的二级索引是否执行唯一性检测. 如果该值设置为关闭, 则引擎不需要ignore duplicate keys
+- **unique_checks: 对innodb表的二级索引是否执行唯一性检测.如果该值设置为关闭, 则引擎不需要ignore duplicate keys**
 - version_comment:  
-- tx_isolation: 事务隔离性, 默认值为`REPEATABLE-READ` 
+- **tx_isolation: 事务隔离性, 默认值为`REPEATABLE-READ`**
 
 #### 5.1.9 Server Status Variables
-mysql服务器维护着许多个操作信息的状态变量. 许多变量在执行`FLUSH STATUS`语句后重置为0
-
+**mysql服务器维护着许多个操作信息的状态变量. 许多变量在执行`FLUSH STATUS`语句后重置为0**
 - Aborted_clients：没有正确关闭的连接数
 - Aborted_connects: 连接mysql服务器失败的尝试次数
 - Binlog_cache_disk_use:
@@ -208,9 +207,9 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
 - Innodb_row_lock_time_avg: 取得innodb行锁的平均时间(毫秒)
 - Innodb_row_lock_time_max: 取得innodb行锁中耗时最大的时间(毫秒)
 - Key_blocks_unused:
-- Last_query_cost: 上次查询语句的总开销, 这对与对比同一查询语句的不同查询计划的开销很有帮助. 仅在简单语句中计算得精确, 对于复杂语句(如包含了子查询或union)该值为0
+- Last_query_cost: 上次查询语句编译的总开销(由查询优化器计算), 这对与对比同一查询语句的不同查询计划的开销很有帮助. 仅在简单语句中计算得精确, 对于复杂语句(如包含了子查询或union)该值为0
 - Last_query_partial_plans
-- Max_used_connections: 服务器开机以来最大的同时连接数量
+- **Max_used_connections: 服务器开机以来最大的同时连接数量**
 - Open_files:
 - Open_tables:
 - Select_full_join: join时执行了表扫描而没有使用到索引的次数, 如果该值不为0, 请注意检查表的索引
@@ -225,22 +224,22 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
 - Table_locks_waited: 无法立即授予对表锁的请求并且需要等待的次数. 如果该值很高并且有性能问题时, 你首先应该优化查询语句,
 然后将表进行拆分或者使用主从复制
 - Threads_connected: 当前打开的连接数
-- Threads_created; 
+- Threads_created:
 
 ##### 5.1.10 Server SQL Modes
 系统变量sql mode默认值为`NO_ENGINE_SUBSTITUTION`, 也可以设置为只对当前session有效.
 - 重要注意事项: 
-  - 当创建使用了用户自定义分区的表, 强烈建议永远不要改变sql mode.因为这有可能会造成数据丢失或数据损坏
+  - **当创建使用了用户自定义分区的表, 强烈建议永远不要改变sql mode.因为这有可能会造成数据丢失或数据损坏**
   - 当复制分区表时, 主从服务器的sql mode不同时也出现问题, 所以最好的方法就是主从服务器都是使用相同的sql mode
 - most important sql modes
   > 本手册的`strict mode`是指启用了`STRICT_TRANS_TABLES`或`STRICT_ALL_TABLES`, 或者同时两者
   - ANSI: 此模式更改语法和行为以更符合标准sql
   - STRICT_TRANS_TABLES: 
-  - TRADITIONAL: 简单的描述就是当插入一个不正确的值时, 会产生一个错误而不是warning. 注意在插入或更新时,当一有错误发生就会马上中止.所以当你使用的是非事务型存储引擎时,这可能不是你想要的结果因为在错误之前的数据更改不会回滚,导致了部分完成更新 
+  - TRADITIONAL: 简单的描述就是当插入一个不正确的值时, 会产生一个错误而不是warning. 注意在插入或更新时,当一有错误发生就会马上中止.**所以当你使用的是非事务型存储引擎时,这可能不是你想要的结果因为在错误之前的数据更改不会回滚,导致了部分完成更新**
   
-- full list(笔记只做了部分))
+- full list(笔记只做了部分)
   - HIGH_NOT_PRECEDENCE: 提高not运算符的优先级
-  - NO_AUTO_VALUE_ON_ZERO: 该值影响着AUTO_INCREMENT列, 通常你可以插入0或null来生成下一个序列号.但是开启该值时插入0的行为将被抑制, 只有插入null才会生成下一个序列号. 这对于0被存储在AUTO_INCREMENT列(不建议存储0)上非常有用, 比如在导出表后又重新加载导入表时, 如果没有开启该值mysql在导入时如果遇到0值则会生成一个新的序号. 为此mysqldump在输出中自动包含了开启NO_AUTO_VALUE_ON_ZERO的语句
+  - NO_AUTO_VALUE_ON_ZERO: 该值影响着AUTO_INCREMENT列, 通常你可以插入0或null来生成下一个序列号.但是开启该值时插入0的行为将被抑制, 只有插入null才会生成下一个序列号. 这对于0被存储在AUTO_INCREMENT列(不建议存储0)上非常有用, 比如在导出表后又重新加载导入表时, 如果没有开启该值mysql在导入时如果遇到0值则会生成一个新的序号.为此mysqldump在输出中自动包含了开启NO_AUTO_VALUE_ON_ZERO的语句
   - NO_ENGINE_SUBSTITUTION: 该值开启时, 当create或alert语句指定了不能使用的或未编译的存储引擎时则会产生一个错误; 而关闭该值时, create语句会产生一个警告并使用默认引擎替代, alert语句则会产生一个warning但该表不会改变
   - NO_UNSIGNED_SUBTRACTION: 当两个整数相减, 其中有一个是unsigned时, 则结果默认的也是unsigned的,所以当结果是负数时则会产生一个错误. 如果开启该变量则可以避免这个问题. 如果用该结果对一个unsigned整数列进行更新时,结果会被裁减为该列类型的最大值, 或者被裁减为0当NO_UNSIGNED_SUBTRACTION值开启时.
   - NO_ZERO_DATE: 该值从5.6.17起不赞成. 该值没开启时, '0000-00-00'是一个有效的日期, 插入该值是允许的; 该值开启时'0000-00-00'是允许的插入时会产生一个warning; 如果strict mode和NO_ZERO_DATE同时开启, '0000-00-00'不允许, 插入产生一个错误除非使用insert ignore或update ignore则可以插入但会产生一个warning.
@@ -258,8 +257,8 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
     - 非事务型表, 更改数据语句(insert,update)中有无效或缺失的值
       - 该坏值出现在数据更改的第一行, 两种模式的行为都是是一样的, 语句被中止且数据表不会被改变
       - 该值出现在数据更改的第二行及以后
-        - STRICT_ALL_TABLES模式, 返回一个错误并中止剩余的语句执行, 因为较早的行已被插入或更新,所以结果是部分更新. 为了避免该情况, 请使用单行语句, 可以在不更改表的情况下中止该语句
-        - STRICT_TRANS_TABLES模式会将无效值转换成最接近的有效值并插入, 如k果是缺少的值则会使用隐私的默认值插入.在两种情况中都会产生一个警告而不是错误并且执行后续的语句
+        - STRICT_ALL_TABLES模式, 返回一个错误并中止剩余的语句执行, 因为较早的行已被插入或更新,所以结果是部分更新. 为了避免该情况,请使用单行语句,可以在不更改表的情况下中止该语句(即第一句一有错误就中止了)
+        - STRICT_TRANS_TABLES模式会将无效值转换成最接近的有效值并插入, 如果是缺少的值则会使用隐私的默认值插入.在两种情况中都会产生一个警告而不是错误并且执行后续的语句
   
 #### 5.1.14 Server Response to Signals
 
@@ -277,7 +276,7 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
   6. 服务器退出
   
 ### 5.3 The mysql System Database
-该部分为介绍mysql系统数据库, 就是名为`mysql`的数据库
+该部分为介绍mysql系统数据库,就是名为`mysql`的数据库
 - 分类
   - 授权表
   - 对象信息系统表
@@ -296,17 +295,17 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
   
 ### 5.4 MySQL Server Logs
 - 服务器日志种类
-  - error log: 
-  - general query log: 建立的客户端连接和从客户端接收的语句
-  - binary log: 改变数据的语句
-  - relay log: 从复制主服务器接收到的数据更改
-  - slow query log:
-  - DDL log (metadata log): DDL执行的元数据操作
+  1. error log: 
+  2. general query log:建立的客户端连接和从客户端接收的语句
+  3. binary log: 改变数据的语句
+  4. relay log: 从复制主服务器接收到的数据更改
+  5. slow query log:
+  6. DDL log(metadata log): DDL执行的元数据操作
   
-- log_output控制输出目的类型是file, table, none的任意组合; general_log和slow_query_log控制对应的日志是否开启;  general_log_file and slow_query_log_file控制着对应日志文件存放的路径(如果有给定的话)和文件名; sql_log_off控制general query logging是否关闭(这假定general query log为开启)
+- 系统变量log_output控制输出目的类型是file, table, none的任意组合; 系统变量general_log和slow_query_log控制对应的日志是否开启;general_log_file and slow_query_log_file控制着对应日志文件存放的路径(如果有给定的话)和文件名;系统变量sql_log_off控制general query logging是否关闭(这假定general query log为开启)
 
 - 使用log table(将日志存储在mysql表)的好处和特点
-  便于查询是哪个客户端发起的查询, 只要能连接上服务器就能进行日志查询
+  便于查询是哪个客户端发起的查询,只要能连接上服务器就能进行日志查询
   
 #### 5.4.2 The Error Log  
 #### 5.4.2.2 Error Logging on Unix and Unix-Like Systems  
@@ -314,14 +313,14 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
 - log-warning控制warning日志是否记录到error log中, 如果该值大于1则将新连接尝试连接但被拒绝访问的错误和中断连接写入错误日志中
 
 #### 5.4.2.5 Error Log File Flushing and Renaming
-- 使用FLUSH ERROR LOGS或FLUSH LOGS命令flush log,mysql服务器会关闭和重新打开任何他之前正在写入的错误日志文件. 如果要重命名错误日志文件名, 则进行如下的操作(以linux为例子, 在window上请用rename代替mv)
-#### 5.4.4 The Binary Log
-在一个语句或事务后但在释放任何锁或任何提交(commit)之前立即执行二进制日志记录; 在执行对非事务表的更新后立即存储在二进制日志中。在未提交事务中, 所有改变事务表更新操作都会被缓存直到服务器接收commit语句, 此时在commit执行前将整个事务写入二进制日志; 对于非事务表的改变是无法被回滚,如果一个事务包含对非事务表的更改回滚了, 则二进制日志会在事务后记录所有rollback语句以确保这些表的更改
-
+- 使用FLUSH ERROR LOGS或FLUSH LOGS命令flush log,mysql服务器会关闭和重新打开任何他之前正在写入的错误日志文件.如果要重命名错误日志文件名,则进行如下的操作(以linux为例子, 在window上请用rename代替mv)
   mv host_name.err host_name.err.old
   mysqladmin flush-logs
   mv host_name.err.old backup-directory//最后将其移动到备份目录中
   注意: 如果错误日志文件的位置mysql服务器没有写入权限那么flush log操作就不能生成新的日志文件
+
+#### 5.4.4 The Binary Log
+在一个语句或事务后但在释放任何锁或任何提交(commit)之前立即执行二进制日志记录; 在执行对非事务表的更新后立即存储在二进制日志中。在未提交事务中, 所有改变事务表更新操作都会被缓存直到服务器接收commit语句, 此时在commit执行前将整个事务写入二进制日志; 对于非事务表的改变是无法被回滚,如果一个事务包含对非事务表的更改回滚了, 则二进制日志会在事务后记录所有rollback语句以确保这些表的更改
 
 ##### 5.4.4.1 Binary Logging Formats
 - 二进制日志记录格式(3种): 
@@ -330,13 +329,13 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
   3. 混合(以上两种混合)日志: 默认是statement-based, 在特定情况下使用row-based保证可以被安全复制
 
 #### 5.4.4 The Binary Log
-- 二进制日志不记录想select或show之类不修改数据语句。如果要记录所有语句，请使用general query log。
-- log-bin系统变量控制是否开启错误日志，可以指定文件名或带绝对路径的文件名(后后缀会被忽略并由mysql自己生成. sql_log_bin(scope为session)可以设置当前的session的二进制日志是否开启
+- 二进制日志不记录像select或show之类不修改数据语句。如果要记录所有语句，请使用general query log。
+- log-bin系统变量控制是否开启错误日志**log_bin_basename可以指定文件名或带绝对路径的文件名(后缀会被忽略并由mysql自己生成.** sql_log_bin(scope为session)可以设置当前的session的二进制日志是否开启
 - PURGE BINARY LOGS删除二进制日志
 - binlog_error_action系统变量控制二进制日志记录出错时所采用的动作
   - IGNORE_ERROR(默认): 服务器会将继续进行中的事务并记录错误, 然后停止二进制日志记录,但会继续执行更新.排除错误要重启服务器才能从新记录二进制日志.这对于二进制日志是不重要的情况可以怎么做
-  - ABORT_SERVER(推荐): 停止二进制日志记录并关闭服务器.
-- sync_binlog控制每N个提交组后将二进制日志同步到磁盘. 最安全的值为1,但仍然存在二进制日志和表内容不一致的可能当宕机时
+  - **ABORT_SERVER(推荐): 停止二进制日志记录并关闭服务器.**
+- **sync_binlog控制每N个提交组后将二进制日志同步到磁盘. 最安全的值为1,但仍然存在二进制日志和表内容不一致的可能当宕机时**
 - max_binlog_size: 指定二进制单个文件最大值, 如果达到就旋转日志(即按序列重起一个文件存储)
   
 在一个语句或事务后但在释放任何锁或任何提交(commit)之前立即执行二进制日志记录; 在执行对非事务表的更新后立即存储在二进制日志中。在未提交事务中, 所有改变事务表更新操作都会被缓存直到服务器接收commit语句, 此时在commit执行前将整个事务写入二进制日志; 对于非事务表的改变是无法被回滚,如果一个事务包含对非事务表的更改回滚了, 则二进制日志会在事务后记录所有rollback语句以确保这些表的更改
@@ -344,15 +343,14 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
 ###### 5.4.4.4 Logging Format for Changes to mysql Database Tables
   
 #### 5.4.5 The Slow Query Log  
-
 - 默认的慢日志不记录管理语句和不使用索引的语句, 但是log_slow_admin_statements 和 log_queries_not_using_indexes进行设置
 
 #### 5.4.7 Server Log Maintenance
-
- mysqladmin flush-logs刷新日志时: 1.二进制日志会重新创建一个文件, 2 而一般日志(general log)和慢日志只会关闭再重新打开
+- mysqladmin flush-logs刷新日志时: 1.**二进制日志会重新创建一个文件,** 2.**而一般日志(general log)和慢日志只会关闭再重新打开**
  
 #### 5.5 MySQL Server Plugins 
-从INFORMATION_SCHEMA.PLUGINS table 或 SHOW PLUGINS获取插件的信息及状态, mysql.plugins表查看注册了的插件
+**从INFORMATION_SCHEMA.PLUGINS table 或 SHOW PLUGINS获取插件的信息及状态, mysql.plugin表查看注册了的插件**
+
 #### 5.6 MySQL Server User-Defined Functions 
 
 #### 5.7 Running Multiple MySQL Instances on One Machine 
@@ -362,19 +360,14 @@ mysql服务器维护着许多个操作信息的状态变量. 许多变量在执�
 rainbow table破解hash加密
           
 #### 6.2.2 Privileges Provided by MySQL          
-
 - Privilege Descriptions
   - reload: 允许flush语句的操作: flush-hosts, flush-logs, flush-privileges, flush-status, flush-tables, flush-threads,refresh and reload. reload语句告诉服务器重新加载权限表到内存中, flush-privileges是reload的同义词. refresh操作是关闭和重新打开日志文件和刷新所有的的表. 其他的flush-xxx命令和refresh相似, 只不过是更具体, 如flush-log就只针对log操作.
-  
 - Privilege-Granting Guidelines
-
-对于 file权限和 管理员特权应该特别注意
+  对于file权限和管理员特权应该特别注意
 - file权限:
   - 具有该权限的用户可以读取mysql服务器主机上的文件,这包括所有world-readable的文件和mysql服务器的data目录.用户可以使用select load_file("file_path")将服务器上的内容传输到用户本地上.应该特别注意.
-
 - 授权选项: 允许用户将自己的权限授予其他用户, 所以两个有不同权限的用户同时又具有授权特权(grant option)时能组合权限
-
-- PROCESS: 能够查看当前正执行语句的纯文本, 包括设置和更改密码语句
+- PROCESS:能够查看当前正执行语句的纯文本,包括设置和更改密码语句
 
 #### 6.2.3 Grant Tables
 
