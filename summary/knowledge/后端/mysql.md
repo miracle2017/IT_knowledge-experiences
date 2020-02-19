@@ -163,7 +163,7 @@ key_buffer_size: 缓冲MyISAM表的索引块(这些缓冲是并被所有线程�
   - read_only设置的目的是保护表的结构和内容被更改,但是对于优化和分析(analysis and optimization)操作不是属于这种更改操作,所以是允许的.
   - 对于临时表的操作
   - 插入log表(mysql.general_log和mysql.slow_log)
-- secure_file_priv:
+- **secure_file_priv:对于具有file权限用户导入导出数据和读取文件的限制(具体就是用load data语句导数据,load_file()函数读取文件).该值为空是没有任何限制;如果是绝对目录路径那么只允许读取或导入导出该目录下文件和数据;如果是null,则禁止任何用户导入导出的操作**
 - **skip_external_locking: 禁止external locking(system locking),外部锁定仅对访问myisam表有影响**
 - skip_name_resolve：是否解析主机名，如果禁止就只能使用ip登录
 - **skip_networking: 服务器是否允许通过tcp连接, 如果只要本地用户连接, 强烈推荐开启此项**
