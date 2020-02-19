@@ -365,7 +365,7 @@ rainbow table破解hash加密
 - Privilege-Granting Guidelines
   对于file权限和管理员特权应该特别注意
 - file权限:
-  - 具有该权限的用户可以读取mysql服务器主机上的文件,这包括所有world-readable的文件和mysql服务器的data目录.用户可以使用select load_file("file_path")将服务器上的内容传输到用户本地上.应该特别注意.
+  - 具有该权限的用户可以读取mysql服务器主机上的文件,这包括所有world-readable的文件和mysql服务器的data目录.**用户可以使用select load_file("file_path")将服务器上的内容传输到用户本地上**.应该特别注意.
 - 授权选项: 允许用户将自己的权限授予其他用户, 所以两个有不同权限的用户同时又具有授权特权(grant option)时能组合权限
 - PROCESS:能够查看当前正执行语句的纯文本,包括设置和更改密码语句
 
