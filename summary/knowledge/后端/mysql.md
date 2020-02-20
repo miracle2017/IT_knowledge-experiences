@@ -367,12 +367,11 @@ rainbow table破解hash加密
 - file权限:
   - 具有该权限的用户可以读取mysql服务器主机上的文件,这包括所有world-readable的文件和mysql服务器的data目录.**用户可以使用select load_file("file_path")将服务器上的内容传输到用户本地上**.应该特别注意.
 - 授权选项: 允许用户将自己的权限授予其他用户, 所以两个有不同权限的用户同时又具有授权特权(grant option)时能组合权限
-- PROCESS:能够查看当前正执行语句的纯文本,包括设置和更改密码语句
+- **PROCESS:能够查看当前正执行语句的纯文本,包括设置和更改密码语句**
 
 #### 6.2.3 Grant Tables
-
-可以使用SHOW GRANTS FOR 'root'@'pc84.example.com';查看对应用户名和主机名被授予的权限
-服务器在启动时会将几个权限组合起来加载到内存中, 如需重新加载可以使用mysql命令行中输出flush privileges 或 mysqladmin flush-privileges 或mysqladmin reload命令
+**可以使用SHOW GRANTS FOR 'root'@'pc84.example.com';查看对应用户名和主机名被授予的权限**
+**服务器在启动时会将几个权限组合起来加载到内存中,如需重新加载可以使用mysql命令行中输出flush privileges或mysqladmin flush-privileges或mysqladmin reload命令**
 
 - Grant Table Overview
   以下这些表包含授权信息
