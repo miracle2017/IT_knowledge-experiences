@@ -370,34 +370,30 @@ rainbow table破解hash加密
 - PROCESS:能够查看当前正执行语句的纯文本,包括设置和更改密码语句
 
 #### 6.2.3 Grant Tables
-
 可以使用SHOW GRANTS FOR 'root'@'pc84.example.com';查看对应用户名和主机名被授予的权限
 服务器在启动时会将几个权限组合起来加载到内存中, 如需重新加载可以使用mysql命令行中输出flush privileges 或 mysqladmin flush-privileges 或mysqladmin reload命令
 
 - Grant Table Overview
-  以下这些表包含授权信息
+  以下这些表包含授权信息(这些表都在数据库名为mysql中)
   - user: 用户账号, 全局权限, 和其他没有权限的列
   - db: 数据库级别权限
-  - tables-priv: 表级别权限
-  - columns-priv: 列级别权限
+  - tables_priv: 表级别权限
+  - columns_priv: 列级别权限
   - procs_priv: 存储过程函数的权限
   - proxies_priv: 代理用户权限
 
-host, proxy_host在存到授权表前转换为小写,权限表User, Proxied_user, Password, Db, and Table_name列大小敏感, Host, Proxied_host, Column_name, and Routine_name 大小写不敏感
+host, proxy_host在存到授权表前转换为小写,权限表User, Proxied_user, Password, Db, and Table_name列大小敏感, Host, Proxied_host, Column_name, and Routine_name大小写不敏感
  
 ##### 6.2.5 Access Control, Stage 1: Connection Verification         
- 
 ""@"%":表示任何用户名字从任何主机名进行连接只要能匹配上密码都能连接, ""表示匹配任何用户名字
 
 当user表被加载到内存时都会对其进行排序, 越具体的行排行越前. 所有当一个用户名和host连接进来可能会匹配到多个行时, mysql只会使用匹配中排序最靠前的那一行进行登录认证
 查看当前登录用户名和host: SELECT CURRENT_USER(); 
  
 #### 6.2.6 Access Control, Stage 2: Request Verification
-
-user表中设置全局的基础权限, 比例授权了全局的delete权限,那么他delete任何database的数据即使设置了默认的database. 所以如非必要, user表的权限都设置为N, 在颗粒级别更具体的地方设置权限
+user表中设置全局的基础权限, 比如授权了全局的delete权限,那么他可delete任何database的数据即使设置了默认的database. 所以如非必要, user表的权限都设置为N,在颗粒级别更具体的地方设置权限.
 
 #### 6.2.7 Adding Accounts, Assigning Privileges, and Dropping Accounts
-
 创建用户: create user "username"@"hostname" identified by 'password'; 
 删除用户: drop use "username"@"hostname"
 修改密码: set password for "username"@"hostname" = password("password")
@@ -407,19 +403,18 @@ user表中设置全局的基础权限, 比例授权了全局的delete权限,那�
 撤销权限: revoke all on "." from "username"@"hostname"
 
 #### 6.2.8 When Privilege Changes Take Effect
-
 修改权限表何时生效? 
-- 使用账号管理语句(如GRANT, REVOKE, SET PASSWORD, and RENAME USER等)这种间接方式修改表的方式, mysql服务器会在一注意到变化时立即从新加载到内存; 而直接通过insert, update语句(不推荐)对表直接修改则要需要flush privileges使其生效.
+- **使用账号管理语句(如GRANT, REVOKE, SET PASSWORD, and RENAME USER等)这种间接方式修改表的方式, mysql服务器会在一注意到变化时立即从新加载到内存; 而直接通过insert, update语句(不推荐)对表直接修改则要需要flush privileges使其生效.**
 
-授权表的重新加载对现有客户端会话权限的影响?
-- 对于表级和列级的权限, 会在下一个请求生效
+**授权表的重新加载对现有客户端会话权限的影响?**
+- **对于表级和列级的权限, 会在下一个请求生效**
 - database权限需要在用户执行use db_name语句时生效
-- 对于全局权限和密码对已连接的会话不会有影响, 只有当下次重连时才会生效.
+- **对于全局权限和密码对已连接的会话不会有影响,只有当下次重连时才会生效.**
 
-对于使用--skip-grant-tables选项开启服务器的, 不会有任何的访问权限检查, 若想使其重新开启访问检查,flush privileges.
+**对于使用--skip-grant-tables选项开启服务器的,不会有任何的访问权限检查, 若想使其重新开启访问检查,flush privileges.**
 
-#### 6.2.13 Setting Account Resource Limits
-对账号资源使用的限制; 可以从以下方面(同样的名字存在mysql.use表中)进行控制; 使用grent语句进行设置
+#### 6.2.13 Setting Account Resource 
+对账号资源使用的限制; 可以从以下方面(同样的名字存在mysql.user表中)进行控制; 使用grent语句进行设置
 - max_queries_per_hour
 - max_updates_per_hour
 - max_connections_per_hour 
@@ -428,7 +423,7 @@ user表中设置全局的基础权限, 比例授权了全局的delete权限,那�
 per-hour的资源使用量可以被全局重置(置0)通过使用flush user_resource或者重载grant表(如flush privileges)
 
 #### 6.2.15 SQL-Based Account Activity Auditing
-user()和current_user()区别?
+**user()和current_user()区别?**
 - current_user()显示是当前登录用户对应配到mysql.user表中到user和host字段的值,有可能会包含通配符; 
 - user()是登录时实际的客户端提供的用户名和实际客户端的host值
 
@@ -438,55 +433,53 @@ user()和current_user()区别?
 #### 6.3.5 Connecting to MySQL Remotely from Windows with SSH
 window上通过ssh远程登录mysq: 如用navicat时, 配置mysql账号外还要再配置ssh登录服务器的账号密码
 
-## Chapter 7 Backup and Recovery
+## Chapter 7 Backup and Recovery                                                                          
 ### 7.1 Backup and Recovery Types
 - 物理(原始) 与 逻辑   
   - 物理备份
-    > 由复制原始的储存数据库内容的目录和文件的副本组成. 适合大型数据库, 需要快速恢复.
+    > 由复制原始的储存数据库内容的目录和文件的副本组成.适合大型数据库,需要快速恢复.
     - 通常就是mysql的data目录一部分或所有的文件的备份
-    - 比逻辑备份快, 因只要复制文件而不需涉及转换
+    - 比逻辑备份快,因只要复制文件而不需涉及转换
     - 比逻辑备份更紧凑
-    - 备份和恢复的粒度从数据库到单个文件. 是否支持表级粒度取决于存储引擎, 如每个myisam表都是对应一组文件的, 而每个innodb表则可以独立也可以与其他表共享.
-    - 备份的工具: mysqlbackup, mysql表的mysqlhotcopy, 任何文件系统级命令(cp, scp, tar等)等
+    - 备份和恢复的粒度从数据库到单个文件. 是否支持表级粒度取决于存储引擎,如每个myisam表都是对应一组文件的, 而每个innodb表则可以独立也可以与其他表共享.
+    - 备份的工具:mysqlbackup,mysql表的mysqlhotcopy, 任何文件系统级命令(cp, scp, tar等)等
     - 备份可在mysql没有运行时或在运行中执行相应的锁以防止数据修改
   - 逻辑备份
-  > 由sql语句组成
-  - 比物理备份速度慢, 体积大
-  - 逻辑备份与计算机无关可移植性更高
-  - 备份工具: select ... into outfile语句或mysqldump
-  - 恢复备份: load data语句或mysqlimport
+    > 由sql语句组成
+    - 比物理备份速度慢, 体积大
+    - 逻辑备份与计算机无关可移植性更高
+    - 备份工具: mysqldump或select ... into outfile语句(扩展:该句为将表数据导出到文件中,而load data语句为该语句的补充,load data语句为将文件数据导入到表中.)
+    - 恢复备份: load data语句或mysqlimport
 - Online 与 Offline Backups
   >区别在于mysql是否运行,也可称为热备份与冷备份(hot versus cold), 还有一种warm备份就是服务器仍运行,但是加锁了无法修改数据
-- 本地 与 远程
-  - mysqldump: 可从本地与远程登录, 备份在本地或远程转储到客户端上
-  - mysqlhotcopy: 只能本地
-  - SELECT ... INTO OUTFILE: 语句可由本地或远程发起, 但输出文件只会放在服务端
+- 本地与远程
+  - mysqldump:可从本地与远程登录, 备份在本地或远程转储到客户端上
+  - mysqlhotcopy:只能本地
+  - SELECT ... INTO OUTFILE:语句可由本地或远程发起, 但输出文件只会放在服务端
   
 ### 7.2 Database Backup Methods
-- 通过 mysqldump or mysqlhotcopy备份
+- 通过mysqldump或mysqlhotcopy备份
   mysqldump更加通用, mysqlhotcopy5.7将移除, 他是使用flush tables,lock tables, cp命令进行数据文件的备份, 且支持myisam,ARCHIVE存储引擎
-          
 - 通过复制表文件备份
-  如myisam表, 可以复制表文件(*.frm, *.MYD, *.MYI)来做备份, 为了保证一致性, 需先停止mysql或lock和flush相关的table(语句如下)
+  如myisam表,可以复制表文件(*.frm, *.MYD, *.MYI)来做备份, 为了保证一致性, 需先停止mysql或lock并flush相关的table(语句如下)
    `FLUSH TABLES tbl_list WITH READ LOCK;`
-
 - 通过开启二进制日志进行增量备份
   当你做完一个完整备份后, 你应该flush logs语句来旋转(rotate)你的二进制日志,也就是重起一个二进制文件记录
-
 - 通过从服务器进行复制
   为了在备份时mysql也不会有性能问题.那么从服务器复制是一个方案
 
 ### 7.4 Using mysqldump for Backups  
->mysqldump产生两种类型输出
+**mysqldump产生两种类型输出**
  - 不带--tab选项, 那么输出就是包含了输出对象的表结构和表内容等的sql语句  
  - 带 --tab选项, 会输出两个文件一个是包含创建表的sql语句名为table_name.sql和名为table_name.txt文件以制表分隔符(tab-delimited)格式储存表内容, 每一个表行一个文本行.
 
 #### 7.4.1 Dumping Data in SQL Format with mysqldump 
-- 导出多个数据库
+- **导出多个数据库**
   - mysqldump --databases db1 db2 db3 > dump.sql, 加上database选项mysql会将后面的内容都当作数据库
   - mysqldump db1 db2 db3 > dump.sql: 与上一句比较不带--database, 导出文本不会包含创建数据库语句和use database语句, 所以你想事先创建和use
-- 只导出表格  
-  - mysqldump db1 t1 t3 t7 > dump.sq: 不加其他选项, mysql将第一个参数当作数据库, 后续的内容都作为表格
+- **只导出表格**
+  - mysqldump db1 t1 t3 t7 > dump.sql: 不加其他选项, mysql将第一个参数当作数据库, 后续的内容都作为表格
+  
 #### 7.4.3 Dumping Data in Delimited-Text Format with mysqldump
 备份分隔符格式的备份最好还是服务器主机上操作, 如果你是从远程连接到服务器上,那么.sql文件(由mysqldump生成)将放在客户端上, .txt文件(由mysql服务器执行select...into outfile语句得到)将放在mysql服务主机上
 
@@ -497,20 +490,18 @@ window上通过ssh远程登录mysq: 如用navicat时, 配置mysql账号外还要
 - --no-create-info: 服务器只会导出表内容sql语句而不包含create table语句
 
 ### 7.5 Point-in-Time (Incremental) Recovery Using the Binary Log
-假设2019-12-4 9:00时误删除了一张大表, 不同恢复方式如下?
+**假设2019-12-4 9:00时误删除了一张大表,不同恢复方式如下?**
 - 7.5.1 Point-in-Time Recovery Using Event Times
->指定开始的时间到结束的时间来做时间点恢复
-   
- 恢复操作: 先将最近的一份全备份恢复, 然后指定时间截止时间2019-12-4 8:59的二进制日志进行回放, 如果你是过了很久之后才发现的这误删操作,那么你还需要执行开始时间为2019-12-4 9:01开始到现在的二进制日志进行回放
+  >指定开始的时间到结束的时间来做时间点恢复
+    - 恢复操作: 先将最近的一份全备份恢复, 然后指定时间截止时间2019-12-4 8:59的二进制日志进行回放, 如果你是过了很久之后才发现的这误删操作,那么你还需要执行开始时间为2019-12-4 9:01开始到现在的二进制日志进行回放
 - 7.5.2 Point-in-Time Recovery Using Event Positions
->指定事件位置来做时间点恢复, 同一时间有多个事务时则该模式可控制粒度更加精确
-  
-  恢复操作: 先确定出那条删除语句的事件位置(如2000), 那么将二进制日志恢复到1999, 然后在从2001开始恢复剩下的
+  >指定事件位置来做时间点恢复, 同一时间有多个事务时则该模式可控制粒度更加精确
+    - 恢复操作: 先确定出那条删除语句的事件位置(如2000), 那么将二进制日志恢复到1999, 然后在从2001开始恢复剩下的
 
 ### 7.6 MyISAM Table Maintenance and Crash Recovery
 
 ### 7.6 MyISAM Table Maintenance and Crash Recovery
-每个myisam表在数据目录中都对应着3个文件, 他们的含义分别如下:
+- 每个myisam表在数据目录中都对应着3个文件, 他们的含义分别如下:
 	file                purpose
 	tb1_name.frm     definition(format) table
 	tb1_name.MYD     Data file
@@ -531,31 +522,29 @@ myisam表的优化
 ## Chapter 8 Optimization
 
 ### 8.1 Optimization Overview
-- Optimizing at the Database Level
+- **Optimizing at the Database Level**
   - 表结构是否合适? 特别是列是否设置了正确的数据类型,比如频繁更新的应用程序拥有较多的表,但表的列比较少; 而分析大量数据的应用程序通常有很少的表,但有较多的列
+  - 是否为每个表设置了适当的存储引擎,并利用其的优势和功能?
   - 是否设置了正确的索引提高查询效率?
-  - 是否为每个表设置了适当的存储引擎, 并利用其的优势和功能? 
-  - 是否设置可适当的行格式?
+  - 是否设置适当的行格式?
   - 应用程序是否使用了适当的锁策略?
-  - 用于缓存的所有内存区域大小是否设置正确? 即大到足以容纳经常访问的数据, 但太大会导致内存过载和分页. 最主要的内存配置是: InnoDB buffer pool, MyISAM key cache, MySQL query cache
+  - 用于缓存的所有内存区域大小是否设置正确? 即大到足以容纳经常访问的数据, 但太大会导致内存过载和分页.**最主要的内存配置是: InnoDB buffer pool, MyISAM key cache, MySQL query cache**
 - Optimizing at the Hardware Level
   - 磁盘搜索(disk seek). 磁盘需要花费时间去找到一条数据, 现代磁盘一次平均在10ms以下, 理论上100次/s. 对于单表这个时间非常难优化, 对于这种情况的优化, 可以将数据分发到不同磁盘上.
   - 磁盘读和写. 现代的一个磁盘至少可以提供20~30MB/s的吞吐量. 你可以从多个磁盘中并行读来达到优化效果.
-  
 - Balancing Portability and Performance
-  在可移植的程序中,可以将mysql关键字写在/*!- */注释分割符中, 其他的sql语言会忽略掉
+  在可移植的程序中,可以将mysql关键字写在/*!- */注释分割符中,其他的sql语言会忽略掉
 
 ### 8.2 Optimizing SQL Statements
 #### 8.2.1 Optimizing SELECT Statements
->即使对于一个使用缓存而快速查询的语句, 你仍能进一步优化语句使用更少的缓存来使你的应用更具有扩展性. 扩展性意味着可处理更多的用户和更大的查询而不会出现性能大幅下降
+>即使对于一个使用缓存而快速查询的语句,你仍能进一步优化语句使用更少的缓存来使你的应用更具有扩展性. 扩展性意味着可处理更多的用户和更大的查询而不会出现性能大幅下降
 
 ##### 8.2.1.1 WHERE Clause Optimization
 - 在查询中所有的常量表都将先被读取在其他表之前.常量表可以是以下任意一种:
   - 一个空表或表中只包含一行    
   - 一个表的基于PRIMARY KEY或UNIQUE KEY的where从句, 其中索引部分都直接与常量表达式进行比较并被定义为not null
-
-- 通过尝试所有的可能来找到最佳的联表联结组合.ORDER BY或GROUP BY从句中的所有列都来自同一个表,那么join时首先将放他前面  
-- 如果一个ORDER BY从句和一个不同的GROUP BY从句, 或者ORDER BY or GROUP BY从句中的列不是来自联表(join)顺序中第一个表的列, 都会创建临时表
+- **通过尝试所有的可能来找到最佳的联表联结组合.ORDER BY或GROUP BY从句中的所有列都来自同一个表,那么join时首先将他放前面**
+- **如果一个ORDER BY从句和一个不同的GROUP BY从句, 或者ORDER BY or GROUP BY从句中的列不是来自联表(join)顺序中第一个表的列, 都会创建临时表**
 - 如果使用SQL_SMALL_RESULT修饰符,则mysql会使用一个内存中的临时表
 - mysql将查询表的索引, 并使用最佳索引除非优化器认为使用表扫描更加有效. 是否使用索引或者扫描, 看是否扫描30%以上, 但现在也基于固定的百分比, 也取决例如表大小,行数,I/O块大小
 - 在输出每一行之前将跳过与HAVING字句不匹配的行
@@ -593,12 +582,12 @@ EXPLAIN输出中的Extra字段如果显示using index则表示使用了Index Con
 外联有left join和right join
 
 #### 8.2.1.9 Outer Join Simplification
-在解析阶段(parse stage), 带有right join的查询会被等效转换成只带有left join的语句
+**在解析阶段(parse stage), 带有right join的查询会被等效转换成只带有left join的语句**
 
 #### 8.2.1.10 Multi-Range Read Optimization
 >Multi-Range Read (MRR)优化的目的是减少对磁盘的随机访问而是基于表数据进行连续的访问
 - EXPLAIN输出的extra字段为MRR就是使用了此优化
-- 在innoDB和MYISAM如果查询不需要读取全部表的所有字段则不会吃用MRR, 因为不能从中获益
+- 在innoDB和MYISAM如果查询不需要读取全部表的所有字段则不会使用MRR,因为不能从中获益
 
 #### 8.2.1.11 Block Nested-Loop and Batched Key Access Joins
 
@@ -607,7 +596,7 @@ EXPLAIN输出中的Extra字段如果显示using index则表示使用了Index Con
 #### 8.2.1.13 ORDER BY Optimization
 
 - Use of Indexes to Satisfy ORDER BY
-  - 默认的, mysql会对group by col1, col2, ...语句进行排序操作,所以你在语句后显式的指定相同列的order by col1, col2, ...语句, mysql会对于进行优化不会任何的速度损失,不管他是否排序(使用索引就不用排序(filesort), 因为索引本身就是顺序的). 如果想让包含group by的语句避免排序的开销, 加上order by null可以抑制排序,但是仅仅是抑制对结果的排序. 
+  - 默认的, mysql会对group by col1, col2, ...语句进行排序操作,所以你在语句后显式的指定相同列的order by col1, col2, ...语句, mysql会对于进行优化不会任何的速度损失,不管他是否排序(**使用索引就不用排序(filesort), 因为索引本身就是顺序的**). 如果想让包含group by的语句避免排序的开销, 加上order by null可以抑制排序,但是仅仅是抑制对结果的排序. 
    - note: 需要排序时,明确的指出ASC还是DESC,而不能依赖于group by隐式的排序(ASC或DESC), 因为未来优化器的优化策略可能会有变.
   
 - Use of filesort to Satisfy ORDER BY
@@ -753,19 +742,16 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   
 #### 8.3.10 Indexed Lookups from TIMESTAMP Columns
   
-
 ### 8.4 Optimizing Database Structure
 
-#### 8.4.1 Optimizing Data Size
+#### **8.4.1 Optimizing Data Size**
 >设计表以最小化在磁盘上的空间.通过减少对磁盘的写入和读取的数据量,这会带来巨大改进.
- 
 - Table Columns
   - 尽可能使用最有效的数据类型.这能节省磁盘空间和内存.比如如果够用MEDIUMINT比INI是更好的选择,因为这需要更少的空间
-  - 如果可能声明列不为null,通过更好的使用索引并消除测试每个值是否为null的开销可加快sql的操作.如果确实需要使用null值,就使用但是避免设置默认值为null.
-
+  - **如果可能声明列不为null,通过更好的使用索引并消除测试每个值是否为null的开销可加快sql的操作.如果确实需要使用null值,就使用但是避免设置默认值为null.**
 - Row Format
-  - 在mysql5.6中, innoDB表默认使用COMPACT row存储格式(ROW_FORMAT=COMPACT).紧凑的行格式系列包括了COMPACT, DYNAMIC, COMPRESSED, 减少了行存储空间但增加默写操作的cpu使用率. 如果你的工作负载是典型的受缓存命中率和磁盘速度, 则会更快; 如果仅仅只是受限于cpu速度, 那么反而会更慢.
-     - 紧凑的行格式还可以优化使用了可变长度字符集(如utf8mb3或utf8mb4时)的char列存储.如果ROW_FORMAT=REDUNDANT,则char(N)占用N x 字符集最大字节长度. 许多语言主要可使用单字节utf8字符集编写, 所以一个固定的存储长度往往是浪费空间的.使用紧凑的行格式系列,InnoDB通过剥离尾部的空格, 在N到N x 该列字符集的最大字节长度的范围内分配存储长度.在典型情况下, 最小的存储长度为N字节以方便就地更新.
+  - 在mysql5.6中,innoDB表默认使用COMPACT row存储格式(ROW_FORMAT=COMPACT).紧凑的行格式系列包括了COMPACT, DYNAMIC, COMPRESSED,减少了行存储空间但增加某些操作的cpu使用率.如果你的工作负载是典型的受缓存命中率和磁盘速度,则会更快;如果仅仅只是受限于cpu速度, 那么反而会更慢.
+     - 紧凑的行格式还可以优化使用了可变长度字符集(如utf8mb3或utf8mb4时)的char列存储.如果ROW_FORMAT=REDUNDANT,则char(N)占用N x 字符集最大字节长度.许多语言主要可使用单字节utf8字符集编写, 所以一个固定的存储长度往往是浪费空间的.使用紧凑的行格式系列,InnoDB通过剥离尾部的空格, 在N到N x 该列字符集的最大字节长度的范围内分配存储长度.在典型情况下, 最小的存储长度为N字节以方便就地更新.
   - 要通过压缩的形式存储表数据来进一步减少空间,可在创建innoDB表时指定ROW_FORMAT=COMPRESSED,或对已存在的myisam表执行myisampack命令.(innoDB压缩表是可读写的,而myisam压缩表只能读)
   - 对于myisam表,如果没有任何可变长度列(varchar,text,blob),则使用固定大小的行格式.这样会比较快,但可能会浪费一些空间.
 - indexs
@@ -813,7 +799,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - 当缓存已经满了,一个线程想要打开不在缓存中的表
   - 当缓存包含多于table_open_cache数量并且缓存中的表不在被任何线程使用.
   - 当使用table-flushing的操作时.
-- 当表缓存占满时, 服务器使用如下程序去定位一个缓存条目使用
+- 当表缓存占满时,服务器使用如下程序去定位一个缓存条目使用
   - 从最近最少使用的表开始,释放当前未使用的表
   - 如果必须打开一个表,但缓存已经满了并无法释放,则缓存会按需要临时扩展,当表从已使用变为未使用状态时则将表关闭并从缓存中释放.
 - myisam将为每个并发访问都打开一个myisam表.这意味着两个线程访问同一个表或一个进程访问表两次(比如join自己)都打开两次表.
