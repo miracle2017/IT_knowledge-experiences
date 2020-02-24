@@ -95,7 +95,7 @@
 ### 5.1 The MySQL Server
 #### 5.1.1 Configuring the Server
 在调优mysql服务器时,最重要的配置变量:key_buffer_size和table_open_cache,你首先应该确信自己已经对这两个值设置适当值在修改参数前.
-table_open_cache: 所有线程的打开表数量,增大该值将增加mysql所需的文件描述符的数量.可通过opened_tables状态变量查看是否修改增加table_open_cache值,如果你没用经常执行flush tables(flush tables会强制将所有的表关闭重新打开)而opened_tables值很大时你就需要增加table_open_cache值了.
+table_open_cache: 所有线程的能打开表数量,增大该值将增加mysql所需的文件描述符的数量.可通过opened_tables状态变量查看是否修改增加table_open_cache值,如果你没用经常执行flush tables(flush tables会强制将所有的表关闭重新打开)而opened_tables值很大时你就需要增加table_open_cache值了.
 key_buffer_size: 缓冲MyISAM表的索引块(这些缓冲是并被所有线程共享的).(只缓冲MyISAM表,同时他是只缓冲索引不缓冲数据的,对于innoDB表缓冲的是索引和数据是一起的)
 一些配置参考的例子:(见官网上)...
 
@@ -574,7 +574,7 @@ EXPLAIN输出中的Extra字段如果显示using index则表示使用了Index Con
 将括号内的逗号视为innner join如: 
    `SELECT * FROM t1 LEFT JOIN (t2, t3, t4) ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c) ` 
    等价于 
-   SELECT * FROM t1 LEFT JOIN (t2 INNER JOIN t3 INNER JOIN t4)  ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c)
+   SELECT * FROM t1 LEFT JOIN (t2 INNER JOIN t3 INNER JOIN t4) ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c)
 - 语句中只有内联结的可以忽略括号,从左到右评估连接, 其实表可以被评估为任意的顺序
 - 但是如果是外联或外联内联混合则不一定, 忽略有可能会造成结果不一致
 
@@ -594,18 +594,17 @@ EXPLAIN输出中的Extra字段如果显示using index则表示使用了Index Con
 #### 8.2.1.12 IS NULL Optimization
 
 #### 8.2.1.13 ORDER BY Optimization
-
 - Use of Indexes to Satisfy ORDER BY
-  - 默认的, mysql会对group by col1, col2, ...语句进行排序操作,所以你在语句后显式的指定相同列的order by col1, col2, ...语句, mysql会对于进行优化不会任何的速度损失,不管他是否排序(**使用索引就不用排序(filesort), 因为索引本身就是顺序的**). 如果想让包含group by的语句避免排序的开销, 加上order by null可以抑制排序,但是仅仅是抑制对结果的排序. 
-   - note: 需要排序时,明确的指出ASC还是DESC,而不能依赖于group by隐式的排序(ASC或DESC), 因为未来优化器的优化策略可能会有变.
+  - 默认的, mysql会对group by col1, col2, ...语句进行排序操作,所以你在语句后显式的指定相同列的order by col1, col2, ...语句, mysql会对于进行优化不会任何的速度损失,不管他是否排序(**使用索引就不用排序(filesort), 因为索引本身就是顺序的**). **如果想让包含group by的语句避免排序的开销, 加上order by null可以抑制排序,但是仅仅是抑制对结果的排序.**
+    - note: 需要排序时,明确的指出ASC还是DESC,而不能依赖于group by隐式的排序(ASC或DESC), 因为未来优化器的优化策略可能会有变.
   
 - Use of filesort to Satisfy ORDER BY
   order by语句使用了filesort,filesort操作事先需要文件排序的内存,优化器会分配固定的 sort_buffer_size字节(byte)内存(各个session可以改变这个值以避免过多的使用). 如果结果集太大无法放入内存中,那么就会创建一个临时表
   
 - Influencing ORDER BY Optimization
   - 没有使用filesort的order by(也就是使用索引)出现排序很慢的情况? 那么将max_length_for_sort_data系统变量值降低到合适值以便触发filesort.(该值设置太高的一个症状就是磁盘活动过多同时cpu活动率低,)
-  - 如果想要提高order by速度,先检查下能否使用索引而不是需要额外的排序阶段(用索引不用排序), 如果不可能,可尝试一下策略:
-    - 增加sort_buffer_size系统变量值.理想的该值应该足够大以装下整个结果集在sort buffer中(避免写入到磁盘和合并过程), 监视合并的次数(合并临时文件),可以查看Sort_merge_passes状态变量, 如果该值很大则应考虑增加sort_buffer_size的值
+  - **如果想要提高order by速度,先检查下能否使用索引而不是需要额外的排序阶段(用索引不用排序),** 如果不可能,可尝试一下策略:
+    - **增加sort_buffer_size系统变量值**.理想的该值应该足够大以装下整个结果集在sort buffer中(避免写入到磁盘和合并过程), 监视合并的次数(合并临时文件),可以查看Sort_merge_passes状态变量, 如果该值很大则应考虑增加sort_buffer_size的值
     - 增加read_rnd_buffer_size变量值，以便一次读取更多行
     - 每行使用更少的内存: 可通过仅声明列上存储数据需要的大小的值, 如char(16)比char(200)好如果该列的值从未超过16字符(character)
     - 更改temdir系统变量指向具有大量可用空间的专用文件系统.该路径位置应该是不同的物理磁盘上, 而非同一物理磁盘的不同分区
@@ -614,10 +613,10 @@ EXPLAIN输出中的Extra字段如果显示using index则表示使用了Index Con
 >EXPLAIN并不能区分filesort操作是否是在内存中完成,可通过optimizer trace输出信息查看
 
 #### 8.2.1.14 GROUP BY Optimization
->group by最通常的做法是扫描整个表然后创建一个临时表, 其每组的所有行都是连续的, 然后使用此表发现组和应用聚合函数(如果有的话), 在某些情况下,mysql会做得更好, 通过访问索引而避免创建临时表. group by使用索引最重要的前提是所有group by列均使用同一索引属性, 并且索引是按顺序存储键值的(例如BTREE索引就是, 而HASH索引则不是)
+>group by最通常的做法是扫描整个表然后创建一个临时表, 其每组的所有行都是连续的, 然后使用此表发现组和应用聚合函数(如果有的话), 在某些情况下,mysql会做得更好, 通过访问索引而避免创建临时表.**group by使用索引最重要的前提是所有group by列均使用同一索引属性**, 并且索引是按顺序存储键值的(例如BTREE索引就是, 而HASH索引则不是)
 
 - Loose Index Scan
-  - 最左前缀列规则. 假设表t1在(c1, c2, c3)上具有索引, 则group by c1, c2情况下loose index scan适用, 如果group by c2,c3(列不是最左前缀) 或group by c1, c2, c4(c4不在索引中), 则不适合
+  - 最左前缀列规则. 假设表t1在(c1, c2, c3)上具有索引, 则group by c1, c2情况下loose index scan适用, **如果group by c2,c3(列不是最左前缀) 或group by c1, c2, c4(c4不在索引中), 则不适合**
   - 选择列(select list)中使用了聚合函数且只有min()和max()时,它们必须是同一列, 该列必须在索引中同时必须马上紧跟group by中的列
   - 必须整列值都被索引, 如有c1 varchar(20), index(c1(10)), 则索引只是使用c1值部分前缀, 所以不能用于loose index scan
   - loose index scan支持聚合函数, 不同的函数有如下的区别:
@@ -654,7 +653,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 ### 8.3 Optimization and Indexes
 
 #### 8.3.1 How MySQL Uses Indexes
-- 许多索引(PRIMARY KEY, UNIQUE, INDEX, FULLTEXT)都是存储在B-trees中, 除了空间数据类型(spatial data type)索引使用R-trees;内存表(memory table)也支持hash索引; innoDB对fulltext使用反向列表(INVERTED LIST FOR FULLTEXT INDEXS)
+- 许多索引(PRIMARY KEY, UNIQUE, INDEX, FULLTEXT)都是存储在B-trees中, 除了空间数据类型(spatial data type)索引使用R-trees;内存表(memory table)也支持hash索引;**innoDB对fulltext使用反向列表**(INVERTED LIST FOR FULLTEXT INDEXS)
 
 - mysql使用索引进行如下操作:
   - 快速的找到与where语句匹配的行
@@ -666,10 +665,10 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
     - 如果在可用索引的最左前缀完成了sort和group by操作,同时在所有的键后都有DESC,则按照相反顺序读取键值.
     - 有些查询可以直接从索引读取所有需要信息而不用读取数据行,这成为覆盖索引,直接从索引树获取结果可提高速度.
 
-- 索引对小表或大表的查询需要处理大多数或所有的行而言,索引那么重要.当一个查询需要太多的行时, 顺序读取比通过索引快. 顺序读取可以最大程度的减少磁盘查找(disk seek),即使查询不需要所有行.
+- 索引对小表或大表的查询需要处理大多数或所有的行而言,索引没那么重要.当一个查询需要太多的行时, **顺序读取比通过索引快.顺序读取可以最大程度的减少磁盘查找(disk seek),即使查询不需要所有行.**
 
 #### 8.3.2 Primary Key Optimization
-如果你的表又大有重要,但没有明显的列或一组列用作主键,你应该创建一个自增的独立列作为主键.这些唯一的id可用于在其他表指向对应的行当联表时使用外键.
+如果你的表又大又重要,但没有明显的列或一组列用作主键,你应该创建一个自增的独立列作为主键.这些唯一的id可用于在其他表指向对应的行当联表时使用外键.
 
 #### 8.3.3 Foreign Key Optimization
 
@@ -681,16 +680,16 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 当有一个字符串列col_name(N),你可以只索引前N个字符,这样会使索引更小.当你对BLOB或TEXT列作索引时, 你必须指定索引前缀长度.索引最长可达到1000字节(bytes)(innoDB最大767bytes,但 系统变量innodb_large_prefix被设置后可以更大). 前缀限制的长度以字节为单位, 而create table, alter table和create index语句的前缀长度被解释为非二进制字符串类型的字符数和二进制字符串类型.所以在为多字节集的非二进制字符串列指定前缀长度时,需要考虑到这点.
 
 - FULLTEXT Indexes
->只有MyISAM和innoDB存储引擎支持全文索引,而且只有char,varchar和text列支持.全文索引只会对整列索引,不支持前缀索引
+**只有MyISAM和innoDB存储引擎支持全文索引,而且只有char,varchar和text列支持.全文索引只会对整列索引,不支持前缀索引**
 
 - Spatial Indexes
 >可在空间数据类型(spatial data types)上创建空间数据类型索引, 只有MyISAM支持空间类型上的R-tree索引, 其他存储引擎使用B-trees索引空间类型(除了ARCHIVE,它不支持空间类型索引)
 
 - Indexes in the MEMORY Storage Engine
->MEMORY存储引擎默认使用hash索引, 但也支持B-tree
+**MEMORY存储引擎默认使用hash索引, 但也支持B-tree**
 
 #### 8.3.5 Multiple-Column Indexes
-- mysql可以创建复合索引(即在多列上建索引).一个索引最多可以包含16列.对于复合索引的替代方法,在表上多建一列基于其他列组合的值的hash列, 如果此列较短,合理唯一并且已经建立索引则可能比复合索引快.
+- **mysql可以创建复合索引(即在多列上建索引).一个索引最多可以包含16列.**对于复合索引的替代方法,在表上多建一列基于其他列组合的值的hash列, 如果此列较短,合理唯一并且已经建立索引则可能比复合索引快.
 - 复合索引只在符合最左前缀下生效
 
 #### 8.3.6 Verifying Index Usage
@@ -702,15 +701,15 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
     - 评估每个ref访问必须读取多少行
     - 估计部分联表(partial join)将产生多少行
   - 随着索引的平均值组的增大, 该索引在上述的两个方面中的用途越小, 因为每次查询到的行数增加.为了使索引更好的用于优化,每个索引最好对应着数据表中比较少的行数.当一个给定的索引值对应着大量的行时,则mysql不太可能使用它.
-  - 平均值组的大小与表基数有关,表基数就是值数的数目.show index语句显示的基数值字段(cardinality)基于N/S, N为表的所有行数, S为值组的平均大小, 该比率指示着表中大约多少个值组.
-  - 对于基于<=>的join, null与其他任何值都一样: null<=>null(为true), 就像N<=>N(为true)一样.
-  - 基于=运算符的join, null与其他non-null值不相等, 当expr1或expre2为null(或两者都是)时, expr1 = expr2不为true.这会影响到ref访问以tabl_name.key = expr形式比较,如果expr值为null,则mysql不会访问表因为比较不会为真.
-- 对于=比较,表中有多少null值都无关紧要.出于优化目的,相关值是非null值组的平均大小, 目前mysql还不支持收集和使用该平均值.
+  - **平均值组的大小与表基数有关,表基数就是值数的数目.show index语句显示的基数值字段(cardinality)基于N/S, N为表的所有行数, S为值组的平均大小, 该比率指示着表中大约多少个值组.**
+  - 对于基于<=>的join, null与其他任何值都一样: null<=>null(为true), 就像N<=>N(为true)一样.(**`<=>`操作符为比较两个变量,相同返回1不同返回0,其中对于null:只有当两个都是null才返回1,只有一个为null时返回0,而平常的`=`操作符null于其它任何值相比都是返回null**)
+  - 基于=运算符的join, null与其他non-null值不相等, 当expr1或expre2为null(或两者都是)时, expr1 = expr2不为true.这会影响到ref访问以tabl_name.key = expr形式比较,如果expr值为null,则mysql不会访问表因为比较不会为真.(也就是`=`操作符,null与其它任何值相比都是返回null)
+- **对于=比较,表中有多少null值都无关紧要.出于优化目的,相关值是非null值组的平均大小, 目前mysql还不支持收集和使用该平均值.**
 - 对于innoDB和MyISAM表,可以通过系统变量innodb_stats_method and myisam_stats_method来控制表统计信息的收集.这两个值有以下3个可能的值:
   - nulls_equal,所有null值都会被认为相等(即它们是同一个值组)
   - nulls_unequal,所有null都被认为不相等.每个null值单独组成大小为1的值组.
   - nulls_ignored,null值会被忽略
-- 如果倾向使用许多<=>比较而不是=比较的联表(join),则nulls_equal是合适的统计方法.
+- **如果倾向使用许多<=>比较而不是=比较的联表(join),则nulls_equal是合适的统计方法.**
 
 - innodb_stats_method有全局值,myisam_stats_method具有全局和会话值,所以可以设置myisam_stats_method的会话值来强制使用给定方法重新生成表的统计信息,而不影响其他客户端.你可以使用如下方法重新生成MyISAM表的统计信息:
   - 执行myisamchk --stats_method=method_name --analyze
@@ -720,25 +719,24 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - 这两个变量分别仅对InnoDB和MyISAM表有效.其他的存储引擎只有一种收集统计信息的方法,它更接近nulls_equal方法
   
 #### 8.3.8 Comparison of B-Tree and Hash Indexes  
-
 - B-Tree Index Characteristics
-  - B-tree索引能被用于=,>,>=,<,<=,BETWEEN的比较,如果like的参数是不以通配符开头的常量字符串(如'Pat%_ck%')的like操作也可以使用索引
-  - col_name IS NULL语句也可以使用索引当col_name加了索引
+  - B-tree索引能被用于=,>,>=,<,<=,BETWEEN的比较,**如果like的参数是不以通配符开头的常量字符串(如'Pat%_ck%')的like操作也可以使用索引**
+  - **col_name IS NULL语句也可以使用索引当col_name加了索引**
   - *(重要但没很看明白)没有覆盖where从句中所有and级别的任何索引都不会用于优化查询,也就是为了能够使用索引, 必须在每个and组中使用索引前缀.
-  - 有时,即是索引可用,mysql也不会使用索引.例如有种情况, 优化器估计使用索引将需要读取表中很大比例的数据行(这种情况, 表扫描可能会更快,因为他需要更少的查找).但是如果这样的语句使用limit只是检索某些行, 则mysql仍然会使用索引, 因为他可以更快找到并返回结果的几行.
+  - 有时,即使索引可用,mysql也不会使用索引.例如有种情况, 优化器估计使用索引将需要读取表中很大比例的数据行(这种情况, 表扫描可能会更快,因为他需要更少的查找).但是如果这样的语句使用limit只是检索某些行, 则mysql仍然会使用索引, 因为他可以更快找到并返回结果的几行.
     
 - Hash Index Characteristics
   - 只适用=或<=>的运算符比较(但非常快),不能使用比较运算符(如<)来查找值的范围.依赖于这种单值查找类型的系统称为"键值存储"(key-value stores)
   - 无法使用hash索引加速order by操作(hash索引无法按顺序搜索下一条目)
   - mysql无法确定两个值之间大约有多少行(范围优化器使用它来决定使用那个索引)
-  - 仅整个键可用于搜索表行(对于B-tree索引,任何键的最左前缀都可以用于查找表行)
+  - **仅整个键可用于搜索表行(对于B-tree索引,任何键的最左前缀都可以用于查找表行)**
 
 #### 8.3.9 Use of Index Extensions  
 - innoDB通过将每个二级索(secondary index)引后附上主键列来自动扩展每个二级索引.
   - 比如i1, i2是主键, 则有一个名为k_d索引,则内部会扩展它并将他认为了(d, i1, i2)
   - 在确定如何以及是否使用该索引时,优化器会考虑到二级索引的主键列, 这会导致更有效的执行计划和更好的性能.
 - 还可以通过flush status;(先清除状态计数器) SHOW STATUS LIKE 'handler_read%'语句查看使用了扩展索引的优化器行为上的差异
--  optimizer_switch系统变量的use_index_extensions=on/off标志可以控制优化器是否对innoDB表的二级索引的主键列进行考虑.默认是启用的.
+- optimizer_switch系统变量的use_index_extensions=on/off标志可以控制优化器是否对innoDB表的二级索引的主键列进行考虑.默认是启用的.
   
 #### 8.3.10 Indexed Lookups from TIMESTAMP Columns
   
@@ -751,49 +749,49 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - **如果可能声明列不为null,通过更好的使用索引并消除测试每个值是否为null的开销可加快sql的操作.如果确实需要使用null值,就使用但是避免设置默认值为null.**
 - Row Format
   - 在mysql5.6中,innoDB表默认使用COMPACT row存储格式(ROW_FORMAT=COMPACT).紧凑的行格式系列包括了COMPACT, DYNAMIC, COMPRESSED,减少了行存储空间但增加某些操作的cpu使用率.如果你的工作负载是典型的受缓存命中率和磁盘速度,则会更快;如果仅仅只是受限于cpu速度, 那么反而会更慢.
-     - 紧凑的行格式还可以优化使用了可变长度字符集(如utf8mb3或utf8mb4时)的char列存储.如果ROW_FORMAT=REDUNDANT,则char(N)占用N x 字符集最大字节长度.许多语言主要可使用单字节utf8字符集编写, 所以一个固定的存储长度往往是浪费空间的.使用紧凑的行格式系列,InnoDB通过剥离尾部的空格, 在N到N x 该列字符集的最大字节长度的范围内分配存储长度.在典型情况下, 最小的存储长度为N字节以方便就地更新.
-  - 要通过压缩的形式存储表数据来进一步减少空间,可在创建innoDB表时指定ROW_FORMAT=COMPRESSED,或对已存在的myisam表执行myisampack命令.(innoDB压缩表是可读写的,而myisam压缩表只能读)
+    - **紧凑的行格式还可以优化使用了可变长度字符集(如utf8mb3或utf8mb4时)的char列存储.如果ROW_FORMAT=REDUNDANT,则char(N)占用N x 字符集最大字节长度.许多语言主要可使用单字节utf8字符集编写, 所以一个固定的存储长度往往是浪费空间的.使用紧凑的行格式系列,InnoDB通过剥离尾部的空格, 在N到N x 该列字符集的最大字节长度的范围内分配存储长度.在典型情况下, 最小的存储长度为N字节以方便就地更新.**
+  - **要通过压缩的形式存储表数据来进一步减少空间,可在创建innoDB表时指定ROW_FORMAT=COMPRESSED,或对已存在的myisam表执行myisampack命令.(innoDB压缩表是可读写的,而myisam压缩表只能读)**
   - 对于myisam表,如果没有任何可变长度列(varchar,text,blob),则使用固定大小的行格式.这样会比较快,但可能会浪费一些空间.
 - indexs
-  - 表中的主索引应尽可能小.这使得识别每一行变得容易有效.对于innoDB表,主键列都会附在二级索引后, 因此如果你有许多二级索引时,则较短的主键可节省大量空间.
-  - 索引能提高读取性能,但会减慢插入和更新操作.如果你需要搜索多列组合来访问表,则创建一个复合索引,而不是为每个单独的创建索引.索引的第一部分应该是最常使用的列.
+  - **表中的主索引应尽可能小.这使得识别每一行变得容易有效.对于innoDB表,主键列都会附在二级索引后, 因此如果你有许多二级索引时,则较短的主键可节省大量空间.**
+  - **索引能提高读取性能,但会减慢插入和更新操作.如果你需要搜索多列组合来访问表,则创建一个复合索引,而不是为每个单独的创建索引.索引的第一部分应该是最常使用的列.**
   - 如果一个长的字符串列很可能在前几个字符上具有唯一的前缀, 则可在该列的最左部分创建索引.较短的索引会更快, 这不仅是他需要更少的磁盘空间,而且还会增加索引缓存的命中次数,从而减少了磁盘寻道
 - joins
   - 在某些情况中, 将经常扫描的表分为两部分是有益的.如果是动态格式的表,可以使用较小的静态格式表去查找相关的行在扫描表时,则尤其如此.
   - 在不同表中声明相同的数据类型以加快基于相应列的联表(join)
-  - 保持列名简单, 以便在不同的表中使用相同的名称以简化联接查询.例如在名为customer的表中, 使用name代替customer_name, 为了使名称能够一直到其他sql server中,请考虑名称短语18个字符
+  - **保持列名简单, 以便在不同的表中使用相同的名称以简化联接查询.例如在名为customer的表中, 使用name代替customer_name,** 为了使名称能够移植到其他sql server中,请考虑名称短语18个字符
 - Normalization
   - 通常,尝试使所有数据都保持非冗余(即是符合第三范式).无需冗长的值(如名字,地址),而是分配它们一个唯一id,在其他有需要的表使用该id.
 
 #### 8.4.2 Optimizing MySQL Data Types
 
 #### 8.4.2.1 Optimizing for Numeric Data
-- 对于唯一id或其他可以被表示为数字或字符串的值,数字列好于字符串列.因为大数值可以比相应的字符串存储使用更少的字节,因此使用更少内存的来传输和比较
-- 如果使用的是数字型数据(numeric data),则许多情况下从数据库访问比文本访问更快.
+- **对于唯一id或其他可以被表示为数字或字符串的值,数字列好于字符串列.因为大数值可以比相应的字符串存储使用更少的字节,因此使用更少内存的来传输和比较**
+- **如果使用的是数字型数据(numeric data),则许多情况下从数据库访问比文本访问更快.**
 
 #### 8.4.2.2 Optimizing for Character and String Types
-- 当你不需要特地语言的排序规则功能时,请使用二进制排序规则快速比较和排序操作.在查询中可以使用BINARY运算符来指定使用二进制排序规则.
+- **当你不需要特地语言的排序规则功能时,请使用二进制排序规则快速比较和排序操作.在查询中可以使用BINARY运算符来指定使用二进制排序规则.**
 - 比较来自不同列的值时,尽可能声明为相同字符集和排序规则,以避免在查询中进行字符串转换.
 - 对于小于8kb的列值,请使用binary VARCHAR而不是BLOB.group by和order by子句可以生成临时表,并且如果原始表不包含任何的BLOB列,则这些临时表可以使用MEMORY存储引擎.
-- 如果一个表包含像名字或地址但许多查询又通常用不到的列,考虑将这些列拆分成为单独的列,在需要的时候使用join查询.当mysql从一行中读取任何值时,它将读取一个包含该行所有列的数据块,所以尽可能保持每行较小.
+- **如果一个表包含像名字或地址但许多查询又通常用不到的列,考虑将这些列拆分成为单独的列,在需要的时候使用join查询.当mysql从一行中读取任何值时,它将读取一个包含该行所有列的数据块,所以尽可能保持每行较小.**
 - innoDB中,当你使用随机值作为主键时,尽可能为其加上一个上升值的前缀,如当前日期和时间.当连续的主键值在物理存储上彼此靠近时,innoDB可以更快的读取和插入它们
 
 ##### 8.4.2.3 Optimizing for BLOB Types
 - 当存储包含文本数据的大blob数据时,首先考虑压缩它.但当整个表由innoDB或myisam压缩时,请勿使用此技术.
-- 对于具有多列的表,为了减少不使用blob列的查询对内存的需求,请考虑将blob列拆分成一个单独的表,在需要时使用join查询
+- **对于具有多列的表,为了减少不使用blob列的查询对内存的需求,请考虑将blob列拆分成一个单独的表,在需要时使用join查询**
 - 由于检索和显示BLOB值对性能的要求相比其他数据类型会较大的不同.你可以将特定于blob表放在不同的存储设备或甚至是单独的数据库实例.比如检索blob需要读取较大的顺序磁盘,而这传统磁盘更适合而不是SSD设备
-- 而不是针对一个非常长的文本字符串测试是否相等, 你可以将列值的hash值存储在一个列中并建立索引,然后在查询使用hash查找.由于hash函数可能会由不同输入值产生重复的结果,为此你仍然可以再加上and blob_colname=long_string_value来保证不会将错误结果也包含进来.
+- **而不是针对一个非常长的文本字符串测试是否相等, 你可以将列值的hash值存储在一个列中并建立索引,然后在查询使用hash查找.由于hash函数可能会由不同输入值产生重复的结果,为此你仍然可以再加上and blob_colname=long_string_value来保证不会将错误结果也包含进来.**
 
 ##### 8.4.2.4 Using PROCEDURE ANALYSE
-- ANALYSE()检查查询结果并对结果进行分析,然后返回每列最佳数据类型的建议.减小表大小.用法在select语句后附上PROCEDURE ANALYSE([max_elements,[max_memory]]);如下例子:
+- **ANALYSE()检查查询结果并对结果进行分析,然后返回每列最佳数据类型的建议.减小表大小**.用法在select语句后附上PROCEDURE ANALYSE([max_elements,[max_memory]]);如下例子:
   `SELECT ... FROM ... WHERE ... PROCEDURE ANALYSE([max_elements,[max_memory]])`    
   
 ### 8.4.3 Optimizing for Many Tables  
 #### 8.4.3.1 How MySQL Opens and Closes Tables
-- mysql多线程的, 所以当有许多客户端同时对一个表进行查询,为了最小化多个客户端会话对于同一张表具有不同的状态的问题,该表由于并发的会话独立打开,这会二外增加内存但通常会增加性能.对于myisam表,对于每个打开表的客户端, 打开数据文件(data file)都需要一个额外的文件描述符(相反索引文件(index file)描述符在所有会话间是共享的)  
-- table_open_cache和max_connections系统变量影响着服务器保持打开的最大文件的数量,如果你增加其中一个或两个值,你可能也需要提高由你操纵施加的每个进程打开的文件描述符的数量.许多操作系统都允许你增加打开文件的限制.
+- **mysql是多线程的, 所以当有许多客户端同时对一个表进行查询,为了最小化多个客户端会话对于同一张表具有不同的状态的问题,该表由于并发的会话独立打开,这会二外增加内存但通常会增加性能.对于myisam表,对于每个打开表的客户端, 打开数据文件(data file)都需要一个额外的文件描述符(相反索引文件(index file)描述符在所有会话间是共享的)** 
+- **table_open_cache和max_connections系统变量影响着服务器保持打开的最大文件的数量,如果你增加其中一个或两个值,你可能也需要提高由你操纵施加的每个进程打开的文件描述符的数量.许多操作系统都允许你增加打开文件的限制.**
 - table_open_cache: 该值与max_connections有关,比如200个并行的连接, 那么指定该值最少200*N,N为任何你要的执行查询语句中联表的最大数量, 同时你必须为临时表和文件保留额外的文件描述符
-- 对于myisam存储引擎需要注意的是,每个唯一打开的表都需要两个文件描述符.对于有分区的mysql表,每个分区都需要两个文件描述符.当mysql打开带有分区的myisam表时,都会打开所有的分区表不管查询语是否有指定分区.如要增加mysql可用的文件描述符的数量,可以设置open_files_limit.
+- **对于myisam存储引擎需要注意的是,每个唯一打开的表都需要两个文件描述符.对于有分区的mysql表,每个分区都需要两个文件描述符.当mysql打开带有分区的myisam表时,都会打开所有的分区表不管查询语是否有指定分区.如要增加mysql可用的文件描述符的数量,可以设置open_files_limit.**
 
 - mysql会在如下情景中关闭不需要使用的表并从table cache中移除:
   - 当缓存已经满了,一个线程想要打开不在缓存中的表
@@ -811,7 +809,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 ##### 8.4.4 Internal Temporary Table Use in MySQL
 - 在一些情况中,mysql会创建内部的临时表当处理语句时.用户无法直接控制.mysql会在如下情况中创建临时表:
   - 评估UNION语句 
-  - 一些视图中, 比如使用了TEMPTABLE算法,UNION或聚合的视图
+  - 一些视图中,比如使用了TEMPTABLE算法,UNION或聚合的视图
   - 评估派生表
   - 为子查询或半联接(semijoin materialization)而创建的表
   - 评估包含一个order by子句和另一个不同的group by子句, 或者对于order by或group by包含的列在联表(join)顺序中第一个表外.
@@ -821,9 +819,9 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - 评估多表update语句时
   - 评估GROUP_CONCAT()或COUNT(DISTINCT)的表达式时
 - 为了确定语句是否使用了临时表,使用EXPLAIN然后查看extra列是否标注了using temporary.对于派生表或物化的临时表( derived or materialized temporary tables)不一定会标出.
-- 当mysql创建一个内部临时表时(不管是在内存还是磁盘上),它会增加Created_tmp_tables状态变量.如果在磁盘的临时表(不管是最初的或者通过转换内存中的表),它会增加 Created_tmp_disk_tables状态变量
+- **当mysql创建一个内部临时表时(不管是在内存还是磁盘上),它会增加Created_tmp_tables状态变量.如果在磁盘的临时表(不管是最初的或者通过转换内存中的表),它会增加 Created_tmp_disk_tables状态变量**
 - 某些查询条件会阻止使用内存中的临时表,而使用在磁盘上的临时表来替代如下:
-  - 表中存在BOLB或TEXT列,这包括被当作BLOB或TEXT(这取决于它们的值是二进制还是非二进制字符串)的用户自定义的字符串变量
+  - **表中存在BOLB或TEXT列,这包括被当作BLOB或TEXT(这取决于它们的值是二进制还是非二进制字符串)的用户自定义的字符串变量**
   - 任何在GROUP BY或DISTINCT中的字符串列大于512(二进制字符串大于512字节(bytes),非二进制字符串大于512字符(characters))
   - 在union或union all中,select的列存在大于512字符串(二进制字符串大于512字节(bytes),非二进制字符串大于512字符(characters))
   - show colums和describe语句某些列使用BLOB类型,因此用于结果的临时表是在磁盘上的.
@@ -1328,7 +1326,6 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 ### 10.8   
 
 #### 10.8.5 The binary Collation Compared to _bin Collations   
-
 - The Unit for Comparison and Sorting
   - binary collation的比较和排序基于数字字节值(base on numeric byte values)
   - nobinary string是字符序列(sequences of characters), 它的collations值定义了用于比较和排序的字符值的顺序
@@ -1466,7 +1463,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 在某些情况下,create table或alert table语句中指定的列规范可能会被静默的修改,这些可能是数据类型,与数据类型关联的属性或索规范.所有更改都受内部的行大小(row-size)65535bytes的限制,这可能会导致某些尝试修改数据类型失败.
   - 构成主键的列都被设置not null,即使没有明确声明.
   - 如果指定的index type不被指定存储引擎支持,如果存储引擎有另外一个不会影响查询结果的index type可用,那么就会使用该存储引擎.
-  - 如果strict mode没有启用,VARCHAR列长度大于65535则转换为TEXT,VARBINARY列长度大于65535则转换为BLOB;如果严格模式开启了则长生一个错误.
+  - **如果strict mode没有启用,VARCHAR列长度大于65535则转换为TEXT,VARBINARY列长度大于65535则转换为BLOB;如果严格模式开启了则产生一个错误.**
   - 如果为字符数据类型(character data type)定义了CHARACTER SET为二进制属性,则CHAR变为BINARY,VARCHAR变为VARBINARY,TEXT变为BLOB;但对enum和set数据类型,不会发生转换,它们按照声明时的创建.
   - 当你使用myisampack压缩表时,对于某些其他数据类型可能会发生更改.
 #### 13.1.19 CREATE TRIGGER Statement
@@ -2339,11 +2336,9 @@ mysqli_multi_query()   :执行多条语句
   
 ## mysql数据类型
   - 数值
-  
     >对于整数类型，M表示最大显示宽度。最大显示宽度为255.显示宽度与存储大小,类型可包含的值范围无关. 当插入的表的字段数据长度小于设定的INT(M)最大长度的时候，检索出来的数据会自动空格补充, 如果你设定zerofill, 那么可以看到存入的格式是在实际数字前补零到总的位数等于M。zerofill(补零)，当实际插入的数据长度小于建表的时候设定的长度时候，它会从左开始补零, 具体补多少与int(M)的M有关。这个修饰符可以防止MySQL存储负值。比如int(20)表示显示宽度是20, 但是实际上可以存储的只有10位数范围2^32-1(无符号), 整数的类型决定着存储的大小, 具体大小和范围如下
     
     >对于浮点和定点类型， M是可以存储的总位数。
-     
     - TINYINT: 1个字节, 无符号的取值范围: 0 ~ 2^8-1, 有符号 -128 ~ 127
     - SMALLINT: 2个字节  无符号的取值范围: 0 ~ 2^16-1
     - MEDIUMINT: 3个字节 无符号的取值范围: 0 ~ 2^24-1
@@ -2353,7 +2348,6 @@ mysqli_multi_query()   :执行多条语句
   - 字符串
     >varchar(M) M表示最大存储范围M个字节, 实际存储多少字节是变动的, 内容多少就是多少字节
      char(M) M表示最大存储范围M个字节, 实际存储时都是固定的M字节 
-
     >ps: 手机号建议存成字符串类型
    
   
