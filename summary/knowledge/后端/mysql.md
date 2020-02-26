@@ -823,40 +823,40 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 某些查询条件会阻止使用内存中的临时表,而使用在磁盘上的临时表来替代如下:
   - **表中存在BOLB或TEXT列,这包括被当作BLOB或TEXT(这取决于它们的值是二进制还是非二进制字符串)的用户自定义的字符串变量**
   - 任何在GROUP BY或DISTINCT中的字符串列大于512(二进制字符串大于512字节(bytes),非二进制字符串大于512字符(characters))
-  - 在union或union all中,select的列存在大于512字符串(二进制字符串大于512字节(bytes),非二进制字符串大于512字符(characters))
+  - 在union或union all中,select的列存在大于512字符串(二进制字符串大于512字节(bytes),非二进制字符串大于512字符(characters)) 
   - show colums和describe语句某些列使用BLOB类型,因此用于结果的临时表是在磁盘上的.
   - 
 - Internal Temporary Table Storage Engine
-  - 一个内部临时表可以存储在内存中,由MEMORY存储引擎处理;或者存储在磁盘上,由myisam存储引擎处理.如果一个在内存中内部临时表变得太大将会被自动转换为到磁盘表,最大的值由tmp_table_size或max_heap_table_size值决定,以较小为准,这不同使用create table显式创建的memory表,对于此表只有max_heap_table_size决定了表能增长的最大值,并且不会转换为磁盘格式.
+  - **一个内部临时表可以存储在内存中(由MEMORY存储引擎处理);或者存储在磁盘上(由myisam存储引擎处理)**,如果一个在内存中内部临时表变得太大将会被自动转换为到磁盘表,最大的值由tmp_table_size或max_heap_table_size值决定,以较小为准,这不同使用create table显式创建的memory表,对于此表只有max_heap_table_size决定了表能增长的最大值,并且不会转换为磁盘格式.
 - Internal Temporary Table Storage Format
-  - 内存中的临时表由memory存储引擎管理,该引擎使用固定长度的行格式()fixed-length row format).VARCHAR和VARBINARY列被填充到最大列长度,实际上它们被存储为char和binary列
+  - 内存中的临时表由memory存储引擎管理,该引擎使用固定长度的行格式(fixed-length row format).VARCHAR和VARBINARY列被填充到最大列长度,实际上它们被存储为char和binary列
   - 磁盘上的临时表由myisam存储引擎管理,该引擎使用动态长度的行格式(dynamic-width row format),列仅占用所需的存储空间; 与使用固定长度行格式的磁盘表相比,减少了磁盘I/O和空间需求以及处理时间
   - 对于最初在内存中创建的内部临时表之后太大自动转换为磁盘上的表的语句,如果跳过转换步骤则一开始就在磁盘上创建表可能会获取更好的性能.big_tables变量可用于强制所有的内部临时表都使用磁盘存储
   
-#### 8.4.5 Limits on Number of Databases and Tables
-- mysql对于数据的数量没有限制,基础文件系可能对目录数量有所限制.
-- mysql对表的数量没有限制,基础文件系统可能对文件数量有所限制;各个存储引擎可能会强加特定于引擎的约束,innodb最多40亿张表
+#### 8.4.5 **Limits on Number of Databases and Tables**
+- mysql对于数据库的数量没有限制,基础文件系可能对目录数量有所限制.
+- mysql对表的数量没有限制,基础文件系统可能对文件数量有所限制;各个存储引擎可能会强加特定于引擎的约束,**innodb最多40亿张表**
 
 #### 8.4.6 Limits on Table Size
 - Windows用户,请注意FAT和VFAT（FAT32）不适用于MySQL。请改用NTFS.
 
-#### 8.4.7 Limits on Table Column Count and Row Size  
+#### 8.4.7 **Limits on Table Column Count and Row Size**  
 - Column Count Limits
-  - mysql硬性限制表最大4096列,但实际有效列可能比这小, 具体取决如下情况:
+  - **mysql硬性限制表最大4096列,但实际有效列可能比这小, 具体取决如下情况:**
     - 最大行大小限制了列的数量(也可能是大小)
-    - 存储引擎可能施加其他的限制,比如innoDB限制每个表最大1017列
+    - 存储引擎可能施加其他的限制,**比如innoDB限制每个表最大1017列**
 - Row Size Limits
-  - mysql表内部表示形式最大行大小限制为65536字节(bytes),即使是存储引擎能提供更大的值也是如此.BLOB和TEXT列仅对行大小贡献9-12字节,因为它们的内容与行的其余部分分开存储
+  - **mysql表内部表示形式最大行大小限制为65536字节(bytes),即使是存储引擎能提供更大的值也是如此.BLOB和TEXT列仅对行大小贡献9-12字节,因为它们的内容与行的其余部分分开存储**
   - innoDB(数据本地存储在一个数据页面中)的最大行大小略小于页的一半.例如,对于默认16kb的innodb页面大小(page size),最大行大小略小于8kb,该页面大小由innodb_page_size设置.
-    如果一个行中包含可变长度的列超出了innodb最大行大小,则innodb选择可变长度列进行页外存储,直到改行适合最大行大小限制.
+    如果一个行中包含可变长度的列超出了innodb最大行大小,则innodb选择可变长度列进行页外存储,直到该行适合最大行大小限制.
   - 不同存储格式使用不同数量的页面标题和尾部数据,这会影响到可用存储量.
     - innodb行格式
     - myisam存储格式  
 - Row Size Limit Examples    
-  - 对于myisam表, null列在行中需要占用额外的空间以记录其值是否为null,每个null列都要多加1bit,四舍五入到最近的字节.(比如一行有3个null列那么就是占用3bit舍入为1byte)
+  - **对于myisam表, null列在行中需要占用额外的空间以记录其值是否为null,每个null列都要多加1bit,四舍五入到最近的字节.(比如一行有3个null列那么就是占用3bit舍入为1byte)**
     
 #### 8.5 Optimizing for InnoDB Tables
-- 一旦你的数据达到稳定大小或者增长了几十或几百兆字节,考虑使用OPTIMIZE TABLE语句重组表并压缩所有浪费的空间.重组后的表需要更少的磁盘I/O执行全表扫描.这是直接的技术(如改善索引使用或调整程序代码)在其他技术不可行时提高性能.
+- **一旦你的数据达到稳定大小或者增长了几十或几百兆字节,考虑使用OPTIMIZE TABLE语句重组表并压缩所有浪费的空间.重组后的表需要更少的磁盘I/O执行全表扫描.这是直接的技术**(如改善索引使用或调整程序代码)在其他技术不可行时提高性能.
 - 对于innoDB表,如果主键很长(不管是单列有很长的值或多列的复合索引组成长值)这将会浪费许多磁盘空间,因为每一行的主键值都会附在该行所有的二级索引值后面.所以创建一个自增加的列作为主键如果你的主键很长或者索引较长VARCHAR列的前缀而不是整列
 - 存储变长字符串时或一列中有许多的null值时,使用varchar数据类型代替char类型, char(N)列始终使用N字符(character)存储数据,即使字符串较短或者存储值为null.较小的表更适合缓冲池并减少磁盘I/O. 当使用COMPACT行格式(innoDB默认格式)存储可变长字符集(如utf8)时, char(N)占用的空间大小为可变的,但至少N字节.
 
@@ -883,8 +883,8 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   
 #### 8.5.4 Optimizing InnoDB Redo Logging  
 - 可以从以下方面考虑优化redo loggin
-  - 使你的redo log文件变大,甚至和缓冲池(buffer pool0一样大.当redo filesbei被innoDB写满时,它必须在检查点(checkpoint)将缓冲池的已修改内存写入磁盘.小的redo log files导致许多不必要的磁盘写入.因此你应该有自信使用大的redo log file.
-    - 可通过innoDB_log_file_size和innoDB_log_file_in_group系统变量分别控制redo log fiels的大小和数量.
+  - 使你的redo log文件变大,甚至和缓冲池(buffer pool0一样大.当redo files被innoDB写满时,它必须在检查点(checkpoint)将缓冲池的已修改内存写入磁盘.小的redo log files导致许多不必要的磁盘写入.因此你应该有自信使用大的redo log file.
+    - **可通过innoDB_log_file_size和innoDB_log_file_in_group系统变量分别控制redo log fiels的大小和数量.**
   - 考虑增加log buffer的大小.一个大的log buffer能够允许大事务的执行在commit前不需要将log写入到磁盘中.因此有更新,插入或删除许多行的事务增大log buffer能够节省磁盘I/O, 可通过innodb_log_buffer_size系统变量来控制log buffer大小.
 
 ##### 8.5.5 Bulk Data Loading for InnoDB Tables
@@ -936,24 +936,24 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 你可以执行的主要配置步骤如下(优化的目录,这里没有详细列出,要看原文)
     
 ### 8.6 Optimizing for MyISAM Tables
->由于表锁定限制了同时更新的能力,因此myisam存储引擎在以只读数据为主要或低并发操作方面表现最佳.    
+>**由于表锁定限制了同时更新的能力,因此myisam存储引擎在以只读数据为主要或低并发操作方面表现最佳.** 
 
-#### 8.6.1 Optimizing MyISAM Queries
+#### 8.6.1 **Optimizing MyISAM Queries**
 >以下为一些加速myisam表查询的一般技巧
-- 在加载数据后使用ANALYZE TABLE或myisamchk --analyze,这将为每个索引部分更新上一个值,改值指示着具有相同值的平均行数.在不是恒定表达式(nonconstant express)的表join中优化器使用该值决定使用哪个索引.
-- 根据某个索引对数据和索引进行排序这会使得如果有一个唯一索引要从中按顺序读取所有的行的查询更快; myisamchk --sort-index --sort-records=1(假设你要对索引号为1的索引进行排序,索引号可从show index语句获得)
-- mysql支持并发插入数据,如果表的数据文件中间没有空闲块(free block),则可以在其他线程正在读取数据的同时,向其中插入新行.如果能够做到这一点对于你很重要,那么请考虑避免删除表行,另一个可能就是当你删除许多行后使用OPTIMIZE TABLE语句整理碎片.通过设置concurrent_insert系统变量可以控制并发插入行的行为,该变量可采用如下的值:
+- **在加载数据后使用ANALYZE TABLE或myisamchk --analyze,这将为每个索引部分更新上一个值,**该值指示着具有相同值的平均行数.在不是恒定表达式(nonconstant express)的表join中优化器使用该值决定使用哪个索引.
+- **根据某个索引对数据和索引进行排序这会使得如果有一个唯一索引要从中按顺序读取所有的行的查询更快;** myisamchk --sort-index --sort-records=1(假设你要对索引号为1的索引进行排序,索引号可从show index语句获得)
+- mysql支持并发插入数据,如果表的数据文件中间没有空闲块(free block),则可以在其他线程正在读取数据的同时,向其中插入新行.如果能够做到这一点对于你很重要,那么请考虑避免删除表行,**另一个可能就是当你删除许多行后使用OPTIMIZE TABLE语句整理碎片.通过设置concurrent_insert系统变量可以控制并发插入行的行为,该变量可采用如下的值:**
   - NEVER: 禁止并发插入
-  - AUTO: (默认,但当服务以--skip-new选项启动则被设置为NEVER)当MyISAM表没有孔(holes)时,允许并发插入
+  - AUTO: (默认,但当服务以--skip-new选项启动则被设置为NEVER)当MyISAM表中没有孔(holes)时(即是没有间隙),允许并发插入
   - ALWAYS: 允许并发插入MyISAM表,即使这些表有holes.该模式下当一个有holes的MyISAM表被其它线程使用时,当前线程对其插入时则新行都被插入到表的最后.否则MyISAM表的插入,是mysql获取一个正常写锁并将行插入到hole中.
 - 对于频繁更改的MyISAM表,避免使用变长的列(varchar,blob,text),该表使用动态行格式(dynamic row format)即使该表只包含一个变长的列.
 - 通常,仅由于行太大而将表拆分不同的表是没用的.在访问一行时,最大的性能损失是查找该行第一个字节所需要的磁盘搜索,找到数据后,对于大多数现代磁盘都可以快速读取整个行.拆分表的唯一情况是:如果你能将动态行格式的myisam表更改为固定行大小(fixed row size);或者你需要经常扫描表但不需要其中大多数列.
-- 使用alter table table_name order by expr1, expr2,...对表进行按照索引的顺序将数据进行排序,这样会有利于后续你查询数据时以expr1,expr2..的顺序查询
+- **使用alter table table_name order by expr1, expr2,...对表进行按照索引的顺序将数据进行排序,这样会有利于后续你查询数据时以expr1,expr2..的顺序查询**
 - 如果你需要基于大量行中的信息来计算结果(例如计数器), 则最好引入一个新表并实时更新它,如下例子更新表格就非常快:
   `UPDATE tbl_name SET count_col=count_col+1 WHERE key_col=constant;`
-  这对于使用像myisam这种仅有表级锁(table-level locking)的存储引擎(表级锁即是同时可以一个写和多个读)非常重要,同时对于其他许多数据库系统也能获得更好的性能因为在这种情况下行级锁管理器的工作量减少了.
-- 定期的执行 OPTIMIZE TABLE语句避免动态格式的myisam表碎片化.
-- 使用DELAY_KEY_WRITE=1选项声明myisam表(该选项有仅适用于myisam),可以加快是索引更新更快因为在关闭表时才会将索引的更新刷新到磁盘.不足之处是当myisam表在打开时mysql服务被kill了,你必须保证表是正常的通过设置了myisam_recover_options系统变量的运行mysql服务器,或者在mysql服务器重启前使用myisamchk检测表.(即使在这种情况下,使用了DELAY_KEY_WRITE你也不会任何损失,因为你总能从数据行中生成键信息).
+  这对于使用像myisam这种仅有表级锁(table-level locking)的存储引擎(**表级锁即是同时可以一个写和多个读**)非常重要,同时对于其他许多数据库系统也能获得更好的性能因为在这种情况下行级锁管理器的工作量减少了.
+- **定期的执行OPTIMIZE TABLE语句避免动态格式的myisam表碎片化.**
+- **使用DELAY_KEY_WRITE=1选项声明myisam表**(该选项有仅适用于myisam),可以加快是索引更新更快因为在关闭表时才会将索引的更新刷新到磁盘.不足之处是当myisam表在打开时mysql服务被kill了,你必须保证表是正常的通过设置了myisam_recover_options系统变量的运行mysql服务器,或者在mysql服务器重启前使用myisamchk检测表.(即使在这种情况下,使用了DELAY_KEY_WRITE你也不会任何损失,因为你总能从数据行中生成键信息).
 - 字符串在myisam索引中自动进行前缀和结尾空间(end-space)压缩    
 - 在自己的应用上缓存查询和答案(query and answers),然后一起执行许多插入或更新操作来提高性能.在此期间锁定表可确保在所有更新后索引缓存只flush一次.你也可以利用mysql的查询缓存达到类似的结果 
 
@@ -1347,8 +1347,12 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 
 ## Chapter 11 Data Types
 
+#### 11.1 Numeric Data Types
+- 浮点(float-point)为大约值(如float,double等),定点(fixed-point)为精确值(如int,decimal等).
+
 ### **11.7 Data Type Storage Requirements**
-- **数据类型存储所需的空间,重要**, [链接](https://dev.mysql.com/doc/refman/8.0/en/storage-requirements.html)
+- **数据类型存储所需的空间,重要手册**, [链接](https://dev.mysql.com/doc/refman/8.0/en/storage-requirements.html)
+
 
 ## Chapter 13 SQL Statements
 
@@ -2112,7 +2116,6 @@ s)不能相互使用.
   
   
 ## 常用基本语法
-
 - SQl(Structured Query Language, 结构化查询语言)分为4种语言:
     - DDl(Data Definition Language, 数据定义语言)
     - DML(Data Manipulate Language, 数据操纵语言)
@@ -2134,18 +2137,15 @@ s)不能相互使用.
 - 删除用户: DROP USER 'jeffrey'@'localhost';
 
 ## mysql启动
-
 - Linux安装多个mysql [二进制包安装方法](https://dev.mysql.com/doc/refman/5.6/en/binary-installation.html#binary-installation-layout)
   
   下载mysql二进制包[下载地址](https://dev.mysql.com/downloads/mysql/), 然后初始化, 初始化时务必使指定basedir和database格式, 这样就能避免与已安装的冲突
   `bin/mysqld --initialize --user=mysql --basedir=/opt/mysql/mysql --datadir=/opt/mysql/mysql/data`
 
 - 指定配置文件启动(Linux)
-  
   `mysql_path/bin/mysqld --defaults-file=customize_config_path/my.cnf`
   
 - 查看mysqld会以什么参数启动或初始化
-  
   `bin/mysqld [--defaults-file=path/my.cnf] --print-defaults`
   
 
@@ -2169,7 +2169,6 @@ ASC升序 / DESC 降序
 mysqli_multi_query()   :执行多条语句
 
 ## 函数:
-
 - FROM_UNIXTIME('时间戳字段', '%Y-%m-%d');     格式化时间戳为时间格式 
 
 - UNIX_TIMESTAMP([date]);   转换为时间戳,不传入参数为当前时间戳, 给定date(格式为正常日期时间格式如 2019-6-6 10:10:10)时则返回当时的时间戳
@@ -2293,7 +2292,6 @@ mysqli_multi_query()   :执行多条语句
     
     
 ## mysql优化
-
 [MySQL优化/面试，看这一篇就够了](https://zhuanlan.zhihu.com/p/53865600)
 
 [mysql优化30条经验参考http://www.jincon.com/archives/120/](http://www.jincon.com/archives/120/)
@@ -2312,17 +2310,13 @@ mysqli_multi_query()   :执行多条语句
 
     
 ## mysql存储引擎之Federated
-
     Federated实现同步远端表格, 实现数据库映射.一边更改时,对方都会随之变化.
 
 >开启:
-
   - show engines; 查看federated引擎是否开启, 远端的mysql表的存储引擎可以不是federated
-
   - 没有开启进入my.ini文件加入一行 `federated` 即可, 重启再次show engines查看是否开启
 
 >使用: 
-
  - 创建新表加上CONNECTION='mysql://mysql_user:password@remote_ip:port/database_name/table_name'
  
    例子: CONNECTION='mysql://test:test@172.16.16.204:3306/lry/fed_test'; 
@@ -2340,6 +2334,7 @@ mysqli_multi_query()   :执行多条语句
   
   
 ## mysql数据类型
+  >[数据类型占用空间-官网手册](https://dev.mysql.com/doc/refman/8.0/en/storage-requirements.html)
   - 数值
     >对于整数类型，M表示最大显示宽度。最大显示宽度为255.显示宽度与存储大小,类型可包含的值范围无关. 当插入的表的字段数据长度小于设定的INT(M)最大长度的时候，检索出来的数据会自动空格补充, 如果你设定zerofill, 那么可以看到存入的格式是在实际数字前补零到总的位数等于M。zerofill(补零)，当实际插入的数据长度小于建表的时候设定的长度时候，它会从左开始补零, 具体补多少与int(M)的M有关。这个修饰符可以防止MySQL存储负值。比如int(20)表示显示宽度是20, 但是实际上可以存储的只有10位数范围2^32-1(无符号), 整数的类型决定着存储的大小, 具体大小和范围如下 
     >对于浮点和定点类型， M是可以存储的总位数。
@@ -2348,26 +2343,30 @@ mysqli_multi_query()   :执行多条语句
     - MEDIUMINT: 3个字节 无符号的取值范围: 0 ~ 2^24-1
     - INT: 4个字节  无符号的取值范围: 0 ~ 2^32-1
     - BIGINT: 8个字节 无符号的取值范围: 0 ~ 2^64-1
+    - DECIMAL[(M[,D])]: 精度随存储空间而不同 M为总位数(最大65),D为小数位数(最大30).(ps:DECIMAL总是用65位精度进行运算的)
+    - float: 4字节 
+    - double: 8字节
     
   - 字符串
+    >[参考](https://dev.mysql.com/doc/refman/8.0/en/string-type-syntax.html)
     >varchar(M) M表示最大存储范围M个字符,占用的存储空间为:实际存储的字符数 x 字符集所占用的字节数
      char(M) M表示最大存储范围M个字符, 实际存储时都是固定的M.
-     对于非二进制字符串类型的声明的列长度以字符表示;对于二进制字符串类型,以字节为单位.
-     执行速度char>varchar>text
-     可变长度的字符串数据类型(varchar,text,blog等)在存储时会多存储一个长度前缀(用于记录该列值的长度),该长度前缀一般为1~4字节.
-    - 字符和字节区别?
-      
+     **对于非二进制字符串类型声明的列长度以字符为单位(如varchar(10)表示10个字符);对于二进制字符串(binary string)类型,以字节为单位(如binary(10)表示10个字节)**
+     执行速度:char>varchar>text
+     **可变长度的字符串数据类型(varchar,text,blog等)在存储时会多存储一个长度前缀(用于记录该列值的长度),该长度前缀一般为1~4字节.**
+    - 字符串和字节串区别?
+      字符串是一种抽象概念,它不能直接存储在硬盘中,而字节串可直接存储.它们之间的映射称为编码/解码.所以说二进制串列以字节为单位,非二进制字符串以字符为单位.
     - text和blob类型分别与varchar和varbinary有什么区别?  
       在大多方面,你可以将blob视为varbinary,只是blob可以根据需要任意大;同样的,可将text视为varchar.此外它们在以下方面有不同.
       - 对于在text和blob列上的索引,你必须指定索引前缀长度,而对于char和varchar则指定索引前缀长度是可选的
       - text和blob列不能有默认值
-      - mysql的硬性要求行的所列加起来大小<=65535字节的限制对于text,和blob数据类型不起作用,因为text和blob字符类型仅对行大小的这个限制贡献9到12个字节
+      - 此条有待确认?mysql的硬性要求行的所列加起来大小<=65535字节的限制对于text和blob数据类型不起作用,因为text和blob字符类型仅对行大小的这个限制贡献9到12个字节
     - 多字节存储在使用单字节的字符集上会报错.
       比如一个列为latin字符集(单字节),如果插入中文(要多个字节表示)   
 	- 占用的存储空间和取值范围表   
-	  - char(m): 占用空间:m x w个字节(w为字符集的字节数); m取值0 ~ 255个字符
-	  - varchar(m): 占用空间: 数据存储所需实际字节 + 1 ~ 2 字节(取1字节时为该列值大小在0~255字节间,取值为2字节为该列值大于255字节); m取值 0 ~ 65535(即0<m<2^16)个字符
-	  - text: 占用空间:实际需要字节+2字节; 取值为0 ~ 65535字节.需要注意的是:如果都是存中文(一个中文占3个字节)那么只能存储21845个,所以它能存的字符个数取决于什么时候字符串长度达到65535字节.
+	  - char(m): 占用空间: m x w个字节(w为字符集的字节数); m取值0 ~ 255个字符
+	  - varchar(m): 占用空间: 数据存储所需实际字节 + 1 ~ 2 字节(取1字节时为该列值大小在0~255字节间,取值为2字节为该列值大于255字节); m取值 0 ~ 65535(即0<m<2^16)个字符,但如果包含多字节字符时则会更少,确切的说是0~65535字节
+	  - text: 占用空间:实际需要字节+2字节; 取值为0 ~ 65535字节.需要注意的是:如果都是存中文(一个中文占3个字节)那么只能存储21845个,所以它能存的字符个数取决于什么时候字符串长度达到65535字节.(text是非二进制字符串)
 	  - BINARY(M): 占用空间:M字节; 取值为0~255字节(取1字节时为该列值大小在0~255字节间,取值为2字节为该列值大于255字节)
 	  - varbinary(m): 占用空间: 数据存储所需的字节 + 1~2字节
 	  - blob: 存储数据所需的字节 + 2字节; 取值范围: 0~65535(0<2^16)字节
@@ -2382,10 +2381,6 @@ mysqli_multi_query()   :执行多条语句
       - 5.6.4后datetime变得更加高效,只需要5字节不是之前的8字节.
       - 定义时间的小数精度: datetime(2)为指定小数部分2位,需要注意的是datetime(0)和普通的datetime一样,即是没有小数部分,所以小数部分是不占用字节数的即可理解为0字节.  
       
-    
-    
-    
-  
     
 ## Mysql工具使用集合
 
