@@ -401,6 +401,7 @@ user表中设置全局的基础权限, 比如授权了全局的delete权限,那�
 修改当前用户密码: set password = password("password")
 用户授权: GRANT all on "." to "username"@"hostname"
 撤销权限: revoke all on "." from "username"@"hostname"
+显示用户权限: show grants for "username"@"hostname"
 
 #### 6.2.8 When Privilege Changes Take Effect
 修改权限表何时生效? 
