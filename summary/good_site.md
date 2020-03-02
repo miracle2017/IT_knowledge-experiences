@@ -8,3 +8,6 @@
   - worldpress也有非常多的模板
   
   - 炫酷的动画效果https://juejin.im/entry/59b202e96fb9a0249b487fd5
+  
+- good github
+  - https://github.com/openai

@@ -9,7 +9,8 @@ asort() - 根据关联数组的值，对数组进行升序排列
 ksort() - 根据关联数组的键，对数组进行升序排列
 arsort() - 根据关联数组的值，对数组进行降序排列
 krsort() - 根据关联数组的键，对数组进行降序排列
-
+array_multisort()
+**array_merge_recursive()**
 魔术变量：
 __LINE__    返回第几行
 __FILE__    返回文件的完整路径和文件名

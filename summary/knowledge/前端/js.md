@@ -638,6 +638,24 @@ callback 函数有**加()则立马执行,不是等到隐藏/显示完后才执�
             }
          })
 
+- **向元素派遣自定义事件.用此方法可模拟用户对元素的操作.**
+  如你要点击选择某个元素,可能你用单纯的click()无法触发,因为它的触发事件比如是mousedown.那么像如下例子模拟mousedown点击元素
+ `    /**
+       * @param el 操作元素
+       * @param eventName 事件名称,如click
+       */
+      function triggerEvent(el, eventName) {
+          try {
+              var evt = document.createEvent('Event');
+              evt.initEvent(eventName, true, true);
+              el.dispatchEvent(evt);
+          } catch (e) {
+              alert(e)
+          }
+      }
+      triggerEvent(el, "mousedown");//调用
+ `
+
 ##React
 
 组件的生命周期:
@@ -664,3 +682,5 @@ node.js 是单进程单线程应用程序，但是通过事件和回调支持并
 - node开启守护进程方法
   - [forever](https://www.npmjs.com/package/forever) 实现程序的永久运行
   
+## chrome谷歌扩展开发
+- [参考地址](https://github.com/sxei/chrome-plugin-demo)
