@@ -454,7 +454,7 @@ window上通过ssh远程登录mysq: 如用navicat时, 配置mysql账号外还要
 - Online 与 Offline Backups
   >区别在于mysql是否运行,也可称为热备份与冷备份(hot versus cold), 还有一种warm备份就是服务器仍运行,但是加锁了无法修改数据
 - 本地与远程
-  - mysqldump:可从本地与远程登录, 备份在本地或远程转储到客户端上
+  - mysqldump:可从本地与远程登录, **备份在本地或远程转储到客户端上**
   - mysqlhotcopy:只能本地
   - SELECT ... INTO OUTFILE:语句可由本地或远程发起, 但输出文件只会放在服务端
   
@@ -942,19 +942,19 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 #### 8.6.1 **Optimizing MyISAM Queries**
 >以下为一些加速myisam表查询的一般技巧
 - **在加载数据后使用ANALYZE TABLE或myisamchk --analyze,这将为每个索引部分更新上一个值,**该值指示着具有相同值的平均行数.在不是恒定表达式(nonconstant express)的表join中优化器使用该值决定使用哪个索引.
-- **根据某个索引对数据和索引进行排序这会使得如果有一个唯一索引要从中按顺序读取所有的行的查询更快;** myisamchk --sort-index --sort-records=1(假设你要对索引号为1的索引进行排序,索引号可从show index语句获得)
+- **根据某个索引对数据和索引进行排序这会使得如果有一个唯一索引要从中按顺序读取所有的行的查询更快;** myisamchk --sort-index --sort-records=1(sort-index为将索引树按高低顺序排序,sort-records则是将表行记录按索引号排序.假设你要对索引号为1的索引进行排序,索引号可从show index语句获得)
 - mysql支持并发插入数据,如果表的数据文件中间没有空闲块(free block),则可以在其他线程正在读取数据的同时,向其中插入新行.如果能够做到这一点对于你很重要,那么请考虑避免删除表行,**另一个可能就是当你删除许多行后使用OPTIMIZE TABLE语句整理碎片.通过设置concurrent_insert系统变量可以控制并发插入行的行为,该变量可采用如下的值:**
-  - NEVER: 禁止并发插入
+  - NEVER: 禁止并发插入 
   - AUTO: (默认,但当服务以--skip-new选项启动则被设置为NEVER)当MyISAM表中没有孔(holes)时(即是没有间隙),允许并发插入
   - ALWAYS: 允许并发插入MyISAM表,即使这些表有holes.该模式下当一个有holes的MyISAM表被其它线程使用时,当前线程对其插入时则新行都被插入到表的最后.否则MyISAM表的插入,是mysql获取一个正常写锁并将行插入到hole中.
 - 对于频繁更改的MyISAM表,避免使用变长的列(varchar,blob,text),该表使用动态行格式(dynamic row format)即使该表只包含一个变长的列.
 - 通常,仅由于行太大而将表拆分不同的表是没用的.在访问一行时,最大的性能损失是查找该行第一个字节所需要的磁盘搜索,找到数据后,对于大多数现代磁盘都可以快速读取整个行.拆分表的唯一情况是:如果你能将动态行格式的myisam表更改为固定行大小(fixed row size);或者你需要经常扫描表但不需要其中大多数列.
-- **使用alter table table_name order by expr1, expr2,...对表进行按照索引的顺序将数据进行排序,这样会有利于后续你查询数据时以expr1,expr2..的顺序查询**
+- **使用alter table table_name order by expr1, expr2,...对表进行按照索引的顺序将数据进行排序,这样会有利于后续你查询数据时以expr1,expr2..的顺序查询**(expr格式字段名加上可选的顺序(asc,desc)默认asc,比如alter table a order by c desc就是将表的数据行按照表的c字段降序,但之后的插入和更新的数据不一定还按这个顺序的)
 - 如果你需要基于大量行中的信息来计算结果(例如计数器), 则最好引入一个新表并实时更新它,如下例子更新表格就非常快:
   `UPDATE tbl_name SET count_col=count_col+1 WHERE key_col=constant;`
   这对于使用像myisam这种仅有表级锁(table-level locking)的存储引擎(**表级锁即是同时可以一个写和多个读**)非常重要,同时对于其他许多数据库系统也能获得更好的性能因为在这种情况下行级锁管理器的工作量减少了.
 - **定期的执行OPTIMIZE TABLE语句避免动态格式的myisam表碎片化.**
-- **使用DELAY_KEY_WRITE=1选项声明myisam表**(该选项有仅适用于myisam),可以加快是索引更新更快因为在关闭表时才会将索引的更新刷新到磁盘.不足之处是当myisam表在打开时mysql服务被kill了,你必须保证表是正常的通过设置了myisam_recover_options系统变量的运行mysql服务器,或者在mysql服务器重启前使用myisamchk检测表.(即使在这种情况下,使用了DELAY_KEY_WRITE你也不会任何损失,因为你总能从数据行中生成键信息).
+- **使用DELAY_KEY_WRITE=1选项声明在建myisam表时**(该选项有仅适用于myisam),可以加快是索引更新更快因为在关闭表时才会将索引的更新刷新到磁盘.不足之处是当myisam表在打开时mysql服务被kill了,你必须保证表是正常的通过设置了myisam_recover_options系统变量的运行mysql服务器,或者在mysql服务器重启前使用myisamchk检测表.(即使在这种情况下,使用了DELAY_KEY_WRITE你也不会任何损失,因为你总能从数据行中生成键信息).
 - 字符串在myisam索引中自动进行前缀和结尾空间(end-space)压缩    
 - 在自己的应用上缓存查询和答案(query and answers),然后一起执行许多插入或更新操作来提高性能.在此期间锁定表可确保在所有更新后索引缓存只flush一次.你也可以利用mysql的查询缓存达到类似的结果 
 
@@ -969,7 +969,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   4. 如果将来只打算从表中读取,请使用myisampack对表进行压缩
   5. 执行myisamchk -rq /path/to/db/table_name命令重新创建索引.该操作在写入磁盘前在内存中创建索引树,所以相比在load data时更新索引更快因为它避免许多磁盘的搜寻
   6. 执行flush tables语句或mysqladmin flush-tables命令
-  - 如果要插入的myisam表为空,则load data会自动执行上述的优化操作,自动优化和程序指定     的区别是: 
+  - **如果要插入的myisam表为空,则load data会自动执行上述的优化操作,自动优化和程序指定的区别是:**
   - 你还可以通过以下语句禁用或启用myisam表的非唯一索引.
     `ALTER TABLE tbl_name DISABLE KEYS;
      ALTER TABLE tbl_name ENABLE KEYS;`
@@ -978,16 +978,16 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 	 `lock tables table_name write;
 	  insert sql;
 	  unlock tables;`
-   - 该操作提高性能得益于因为在所有insert语句完成后索引缓冲区(index buffer)才flush到磁盘上.通常地,索引缓冲区刷新与insert语句一样多.如果可以单个insert语句插入所有行则不需要显示的锁定语句.
+   - **该操作提高性能得益于因为在所有insert语句完成后索引缓冲区(index buffer)才flush到磁盘上.通常地,索引缓冲区刷新与insert语句一样多.如果可以单个insert语句插入所有行则不需要显示的锁定语句.**
    - 插入时使用锁会减少多个连接中执行总的时间,尽管单个连接等待可能会增加.如下举个例子,插入时没有使用锁表,那么连接2,3,4会在连接1,5之前完成.如果加了表锁,那么连接2,3,4可能不会在连接1或5之前完成,但是总的耗时应该快了40%
      - 连接1做1000个插入
      - 连接2,3,4个做1个插入
      - 连接5做1000个插入
-   - mysql中插入更新删除操作是很快的,但你可以在所有大约有5个以上的连续插入或更新的操作上加上锁来获得更好的整体性能.如果你要执行很多连续的插入,你可不时地使用lock table和unlock tables语句(每1000行左右)以使其他线程也能访问表,这也能获取不错的性能提升.但insert语句仍然比load data语句加载数据慢很多,即使是使用刚描述的策略.
+   - mysql中插入更新删除操作是很快的,但你可以在所有大约有5个以上的连续插入或更新的操作上加上锁来获得更好的整体性能.如果你要执行很多连续的插入,你可不时地使用lock table和unlock tables语句(每1000行左右)以使其他线程也能访问表,这也能获取不错的性能提升.**但insert语句仍然比load data语句加载数据慢很多,即使是使用刚描述的策略.**
 - 对于myisam表,增加key_buffer_size系统变量的值对于load data和insert语句都能带来性能提升.
 
 #### 8.6.3 Optimizing REPAIR TABLE Statements
-- 对myisam表使用REPAIR TABLE语句类似于myisamchk的修复操作,并且应用一些相同的性能优化
+- **对myisam表使用REPAIR TABLE语句类似于myisamchk的修复操作**,并且应用一些相同的性能优化
   
 #### 8.7 Optimizing for MEMORY Tables  
 - 对于经常访问和只读或很少更新的非关键数据可以考虑使用MEMORY表,将应用程序与等效的innoDB或myisam表进行基准测试,以确认提升的性能是否值得冒丢失数据的风险,或当应用启动时从磁盘上的表复制数据的开销
@@ -997,8 +997,9 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - explain可以运用在select,insert,delete,update,replace语句(对于相同操作的预处理语句不支持)
 #### 8.8.2 EXPLAIN Output Format
 #### 8.8.3 Extended EXPLAIN Output Format
-- 使用explain EXTENDED时,输出信息会多包含一个filtered列(指示过滤的表行的估计的百分比);
+- **使用explain EXTENDED时,输出信息会多包含一个filtered列(指示过滤的表行的估计的百分比);**
 - 此外对于select语句(只有select有,其他update等都没有)还会有一些其他信息但是不会包含explain输出中,但是可以通过在explain语句后马上执行show warning语句来查看.
+
 #### 8.8.4 Obtaining Execution Plan Information for a Named Connection
 - 获取一个给定的连接名正在执行语句(需支持explainable的语句)的执行计划,用法如下:
   `EXPLAIN [options] FOR CONNECTION connection_id;`
@@ -1037,19 +1038,18 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 ### 8.10 Buffering and Caching  
 #### 8.10.1 InnoDB Buffer Pool Optimization
 #### 8.10.2 The MyISAM Key Cache
-- 为了最小化磁盘I/O,myisam存储引擎,它使用了缓存机制将最常访问的表块数据保留在内存中.
-  - 对于index block(索引块),由于一种叫key cache(or key buffer)的特殊结构维护,
-  - 对于数据块(data block),myslq没使用特殊的缓存.相反,它们依赖于本机操作系统文件系统缓存.
+- **为了最小化磁盘I/O,myisam存储引擎,它使用了缓存机制将最常访问的表块数据保留在内存中.**
+  - **对于index block(索引块),由于一种叫key cache(or key buffer)的特殊结构维护**
+  - **对于数据块(data block),myslq没使用特殊的缓存.相反,它们依赖于本机操作系统文件系统缓存.**
 - 当key cache不可用时,仅使用操作系统提供的本机文件系统缓存来访问索引文件(index files)(即就像访问data block一样)
 - 一个索引块(index block)是对myisam索引文件的连续访问单元.通常一个索引块大小等于索引B-tree的节点的大小.(索引在磁盘以B-tree数据结构表示.在树底部的节点(node)是叶节点leaf node, 叶节点以上都是非叶节点(nonleaf nodes)))
-- 当访问任何表索引块数据时,mysql服务器首先会检查在key cache中是否有可用的,如果是则读取和写入都是对key cache操作而不是操作磁盘.否则mysql服务器将选择一块cache block并用所需要表的索引替换它,后续就可以访问该新索引了.
+- **当访问任何表索引块数据时,mysql服务器首先会检查在key cache中是否有可用的,如果是则读取和写入都是对key cache操作而不是操作磁盘.否则mysql服务器将选择一块cache block并用所需要表的索引替换它,后续就可以访问该新索引了.**
 - 如果一块更改过的缓存被选中为被替换对象,则该块视为脏,所以在被替换之前,会先将更改过的数据刷新到其对应的表索引中.
-- 通常的mysql服务器遵循LRU(Least Recently Used)策略(最近最少使用),当选择一块作为替换对象时,它选择最近最少使用的索引块.为了使选择变得简单, key cache module维护着所有使用过的块在一个由使用的次数排序的特殊列表(LRU chain).当一个块访问时,它是最近访问所以放置到列表底部;当需要一个块被替换时,最经常使用的块置于该列表的底部,而该列表的开头成为第一个驱逐的候选者.
+- **通常的mysql服务器遵循LRU(Least Recently Used)策略(最近最少使用),当选择一块作为替换对象时,它选择最近最少使用的索引块.为了使选择变得简单, key cache module维护着所有使用过的块在一个由使用的次数排序的特殊列表(LRU chain).当一个块访问时,它是最近访问所以放置到列表底部;当需要一个块被替换时,最经常使用的块置于该列表的底部,而该列表的开头成为第一个驱逐的候选者.**
 - innoDB存储引擎同样也使用LRU策略管理buffer pool.
   
 #### 8.10.2.1 Shared Key Cache Access
 - 线程间可以同时访问key cache buffers,但遵循以下条件:
-  - 没有被更新的buffer可以被多个会话同时访问
   - 当一个会话要使用的buffer正在被更新时,则必须等待其更新完成后才能使用它
 
 ##### 8.10.2.2 Multiple Key Caches
@@ -1117,7 +1117,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   
 #### 8.11.1 Internal Locking Methods
 - 行锁
-  -  mysql为innoDB表使用行锁以支持多个会话的写操作.死锁会影响性能而不是代表严重错误,因为innoDB会自动死锁条件并回滚受影响的事务.
+  - mysql为innoDB表使用行锁以支持多个会话的写操作.死锁会影响性能而不是代表严重错误,因为innoDB会自动死锁条件并回滚受影响的事务.
 - 表锁
   - MySQL为MYISAM,MEMORY, MERGE使用表锁,同时仅允许一个会话更新表.表锁更适合只读,大多数为读或单用户的应用.表锁通过总是在一开始就请求所有需要的锁并始终按照相同的顺序锁定表来避免是死锁.
   - 表锁的优点
@@ -2355,6 +2355,7 @@ mysqli_multi_query()   :执行多条语句
      **对于非二进制字符串类型声明的列长度以字符为单位(如varchar(10)表示10个字符);对于二进制字符串(binary string)类型,以字节为单位(如binary(10)表示10个字节)**
      执行速度:char>varchar>text
      **可变长度的字符串数据类型(varchar,text,blog等)在存储时会多存储一个长度前缀(用于记录该列值的长度),该长度前缀一般为1~4字节.**
+    - 二进制和非二进制的一区别:
     - 字符串和字节串区别?
       字符串是一种抽象概念,它不能直接存储在硬盘中,而字节串可直接存储.它们之间的映射称为编码/解码.所以说二进制串列以字节为单位,非二进制字符串以字符为单位.
     - text和blob类型分别与varchar和varbinary有什么区别?  
