@@ -37,7 +37,7 @@
    因为会降低性能所以仅在低网速(网络传输消耗大于压缩解压缩)才会有收益.
  
 ##### 4.5.1.3 mysql Client Logging
-命令行交互式语句默认都会被记录在home目录下默认名字为.mysql_history的文件中,也可以设置为不记录. 需注意,设置密码时,明文可能会被记录, 所以需确认设置密码会不会被记录以提高安全性
+**命令行交互式语句默认都会被记录在home目录下默认名字为.mysql_history的文件中,也可以设置为不记录. 需注意,设置密码时,明文可能会被记录, 所以需确认设置密码会不会被记录以提高安全性.**
 
 ##### 4.5.1.5 Executing SQL Statements from a Text File
 > 从文件读取sql语句并执行, 如下2种方法
@@ -529,7 +529,7 @@ myisam表的优化
   - 是否设置了正确的索引提高查询效率?
   - 是否设置适当的行格式?
   - 应用程序是否使用了适当的锁策略?
-  - 用于缓存的所有内存区域大小是否设置正确? 即大到足以容纳经常访问的数据, 但太大会导致内存过载和分页.**最主要的内存配置是: InnoDB buffer pool, MyISAM key cache, MySQL query cache**
+  - 用于缓存的所有内存区域大小是否设置正确? 即大到足以容纳经常访问的数据, 但太大会导致内存过载和分页.**最主要的内存配置是: InnoDB buffer pool, MyISAM key cache(key_buffer_size变量控制), MySQL query cache**
 - Optimizing at the Hardware Level
   - 磁盘搜索(disk seek). 磁盘需要花费时间去找到一条数据, 现代磁盘一次平均在10ms以下, 理论上100次/s. 对于单表这个时间非常难优化, 对于这种情况的优化, 可以将数据分发到不同磁盘上.
   - 磁盘读和写. 现代的一个磁盘至少可以提供20~30MB/s的吞吐量. 你可以从多个磁盘中并行读来达到优化效果.
@@ -926,7 +926,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 ##### 8.5.8 Optimizing InnoDB Disk I/O    
 >如果你遵循了mysql数据设计的最佳实践和sql操作的调优技术,但是mysql还是因为I/O繁忙活动而很慢, 请考虑这些I/O优化.如果你使用top工具显示cpu的使用率低于70%,那么你的工作负载可能受限于磁盘. 
   - 增加buffer pool大小
-    - 通过innodb_buffer_pool_size设置,此内存区域非常重要,因此建议配置为系统的50%-75%. 
+    - **通过innodb_buffer_pool_size设置,此内存区域非常重要,因此建议配置为系统的50%-75%.**
   - 调整flush方法
   - 增加I/O容量避免积压
     - 如果由于checkpoint操作造成吞出量周期性下降,请考虑增加innodb_io_capacity变量值,越高则flush越频繁,从而避免了积压的工作量
@@ -954,14 +954,14 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   `UPDATE tbl_name SET count_col=count_col+1 WHERE key_col=constant;`
   这对于使用像myisam这种仅有表级锁(table-level locking)的存储引擎(**表级锁即是同时可以一个写和多个读**)非常重要,同时对于其他许多数据库系统也能获得更好的性能因为在这种情况下行级锁管理器的工作量减少了.
 - **定期的执行OPTIMIZE TABLE语句避免动态格式的myisam表碎片化.**
-- **使用DELAY_KEY_WRITE=1选项声明在建myisam表时**(该选项有仅适用于myisam),可以加快是索引更新更快因为在关闭表时才会将索引的更新刷新到磁盘.不足之处是当myisam表在打开时mysql服务被kill了,你必须保证表是正常的通过设置了myisam_recover_options系统变量的运行mysql服务器,或者在mysql服务器重启前使用myisamchk检测表.(即使在这种情况下,使用了DELAY_KEY_WRITE你也不会任何损失,因为你总能从数据行中生成键信息).
+- **使用DELAY_KEY_WRITE=1选项声明在建myisam表时(该选项有仅适用于myisam),可以加快是索引更新更快因为在关闭表时才会将索引的更新刷新到磁盘**.不足之处是当myisam表在打开时mysql服务被kill了,你必须保证表是正常的通过设置了myisam_recover_options系统变量的运行mysql服务器,或者在mysql服务器重启前使用myisamchk检测表.(即使在这种情况下,使用了DELAY_KEY_WRITE你也不会任何损失,因为你总能从数据行中生成键信息).
 - 字符串在myisam索引中自动进行前缀和结尾空间(end-space)压缩    
 - 在自己的应用上缓存查询和答案(query and answers),然后一起执行许多插入或更新操作来提高性能.在此期间锁定表可确保在所有更新后索引缓存只flush一次.你也可以利用mysql的查询缓存达到类似的结果 
 
 #### 8.6.2 Bulk Data Loading for MyISAM Tables  
 >以下的一些性能提示补充8.2.4.1, “Optimizing INSERT Statements”中有关快速插入的一般准则
 - 使用INSERT DELAYED语句提升多个客户端插入许多行时.这对于myisam和其他引擎是有效的,但是innoDB不行.
-   - 注意 INSERT DELAYED已经不赞成使用,在将来的版本中将被移除,请使用 INSERT(不带DELAYED)语句代替
+   - 注意INSERT DELAYED已经不赞成使用,在将来的版本中将被移除,请使用 INSERT(不带DELAYED)语句代替
 - 通过一些额外的工作,当表具有许多索引时,可以使用load data以使myisam运行得更快.操作步骤如下:
   1. 执行flush table语句或mysqladmin flush-tables命令
   2. 执行myisamchk --keys-used=0 /path/to/db/tabl_name以在插入时禁止更新表的所有索引
@@ -1023,7 +1023,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 #### 8.9.2 Switchable Optimizations 
 - optimizer_switch系统变量控制优化器的一些行为.该值为一组标志,每个标志都为on或off.
 
-#### *8.9.3 Index Hints ****
+#### **8.9.3 Index Hints**
 - 在查询处理期间,index hint(索引提示)为优化器提供了如何选择索引的信息,索引提示仅对select,update语句有效.index hints跟在表后面
    - USE INDEX (index_list)告诉优化器仅使用index_list其中一个索引去寻找行;相反的,ignore index (index_list)告诉优化器不使用index_list的索引;
    - force index提示与use index类似
@@ -1052,21 +1052,21 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 线程间可以同时访问key cache buffers,但遵循以下条件:
   - 当一个会话要使用的buffer正在被更新时,则必须等待其更新完成后才能使用它
 
-##### 8.10.2.2 Multiple Key Caches
-- 对于key cache的共享访问并不能消除会话间的竞争关系.为了减少这种key cache访问的竞争,mysql提供了多个key caches,即允许将不同的表索引分配到不同的key caches.默认的,所有myisam表的indexs都被缓存(cache)在同一个key cache上.你可以使用cache index table_name[,table_name] in key_cache_name语句为表索引分配到指定名字的key cache上,同时还可以设置其大小. 当有一个key cache被销毁时,所有分配到这上的所有索引都将被重新分配到默认的key cache上.
+##### **8.10.2.2 Multiple Key Caches**
+- **对于key cache的共享访问并不能消除会话间的竞争关系.为了减少这种key cache访问的竞争,mysql提供了多个key caches,即允许将不同的表索引分配到不同的key caches.默认的,所有myisam表的indexs都被缓存(cache)在同一个key cache上.你可以使用cache index table_name[,table_name] in key_cache_name语句为表索引分配到指定名字的key cache上,同时还可以设置其大小.(ps:load index into cache tab_index_list则是将表索引预先加载到刚cache index语句指定的key_cache_name上).当有一个key cache被销毁时,所有分配到这上的所有索引都将被重新分配到默认的key cache上.**
 
-- 对于一个繁忙的服务器, 可以使用以下的三个key caches策略:
-  - 'hot' key cache:占所有为key cache分配空间的20%,该部分用经常搜索但是不更新的表
-  - 'cold' key cache:20%,该部分用于中等大小,密集修改的表,如临时表
-  - 'warm' key cache:60%,改部分最为默认的key cache,上述情况外都使用此区域
+- 对于一个繁忙的服务器,**可以使用以下的三个key caches策略:**
+  - **'hot' key cache:占所有为key cache分配空间的20%,该部分用经常搜索但是不更新的表.**
+  - **'cold' key cache:20%,该部分用于中等大小,密集修改的表,如临时表**
+  - **'warm' key cache:60%,该部分最为默认的key cache,上述情况外都使用此区域**
 
 - cache index设置了表和key cache的关联,但是这个关联在mysql服务重启后就会丢失.如果你想在每次启动后都保持这种关联,有个办法是那么可以在my.cf文件中指定init_file=/path/mysqld_init.sql,在mysqld_init.sql中指定关联.
 
 ##### 8.10.2.3 Midpoint Insertion Strategy
-- 默认的,mysql使用简单的LRU策略来选择需要驱逐的key cache block.而中点插入策略会将LRU链分为hot子列表和warm子列表两部分. 使用中点插入策略能够使得更有价值的blocks总是保留在cache中.如果仅想使用普通LRU,则将key_cache_division_limit设置它的默认值100.
+- 默认的,mysql使用简单的LRU策略来选择需要驱逐的key cache block.而中点插入策略会将LRU链分为hot子列表和warm子列表两部分.**使用中点插入策略能够使得更有价值的blocks总是保留在cache中**.如果仅想使用普通LRU,则将key_cache_division_limit设置它的默认值100.
    
 ##### 8.10.2.4 Index Preloading   
-- 如果有足够的key cache block去容纳整个索引的块,至少是其对应的非叶节点的块.这在使用前将index blocks预先加载(preload)到key cache是有意思.这是将index blocks放入key cache最有效的方式,因为它从磁盘顺序读取.虽然没有preloading,index block也会因查询语句的需要而被加载到key cache中,也会一直保留(假设key cache足够),但是它们从磁盘中是以随机而非顺序读取的.
+- 如果有足够的key cache block去容纳整个索引的块,至少是其对应的非叶节点的块.这在使用前将index blocks预先加载(preload)到key cache是有意义的.**这是将index blocks放入key cache最有效的方式,因为它从磁盘顺序读取.**虽然没有preloading,index block也会因查询语句的需要而被加载到key cache中,也会一直保留(假设key cache足够),但是它们从磁盘中是以随机而非顺序读取的.
 - LOAD INDEX INTO CACHE语句可以预先加载index到cache中.例如:
   `LOAD INDEX INTO CACHE t1, t2 IGNORE LEAVES;`
    - IGNORE LEAVES表示仅预加载索引的非叶节点. 以上表示预加载t1表的所有索引,t2表的索引的非叶节点.
@@ -1076,23 +1076,22 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 可以使用key_cache_block_size为指定的一个key cache设置block buffers size.这允许调整索引文件的I/O操作的性能.当read buffer size等于本机文件系统I/O buffer的大小时,可以实现I/O操作性能达到最佳.
 - 对于控制.MYI索引文件中的块大小, 可以在mysql服务器启动时通过--myisam-block-size(myisam索引页要使用的块大小)指定 
    
-   
 ##### 8.10.2.6 Restructuring a Key Cache   
 - 一个key cache可以随时通过设置它的key_buffer_size来达到重组.如果你设置了一个key cache的key_buffer_size或key_cache_block_size的值不同于当前的值,则mysql会销毁缓存旧的结构然后重新创建一个新的.如果cache包含任何脏数据块(dirty blocks),则在重新创建新的前会先将它们保存到磁盘.当你改变一个key cache的其他参数时,不会发生重建.
 - 当重建一个key cache时,服务器首先将任何dirty buffer刷新到磁盘中,之后cache内存变得不可用,虽然重建不会阻止需要将索引分配到cache中的查询,相反服务器使用本机文件系统缓存直接访问表索引.文件系统缓存效率不如key cache,所以可以预见尽管执行查询,但速度会变慢.key cach重构后,它被再次启用,并且不再使用文件系统缓存来存储索引.
    
 #### 8.10.3 The MySQL Query Cache
-- 查询缓存将select语句和对应的发送到客户端的结果存储起来.以便后续有相同查询语句时可以直接从查询缓存获取而不必再解析执行.这对于表没有经常改而又经常用相同语句取数据的环境很有帮助.查询缓存不会返回陈旧的数据,当表被更改时,则对应的查询缓存条目都将被刷新. 分区表不支持查询缓存,涉及分区表的查询将自动禁止查询缓存.
+- **查询缓存将select语句和对应的发送到客户端的结果存储起来.以便后续有相同查询语句时可以直接从查询缓存获取而不必再解析执行.这对于表没有经常改而又经常用相同语句取数据的环境很有帮助.查询缓存不会返回陈旧的数据,当表被更改时,则对应的查询缓存条目都将被刷新.** **分区表不支持查询缓存,涉及分区表的查询将自动禁止查询缓存.**
 - 一些基础测试数据: 查询从只包含一行的表中查询一行(这被认为是接近了查询缓存加速最少的情况),这种情况下也比没有使用查询缓存快(快多少视服务器性能和配置)
 - 查询缓存具有显著提高性能的潜力,但并不是在所有情况下都会有提升,有时候甚至会降低.如下情况:
-  - 分配过大的查询缓存,增加维护查询缓存的开销.通常几十M是有益的.而几百M则可能是不好的.
+  - **分配过大的查询缓存,增加维护查询缓存的开销.通常几十M是有益的.而几百M则可能是不好的.**
 - 验证查询缓存是否有益,启用和关闭状态下测试mysql的工作,然后后期定期重新测试,因为查询缓存效率可能会随负载而变化.  
 
 #### 8.10.3.1 How the Query Cache Operates
-- 在解析前,将传入查询语句与查询缓存中的语句进行比较.查询语句必须完全相同(每字节都必须相同),如大小写不一样视为不想等.此外完全相同的查询在以下情况下也被视为不想等:使用的不是同一个数据库,不同的协议版本,不同的默认字符集(被分别缓存).
+- 在解析前,将传入查询语句与查询缓存中的语句进行比较.**查询语句必须完全相同(每字节都必须相同)**,如大小写不一样视为不相等.此外完全相同的查询在以下情况下也被视为不想等:使用的不是同一个数据库,不同的协议版本,不同的默认字符集(被分别缓存).
 - 在查询结果被取出先,mysq会先检测用户是否有结果中涉及到的库和表的select权限
-- 如果一个查询缓存命中则会增加Qcache_hits状态变量而不是Com_select的值.
-- 如果一个表更改了,则使用该表的所有缓存查询都将无效并被从cache中移除.
+- **如果一个查询缓存命中则会增加Qcache_hits状态变量而不是Com_select的值.**
+- **如果一个表更改了,则使用该表的所有缓存查询都将无效并被从cache中移除.**
 - 查询缓存同样适用在innoDB表的事务内.
 - 视图上的select查询的结果会被缓存.
 - 包含以下函数则查询不被缓存
@@ -1107,8 +1106,8 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 #### 8.10.3.3 Query Cache Configuration  
 
 #### 8.10.3.4 Query Cache Status and Maintenance  
-- flush query cache可以对查询缓存进行碎片整理.该操作不会从缓存删除任何查询.RESET QUERY CACHE则清除所有查询缓存.flush tables语句也一样会.
-- 使用SHOW STATUS LIKE 'Qcache%';来监视查询缓存的性能  
+- **flush query cache可以对查询缓存进行碎片整理.该操作不会从缓存删除任何查询.RESET QUERY CACHE则清除所有查询缓存.flush tables语句也一样会.**
+- **使用SHOW STATUS LIKE 'Qcache%';来监视查询缓存的性能**
 
 #### 8.11 Optimizing Locking Operations
 - mysql用锁来管理表内容的争用
@@ -1117,11 +1116,11 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   
 #### 8.11.1 Internal Locking Methods
 - 行锁
-  - mysql为innoDB表使用行锁以支持多个会话的写操作.死锁会影响性能而不是代表严重错误,因为innoDB会自动死锁条件并回滚受影响的事务.
+  - **mysql为innoDB表使用行锁以支持多个会话的写操作.死锁会影响性能而不是代表严重错误,因为innoDB会自动死锁条件并回滚受影响的事务.**
 - 表锁
-  - MySQL为MYISAM,MEMORY, MERGE使用表锁,同时仅允许一个会话更新表.表锁更适合只读,大多数为读或单用户的应用.表锁通过总是在一开始就请求所有需要的锁并始终按照相同的顺序锁定表来避免是死锁.
+  - MySQL为MYISAM,MEMORY,MERGE使用表锁,同时仅允许一个会话更新表.表锁更适合只读,大多数为读或单用户的应用.表锁通过总是在一开始就请求所有需要的锁并始终按照相同的顺序锁定表来避免是死锁.
   - 表锁的优点
-    - 所需要的了内存相对较少(行锁需要锁定每行或行组的内存)
+    - **所需要的内存相对较少**(行锁需要锁定每行或行组的内存)
     - 当使用一个表的一大部分时更快因为只有涉及一个锁
     - 当经常使用对表的一大部分数据进行group by操作或者必须经常的扫描整个表,则速度会很快
   - mysql怎么授予表写锁:
@@ -1130,7 +1129,10 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - mysql怎么授予读锁:
     1. 如果表上没有写锁,则加上读锁
     2. 否则,将锁请求放入读锁队列中
-  - 表的更新权限比读高,因此当一个锁释放时,该锁先可用于写锁队列中请求,然后才是读锁队列中的请求.如果有许多更新则等到更新结束才能读取.SHOW STATUS LIKE 'Table%';可以查看表锁争用的信息.
+  - 表的更新权限比读高,因此当一个锁释放时,该锁先可用于写锁队列中请求,然后才是读锁队列中的请求.如果有许多更新则等到更新结束才能读取.SHOW STATUS LIKE 'Table%';可以查看表锁争用的信息.(**ps:自己理解,表级锁的表读锁和写锁是互斥的,读与写操作是串行的,即读锁会阻塞写,而不会阻塞读,写锁会把其他写和读都阻塞.不过在设置Concurrent Insert>0时,允许有一个会话执行插入的同时其他会话可以读表(同一时间只能有一个插入),就是我们说的并行插入**)
+    - 自己的扩展补充: 
+      - **读锁又称为共享锁,s锁(share):即是允许多个同时读.**
+      - **写锁又称排他锁,单占锁,x锁:即是不能与其他锁共存(包括读锁和排他锁),读锁可以读和写数据.**
   - myisam存储引擎支持并行插入以减少与读取器和写入器之间的争用.myisam表的数据文件中没用空闲块时,则插入行总是位于数据文件后,在这种情况下, 你可以随意组合select和insert语句操作myisam表而不需要锁.在这种情况下你就可以在插入表行的同时读取它.holes可以由于在表中间删除或更新了行导致的.如果显示的使用了lock tables,则可以在锁表时同时请求read local锁而不是read锁以使其他会话能够执行并发插入.
   - 如果对于一个表无法执行许多插入或查询时当这个表不能并发插入时,此时你可以将数据插入到临时表,然后将临时表的数据更新到实际表上.
   
@@ -2087,6 +2089,7 @@ s)不能相互使用.
   - ibdata file是一系列名字如ibdata1,ibdata2等的文件,这一系列文件组成了innoDB的系统表空间(system tablespace).这些文件包含了innoDB表的元数据,(innoDB data dictionary(数据词典))和一个或多个的undo logs(撤消日志)、change buffer、doublewrite buffer(双写缓冲)的存储区域.这些文件包含了部分或全部表的数据(部分还是全部这取决于所有表创建时innodb_file_per_table选项是否关闭),启用innodb_file_per_table时,新建表的数据和索引将单独存储在.ibd文件中,而不是系统表空间中.ibdata文件的增长受innodb_autoextend_increment配置影响.
 - ib_logfile
   - 形成redo log(重做日志)的一组文件,通常命名为ib_logfile0和ib_logfile1.有时也被称为log group(日志组).这些文件记录着尝试更改innoDB表中数据的语句.这些语句会在系统崩溃之后的启动时自动重播(replay)以更正由不完整事务写入的数据.当然ib_logfile文件是不能被用于手动恢复的,若需要手动恢复请使用binary log.
+- **key_buffer_size:缓存myisam表的索引.通常分配服务器总内存的25%是可接受的,但是也不能太高,比如超过服务器总内存的50%,你的服务器就开始分页并变得非常慢,因为mysql还依赖于操作系统为数据读取(即mysiam表的数据读取,key_buffer_size只是缓存mysiam的索引)执行文件系统缓存.为此你要留内存给文件系统缓存以及也要考虑到其他存储引擎的使用.实际要分配多少我可以show status查看,Key_blocks_unused * key_cache_block_size就是分配的key cache有多少没被用到.**  
 - LSN
   - log sequence numberde首字母缩写,这个不断增加的值表示着与重做日志(redo log)中操作记录对应的时间点.(此时间点不受事务边界限制,它可以落在一个或多个事务的中间).在崩溃恢复期间,innoDB在内部使用它来管理缓冲池.
   
@@ -2096,7 +2099,6 @@ s)不能相互使用.
   - 一种innoDB索引,表示着表列的子集.一个innoDB表可以有零个,一个或多个secondary index(不像聚簇索引(clustered index),每个innoDB表都要有聚簇索引).secondary index能被用在仅查询索引列就能满足查询条件;或更复杂的,能被用于定位表中相关行,然后再用聚簇索引来获取要查询的行信息.
 - tablespace
   - 一个数据文件,可以保存一个或多个innoDB表及关联的索引.系统表空间(system tablespace)包含了innoDB的数据字典(data dictionary)
-
 
 # 一些外部辅助理解mysql的文章
 - 索引结构
@@ -2112,8 +2114,7 @@ s)不能相互使用.
 >获取serve side help; mysql命令行中键入 `help contents` 获取所有分类help
    
 ##有用(未分类)
-
-  - 设置mysql server slow shutdown: mysql -u root -p --execute="SET GLOBAL innodb_fast_shutdown=0" , 然后mysqladmin -u root -p shutdown
+- 设置mysql server slow shutdown: mysql -u root -p --execute="SET GLOBAL innodb_fast_shutdown=0" , 然后mysqladmin -u root -p shutdown
   
   
 ## 常用基本语法
@@ -2200,7 +2201,6 @@ mysqli_multi_query()   :执行多条语句
 
 
 ## mysql命令行:
-
 - show status:(provides server status information) 服务器系统状态 [官网](https://dev.mysql.com/doc/refman/5.7/en/show-status.html)
 
 - show variables:(shows the values of MySQL system variables) 系统变量, 分为GLOBAL和SESSION, 大部分可以被改变  [官网](https://dev.mysql.com/doc/refman/5.7/en/show-variables.html)
@@ -2216,22 +2216,15 @@ mysqli_multi_query()   :执行多条语句
     select @@global.var_name|@@var_name|@@session.var_name  查看全局变量var_name|全局变量var_name|会话变量var_name的值
     
 	show [gloal] status [like "要查找的变量名,%为通配符"]  查看服务器运行状态
-	
 	help content
-
 	show status like "table_locks_waited" 显示有多少锁需要等待  
 	
 	
 ## mysql性能分析操作
-
 - set profiling = 1; 开启
-
 - show profile;  显示执行语句各阶段详细执行时间
-
 - show profiles; 显示语句执行总的时间
-
 - last_query_cost: 查询成本 show status like 'last_query_cost'
-
 - mysql语句前加上explain; 显示mysql如何使用索引等情况
 >- [官网参考https://dev.mysql.com/doc/refman/8.0/en/explain-output.html#explain-join-types](https://dev.mysql.com/doc/refman/8.0/en/explain-output.html#explain-join-types)
 >- [参考](https://www.jianshu.com/p/593e115ffadd)
@@ -2243,11 +2236,8 @@ mysqli_multi_query()   :执行多条语句
  >>- id越大执行顺序越优先
  >>- id相同，执行顺序由上至下
  >- 2.__select_type__: SELECT查询的类型，该类型的值有11种类型。
- 
  >- 3.__table__: 输出行所引用的表名。
- 
  >- 4.__partitions__: 查询所匹配到的分区, 非分区表为`null`。
- 
  >- 5.__*type__: 连接类型。
  >>&nbsp;&nbsp; 以下从最好到差排序
  >>- system: 当表只有一行时,这个const的特例
@@ -2264,33 +2254,21 @@ mysqli_multi_query()   :执行多条语句
  >>>- select 中的列被全部索引覆盖, mysql只需要对索引树进行扫描, 这种情况下extra会显示  USING INDEX
  >>>- 使用索引读取主键值, 按照索引的顺序对全表进行扫描, 此时extra 中没有 USING INDEX
  >>- all: 对表中每一行进行扫描, 这个最糟糕的情况. 
- 
  >- 6.__possible_key__: 在查询中能够用到的索引，但是实际中不一定会被全部用到, 这取决`mysql`优化器的选择.
- 
- >- 7.__*key__: 查询中实际用到的索引, 该列的值可能包含`possible_key`列中没有出现的索引; 当查询满足覆盖索引的条件时，`possible_keys`列为`NULL`，索引仅在`key`列显示，`MySQL`只需要扫描索引树，不用到实际的数据行检索即可得到结果，查询会更高效，`Extra`列显示`USING INDEX`，则证明使用了覆盖索引。 
-                            
+ >- 7.__*key__: 查询中实际用到的索引, 该列的值可能包含`possible_key`列中没有出现的索引; 当查询满足覆盖索引的条件时，`possible_keys`列为`NULL`，索引仅在`key`列显示，`MySQL`只需要扫描索引树，不用到实际的数据行检索即可得到结果，查询会更高效，`Extra`列显示`USING INDEX`，则证明使用了覆盖索引。                            
  >- 8.__key_len__: 实际用到的索引字段长度，越短越好。     
- 
  >- 9.__ref__: 显示哪个列或者常数和索引比较筛选出结果。
- 
  >- 10.__rows__: MySQL认为执行查询必须检查的行数，对Innodb表来说，这是一个预估值，可能并不是确切的值。
-
  >- 11.__filtered__: 过滤百分比, 1~100, 值越大可能意味着索引越好。
- 
  >- 12.__*Extra__: 附加信息
- 
- 
- 
-	
+ 	
 ## 索引生效条件
-
 >假设index（a,b,c）
 >- 最左前缀匹配：模糊查询时，使用%匹配时：'a%'会使用索引，'%a'不会使用索引
 >- 条件中有or: 索引不会生效
 >- a and c: a生效，c不生效
 >- b and c: 都不生效
 >- a and b > 5 and c : a和b生效，c不生效。
-    
     
 ## mysql优化
 [MySQL优化/面试，看这一篇就够了](https://zhuanlan.zhihu.com/p/53865600)
@@ -2300,7 +2278,6 @@ mysqli_multi_query()   :执行多条语句
 [参考http://itindex.net/detail/55421-mysql-sql-%E8%AF%AD%E5%8F%A5](http://itindex.net/detail/55421-mysql-sql-%E8%AF%AD%E5%8F%A5)
 [参考https://www.cnblogs.com/huchong/p/10219318.html#_lab2_1_0](https://www.cnblogs.com/huchong/p/10219318.html#_lab2_1_0)
 
-
 >### mysql查询执行过程
 >- 客户端向MySQL服务器发送一条查询请求
 >- 服务器首先检查查询缓存，如果命中缓存，则立刻返回存储在缓存中的结果。否则进入下一阶段
@@ -2309,18 +2286,14 @@ mysqli_multi_query()   :执行多条语句
 >- 将结果返回给客户端，同时缓存查询结果
 >![](../../../images/mysql/mysql查询过程.jpg)
 
-    
 ## mysql存储引擎之Federated
-    Federated实现同步远端表格, 实现数据库映射.一边更改时,对方都会随之变化.
-
->开启:
+>Federated实现同步远端表格, 实现数据库映射.一边更改时,对方都会随之变化.
+- 开启:
   - show engines; 查看federated引擎是否开启, 远端的mysql表的存储引擎可以不是federated
   - 没有开启进入my.ini文件加入一行 `federated` 即可, 重启再次show engines查看是否开启
-
->使用: 
+- 使用: 
  - 创建新表加上CONNECTION='mysql://mysql_user:password@remote_ip:port/database_name/table_name'
- 
-   例子: CONNECTION='mysql://test:test@172.16.16.204:3306/lry/fed_test'; 
+   `例子: CONNECTION='mysql://test:test@172.16.16.204:3306/lry/fed_test';`
    
 ## mysql存储引擎之MRG_MyISAM
     >将所有表具有相同的列数据类型和索引信息集合到一个表上.MERGE表 的替代方法是分区表(它将单个表的分区存储在单独的文件中。分区使得一些操作能够更有效地执行，并且不限于MyISAM 存储引擎。)
@@ -2332,7 +2305,6 @@ mysqli_multi_query()   :执行多条语句
   
 ## mysql经典面试题
   [参考https://www.jianshu.com/p/977a9e7d80b3](https://www.jianshu.com/p/977a9e7d80b3)
-  
   
 ## mysql数据类型
   >[数据类型占用空间-官网手册](https://dev.mysql.com/doc/refman/8.0/en/storage-requirements.html)
@@ -2407,18 +2379,16 @@ mysqli_multi_query()   :执行多条语句
    [参考https://www.jianshu.com/p/db7190658926](https://www.jianshu.com/p/db7190658926)
    
 - ### mysql性能检测工具之 innotop
-  >安装
-  - yum install innotop
-  >使用
-  - innotop -u username -p 'password'
-  - 进入后输入 ` 模式代码字母(大小写敏感) ` 进行模式切换
+  - 安装
+   `yum install innotop`
+  - 使用
+    innotop -u username -p 'password'
+    进入后输入 ` 模式代码字母(大小写敏感)` 进行模式切换
   
 ## 忘记密码
-  
   [How to Reset the Root Password官网](https://dev.mysql.com/doc/refman/5.6/en/resetting-permissions.html)
 
 ## 杂项
-    
 - innodb默认是行锁，**前提条件是建立在索引之上的**。如果筛选条件没有建立索引，会降级到表锁。
 即如果where条件中的字段都加了索引，则加的是行锁；否则加的是表锁。
 
@@ -2426,7 +2396,6 @@ mysqli_multi_query()   :执行多条语句
 b字段有索引时能用到索引,mysql能快速定位要更新的位置速度变快, a有索引更新不仅要更新表数据还要更新索引所以变慢.
 
 - mysql使用UNIX sock方式或者tcp连接
-  
   host是localhost时，优先使用Unix domain sockets方式，也可以使用--protocol指定采用什么方式连接
   在php编程中，host为localhost即可实现使用socket方式连接. [php官网关于数据库连接的说明](https://www.php.net/manual/zh/mysqli.quickstart.connections.php)
 
