@@ -39,13 +39,13 @@
 ##### 4.5.1.3 mysql Client Logging
 **命令行交互式语句默认都会被记录在home目录下默认名字为.mysql_history的文件中,也可以设置为不记录. 需注意,设置密码时,明文可能会被记录, 所以需确认设置密码会不会被记录以提高安全性.**
 
-##### 4.5.1.5 Executing SQL Statements from a Text File
+##### **4.5.1.5 Executing SQL Statements from a Text File**
 > 从文件读取sql语句并执行, 如下2种方法
   1. >shell mysql -uroot -p [datebase_name] < test_file > result.log; 如果文件有use datebase; datebase_name参数就不需要在命令行中指定
   2. >mysql source test_file 或 >mysql  \. test_file
 
-#### 4.5.3 mysqlcheck — A Table Maintenance Program
->mysqlcheck是checks,repairs,,optimizesanalyzes tables sql语句方便调用的一个工具. mysqlcheck和myisamchk差不多, 在mysql serve运行时使用mysqlcheck,停机时用myisamchk
+#### **4.5.3 mysqlcheck — A Table Maintenance Program**
+>mysqlcheck是checks,repairs,,optimizesanalyzes tables sql语句方便调用的一个工具. mysqlcheck和myisamchk差不多,**mysqlcheck必须在mysql serve运行时使用在它处理期间每个表都会被锁所以其他的会话都无法.停机时可以使用myisamchk,虽然你也可在运行时使用但是你必须自己锁表在使用myisamchk时,但不推荐,用mysiamchk比较保险的就是停机后使用**
 - quick: prevents the check from scanning the rows to check for incorrect links.这是最快的check方式. 如果使用该方式去repair表, 则只repair index tree, 这是最快的repair方式.
 - fast: 仅检查未正确关闭的表
 - check: check table for error
@@ -53,11 +53,11 @@
 - analyze: 分析表
 - optimize: 优化表
 
-#### 4.5.4 mysqldump — A Database Backup Program
+#### **4.5.4 mysqldump — A Database Backup Program**
 > mysqldump实行的是逻辑备份(即是sql语句), 也可以导出为其他的定界文本如csv
 　- --opt: 导出时默认使用该选项, 其为多个选项集合的缩写, 性能也不错
   - 一键复制到远程:mysqldump --opt db_name | mysql --host=remote_host -C db_name
-  - --master-data[=value]: 会在导出的备份文件中会包含一个`CHANGE MASTER TO`语句以记录下binary log的坐标(日志文件名和位置), 后续要从二进制文件中恢复数据就知道从日志文件名的那个位置开始执行了.value为1时, 重新导入备份文件时,该CHANGE MASTER TO语句会被执行, 而value=2时, 语句只是显示信息而已不会被执行.如果没有指定value默认为1.
+  - **--master-data[=value]: 会在导出的备份文件中会包含一个`CHANGE MASTER TO`语句以记录下binary log的坐标(日志文件名和位置), 后续要从二进制文件中恢复数据就知道从日志文件名的那个位置开始执行了.value为1时, 重新导入备份文件时,该CHANGE MASTER TO语句会被执行, 而value=2时, 语句只是显示信息而已不会被执行.如果没有指定value默认为1.**
 
 #### 4.5.5 mysqlimport — A Data Import Program
 >为`load data` sql语句提供一个命令行界面
@@ -77,14 +77,14 @@
 #### 4.6.6 mysql_config_editor — MySQL Configuration Utility
 >管理名为`.mylogin.cnf`(默认在用户home目录下,名字最前面是有点的)的模糊登录路径文件, 当如mysql. mysqladmin等客户端工具使用--login-path=.mylogin.cnf启动时, 这些客户端会读取其中的[client], [mysql], [mypath]块配置(优先权高于其他配置文件但低于命令行的), 这样就能知道要连接那个mysql server, 同时记录在.mylogin.cnf的密码不是明文的有一定安全性(但是不要认为它是牢不可破,因为无法阻挡有决心的攻击者), 有多个mysql服务器时方便连接切换
 
-#### 4.6.8 mysqlbinlog — Utility for Processing Binary Log Files
+**#### 4.6.8 mysqlbinlog — Utility for Processing Binary Log Files**
 - 使用mysqldump + mysqlbinlog for Backup and Restore
   事先使用mysqldump导出备份文件作为快照, 使用 mysqlbinlog备份bin log二进制文件(可以永不断开的持续实时备份). 在万一数据丢失了,先导入备份文件, 然后执行二进制备份,可执行类似如下命令 `mysqlbinlog --start-position=27284 binlog.001002 binlog.001003 binlog.001004 | mysql --host=host_name -u root -p`
 
 #### 4.6.9 mysqldumpslow — Summarize Slow Query Log Files
 
 #### 4.7.3 my_print_defaults — Display Options from Option Files
-> my_print_defaults展示给定程序会使用配置文件中给定选项组的具体配置. 使用例子: my_print_defaults mysqlcheck client -uroot -p
+>**my_print_defaults展示给定程序会使用配置文件中给定选项组的具体配置. 使用例子: my_print_defaults mysqlcheck client -uroot -p**
 
 #### 4.8.2 replace — A String-Replacement Utility
 > 替换文件中字符串, 如 replace a b b a -- file_name(将a和b互换)
