@@ -37,7 +37,7 @@
    因为会降低性能所以仅在低网速(网络传输消耗大于压缩解压缩)才会有收益.
  
 ##### 4.5.1.3 mysql Client Logging
-**命令行交互式语句默认都会被记录在home目录下默认名字为.mysql_history的文件中,也可以设置为不记录. 需注意,设置密码时,明文可能会被记录, 所以需确认设置密码会不会被记录以提高安全性.**
+**在mysql中使用的命令行交互式语句默认都会被记录在home目录下默认名字为,也因此你可使用向上箭头来查看以为输入的命令.mysql_history的文件中,也可以设置为不记录(以--histignore="*"启动mysql就会忽略所有命令行语句,既不会记录). 需注意,设置密码时,明文可能会被记录, 所以需确认设置密码会不会被记录以提高安全性.**
 
 ##### **4.5.1.5 Executing SQL Statements from a Text File**
 > 从文件读取sql语句并执行, 如下2种方法
@@ -77,7 +77,7 @@
 #### 4.6.6 mysql_config_editor — MySQL Configuration Utility
 >管理名为`.mylogin.cnf`(默认在用户home目录下,名字最前面是有点的)的模糊登录路径文件, 当如mysql. mysqladmin等客户端工具使用--login-path=.mylogin.cnf启动时, 这些客户端会读取其中的[client], [mysql], [mypath]块配置(优先权高于其他配置文件但低于命令行的), 这样就能知道要连接那个mysql server, 同时记录在.mylogin.cnf的密码不是明文的有一定安全性(但是不要认为它是牢不可破,因为无法阻挡有决心的攻击者), 有多个mysql服务器时方便连接切换
 
-**#### 4.6.8 mysqlbinlog — Utility for Processing Binary Log Files**
+#### **4.6.8 mysqlbinlog — Utility for Processing Binary Log Files**
 - 使用mysqldump + mysqlbinlog for Backup and Restore
   事先使用mysqldump导出备份文件作为快照, 使用 mysqlbinlog备份bin log二进制文件(可以永不断开的持续实时备份). 在万一数据丢失了,先导入备份文件, 然后执行二进制备份,可执行类似如下命令 `mysqlbinlog --start-position=27284 binlog.001002 binlog.001003 binlog.001004 | mysql --host=host_name -u root -p`
 
@@ -94,24 +94,24 @@
 
 ### 5.1 The MySQL Server
 #### 5.1.1 Configuring the Server
-在调优mysql服务器时,最重要的配置变量:key_buffer_size和table_open_cache,你首先应该确信自己已经对这两个值设置适当值在修改参数前.
-table_open_cache: 所有线程的能打开表数量,增大该值将增加mysql所需的文件描述符的数量.可通过opened_tables状态变量查看是否修改增加table_open_cache值,如果你没用经常执行flush tables(flush tables会强制将所有的表关闭重新打开)而opened_tables值很大时你就需要增加table_open_cache值了.
-key_buffer_size: 缓冲MyISAM表的索引块(这些缓冲是并被所有线程共享的).(只缓冲MyISAM表,同时他是只缓冲索引不缓冲数据的,对于innoDB表缓冲的是索引和数据是一起的)
+- 在调优mysql服务器时,最重要的配置变量:key_buffer_size和table_open_cache,你首先应该确信自己已经对这两个值设置适当值在修改参数前.
+    - table_open_cache: 所有线程的能打开表数量,增大该值将增加mysql所需的文件描述符的数量.可通过opened_tables状态变量查看是否修改增加table_open_cache值,如果你没用经常执行flush tables(flush tables会强制将所有的表关闭重新打开)而opened_tables值很大时你就需要增加table_open_cache值了.
+    - key_buffer_size: 缓冲MyISAM表的索引块(这些缓冲是并被所有线程共享的).(只缓冲MyISAM表,同时他是只缓冲索引不缓冲数据的,对于innoDB表缓冲的是索引和数据是一起的)
 一些配置参考的例子:(见官网上)...
 
 #### 5.1.6 Server Command Options
 
 #### 5.1.7 Server System Variables
 - back_log: mysql可以拥有未完成连接请求的数量, 默认50, -1自动调整. 当你短时间有很多请求才需要提高此值
-- big_tables: mysql server将所有临时表都存储在disk上而不是内存上, 可以避免需要大的临时表不够的情况, 但同时也会降低原本在内存表就够的查询
-- bind_address: mysql server监听单个网络套接字上侦听TCP / IP连接. 有如下取值:
+- **big_tables: mysql server将所有临时表都存储在disk上而不是内存上, 可以避免需要大的临时表不够的情况, 但同时也会降低原本在内存表就够的查询**
+- **bind_address: mysql server监听单个网络套接字上侦听TCP / IP连接. 有如下取值:** 
   - `*`: 默认值. 所有服务主机的ipv4接口和ipv6接口(如果支持).(ps: 所有现有的mysql账号都可连接)
   - `0.0.0.0`: 监听所有服务主机的ipv4接口
   - `::` : 监听所有服务主机的ipv6接口
 - bulk_insert_buffer_size: 
 - completion_type: 
 - concurrent_insert:
-- delay_key_write: 只对MyISAM表有效.不会在每次索引更新时都为key buffer都进行刷新只在表关闭时.
+- **delay_key_write: 只对MyISAM表有效.不会在每次索引更新时都为key buffer都进行刷新只在表关闭时.**
 - flush: on/off,如果开启则每句后都会flush所有更改到磁盘
 - flush_time:过多少flush_time秒关闭所有表以释放资源并将未刷新(unflushed)的数据同步磁盘上.该选项最好仅在资源很少的系统上使用
 - foreign_key_checks
@@ -150,7 +150,7 @@ key_buffer_size: 缓冲MyISAM表的索引块(这些缓冲是并被所有线程�
 - myisam_sort_buffer_size:
 - net_buffer_length
 - net_retry_count
-- **open_files_limit:**mysql从操作系统可使用的最大文件描述符
+- **open_files_limit:mysql从操作系统可使用的最大文件描述符**
 - optimizer_switch: 控制优化器行为
 - performance_schema_xxx: performance schema系统变量的设置
 - profiling: 
@@ -158,7 +158,7 @@ key_buffer_size: 缓冲MyISAM表的索引块(这些缓冲是并被所有线程�
 - query_cache_size:
 - query_cache_type:
 - query_prealloc_size
-- read_only:当该设置开启时,mysql服务器不会允许任何客户端更新操作除了超级用户.但即使该值开启,mysql服务器仍然允许如下操作:
+- **read_only:当该设置开启时,mysql服务器不会允许任何客户端更新操作除了超级用户.但即使该值开启,mysql服务器仍然允许如下操作:**
   - 由从线程(slave threads)执行的更新,**如果是从服务器上,则开启read_only很有帮助这能确保从服务器只接受主服务器的更新而不是其他客户端的.**
   - read_only设置的目的是保护表的结构和内容被更改,但是对于优化和分析(analysis and optimization)操作不是属于这种更改操作,所以是允许的.
   - 对于临时表的操作
@@ -200,13 +200,13 @@ key_buffer_size: 缓冲MyISAM表的索引块(这些缓冲是并被所有线程�
 - Bytes_received: 所有客户端接收的字节数
 - Bytes_send: 发送给所有客户端的字节数
 - Com_xxx:　计算xxx语句的执行次数
-- Handler_read_rnd: 基于固定位置读取行的请求数. 如果需要执行很多对结果进行排序的查询该值会很高;这可能是你执行了许多需要全表扫描或joins没有正确使用键的查询
+- Handler_read_rnd: 基于固定位置读取行的请求数.如果需要执行很多对结果进行排序的查询该值会很高;这可能是你执行了许多需要全表扫描或joins没有正确使用键的查询
 - Handler_read_rnd_next: 读取数据文件的下一行的请求数. 如果该值很高则说明做了很多的表扫描, 通常这表明未正确建立索引或你的查询没有很好利用索引
 - Innodb_row_lock_current_waits: 现在需要等待行锁的数量
 - Innodb_row_lock_time: 花费在取得innodb行锁总的时间(单位毫秒)
 - Innodb_row_lock_time_avg: 取得innodb行锁的平均时间(毫秒)
 - Innodb_row_lock_time_max: 取得innodb行锁中耗时最大的时间(毫秒)
-- Key_blocks_unused:
+- **Key_blocks_unused: 这个看出key cache(mysiam缓存索引的地方)有多少没被用到**
 - Last_query_cost: 上次查询语句编译的总开销(由查询优化器计算), 这对与对比同一查询语句的不同查询计划的开销很有帮助. 仅在简单语句中计算得精确, 对于复杂语句(如包含了子查询或union)该值为0
 - Last_query_partial_plans
 - **Max_used_connections: 服务器开机以来最大的同时连接数量**
@@ -221,7 +221,7 @@ key_buffer_size: 缓冲MyISAM表的索引块(这些缓冲是并被所有线程�
 - Sort_range:使用范围来完成排序的次数
 - Sort_scan: 扫描表来完成排序的次数
 - Table_locks_immediate: 可以立即授予对表锁定的请求的次数
-- Table_locks_waited: 无法立即授予对表锁的请求并且需要等待的次数. 如果该值很高并且有性能问题时, 你首先应该优化查询语句,
+- **Table_locks_waited: 无法立即授予对表锁的请求并且需要等待的次数. 如果该值很高并且有性能问题时, 你首先应该优化查询语句,**
 然后将表进行拆分或者使用主从复制
 - Threads_connected: 当前打开的连接数
 - Threads_created:
@@ -248,13 +248,13 @@ key_buffer_size: 缓冲MyISAM表的索引块(这些缓冲是并被所有线程�
 - Combination SQL Modes
   >以下提供了特殊模式作为上面模式值组合的简写
   - ANSI
-  - TRADITIONAL: 等于 STRICT_TRANS_TABLES, STRICT_ALL_TABLES, NO_ZERO_IN_DATE, NO_ZERO_DATE, ERROR_FOR_DIVISION_BY_ZERO, NO_AUTO_CREATE_USER, 和NO_ENGINE_SUBSTITUTION.
+  - **TRADITIONAL: 等于 STRICT_TRANS_TABLES, STRICT_ALL_TABLES, NO_ZERO_IN_DATE, NO_ZERO_DATE, ERROR_FOR_DIVISION_BY_ZERO, NO_AUTO_CREATE_USER, 和NO_ENGINE_SUBSTITUTION.**
   
 - Strict SQL Mode
-  >在启用了STRICT_ALL_TABLES或STRICT_TRANS_TABLES, 或者两者同时, Strict SQL Mode生效
-  - STRICT_ALL_TABLES和STRICT_TRANS_TABLES的一些区别
+  >在启用了STRICT_ALL_TABLES(其实就是所有表实施strict模式)或STRICT_TRANS_TABLES(其实就是只对事务表实施strict), 或者两者同时, Strict SQL Mode生效
+  - **STRICT_ALL_TABLES和STRICT_TRANS_TABLES的一些区别**
     - 对于事务型表, 两种模式都是会产生一个错误当更改数据语句中有无效或缺失的值, 该语句中止并回滚
-    - 非事务型表, 更改数据语句(insert,update)中有无效或缺失的值
+    - 非事务型表,更改数据语句(insert,update)中有无效或缺失的值
       - 该坏值出现在数据更改的第一行, 两种模式的行为都是是一样的, 语句被中止且数据表不会被改变
       - 该值出现在数据更改的第二行及以后
         - STRICT_ALL_TABLES模式, 返回一个错误并中止剩余的语句执行, 因为较早的行已被插入或更新,所以结果是部分更新. 为了避免该情况,请使用单行语句,可以在不更改表的情况下中止该语句(即第一句一有错误就中止了)
@@ -293,16 +293,17 @@ key_buffer_size: 缓冲MyISAM表的索引块(这些缓冲是并被所有线程�
   - 优化器系统表
   - 杂项系统表
   
-### 5.4 MySQL Server Logs
+### **5.4 MySQL Server Logs**
 - 服务器日志种类
-  1. error log: 
-  2. general query log:建立的客户端连接和从客户端接收的语句
-  3. binary log: 改变数据的语句
+  1. error log: log-error指定错误日志的文件名和路径,如果该值为空则错误输出到控制台上(即是stderr)
+  2. general query log:建立的客户端连接和从客户端接收的语句.general_log控制是否开启,general_log_file指定日志文件名和路径.
+  3. binary log: 改变数据的语句. log-bin控制是否开启;log_bin_basename指定文件名
   4. relay log: 从复制主服务器接收到的数据更改
-  5. slow query log:
+  5. slow query log: slow_query_log控制是否开启,slow_query_log_file指定输入文件和路径
   6. DDL log(metadata log): DDL执行的元数据操作
+  - 自己补充:其实还有个就是命令行交互式语句会被记录在.mysql_history中(默认地是会记录的.除非mysql以--histignore="*"启动,这会忽略所有的命令行交互语句即不会记录)
   
-- 系统变量log_output控制输出目的类型是file, table, none的任意组合; 系统变量general_log和slow_query_log控制对应的日志是否开启;general_log_file and slow_query_log_file控制着对应日志文件存放的路径(如果有给定的话)和文件名;系统变量sql_log_off控制general query logging是否关闭(这假定general query log为开启)
+- **系统变量log_output控制输出目的类型是file, table, none的任意组合; 系统变量general_log和slow_query_log控制对应的日志是否开启;general_log_file and slow_query_log_file控制着对应日志文件存放的路径(如果有给定的话)和文件名;系统变量sql_log_off控制general query logging是否关闭(这假定general query log为开启)**
 
 - 使用log table(将日志存储在mysql表)的好处和特点
   便于查询是哪个客户端发起的查询,只要能连接上服务器就能进行日志查询
@@ -312,7 +313,7 @@ key_buffer_size: 缓冲MyISAM表的索引块(这些缓冲是并被所有线程�
 - log-error没有指定值时则将错误信息输出到console(即是stderr), 如果指定了文件名或绝对路径就将日志写入对应文件中去
 - log-warning控制warning日志是否记录到error log中, 如果该值大于1则将新连接尝试连接但被拒绝访问的错误和中断连接写入错误日志中
 
-#### 5.4.2.5 Error Log File Flushing and Renaming
+#### **5.4.2.5 Error Log File Flushing and Renaming**
 - 使用FLUSH ERROR LOGS或FLUSH LOGS命令flush log,mysql服务器会关闭和重新打开任何他之前正在写入的错误日志文件.如果要重命名错误日志文件名,则进行如下的操作(以linux为例子, 在window上请用rename代替mv)
   mv host_name.err host_name.err.old
   mysqladmin flush-logs
@@ -322,15 +323,15 @@ key_buffer_size: 缓冲MyISAM表的索引块(这些缓冲是并被所有线程�
 #### 5.4.4 The Binary Log
 在一个语句或事务后但在释放任何锁或任何提交(commit)之前立即执行二进制日志记录; 在执行对非事务表的更新后立即存储在二进制日志中。在未提交事务中, 所有改变事务表更新操作都会被缓存直到服务器接收commit语句, 此时在commit执行前将整个事务写入二进制日志; 对于非事务表的改变是无法被回滚,如果一个事务包含对非事务表的更改回滚了, 则二进制日志会在事务后记录所有rollback语句以确保这些表的更改
 
-##### 5.4.4.1 Binary Logging Formats
+##### **5.4.4.1 Binary Logging Formats**
 - 二进制日志记录格式(3种): 
-  1. 基于sql语句日志
-  2. 基于行日志: 记录被影响的单个表行
+  1. 基于sql语句日志(statement-based)
+  2. 基于行日志(row-based): 记录被影响的单个表行
   3. 混合(以上两种混合)日志: 默认是statement-based, 在特定情况下使用row-based保证可以被安全复制
 
 #### 5.4.4 The Binary Log
-- 二进制日志不记录像select或show之类不修改数据语句。如果要记录所有语句，请使用general query log。
-- log-bin系统变量控制是否开启错误日志**log_bin_basename可以指定文件名或带绝对路径的文件名(后缀会被忽略并由mysql自己生成.** sql_log_bin(scope为session)可以设置当前的session的二进制日志是否开启
+- **二进制日志不记录像select或show之类不修改数据语句。如果要记录所有语句，请使用general query log。**
+- **log-bin系统变量控制是否开启错误日志; log_bin_basename可以指定文件名或带绝对路径的文件名(后缀会被忽略并由mysql自己生成.** sql_log_bin(scope为session)可以设置当前的session的二进制日志是否开启
 - PURGE BINARY LOGS删除二进制日志
 - binlog_error_action系统变量控制二进制日志记录出错时所采用的动作
   - IGNORE_ERROR(默认): 服务器会将继续进行中的事务并记录错误, 然后停止二进制日志记录,但会继续执行更新.排除错误要重启服务器才能从新记录二进制日志.这对于二进制日志是不重要的情况可以怎么做
@@ -343,7 +344,7 @@ key_buffer_size: 缓冲MyISAM表的索引块(这些缓冲是并被所有线程�
 ###### 5.4.4.4 Logging Format for Changes to mysql Database Tables
   
 #### 5.4.5 The Slow Query Log  
-- 默认的慢日志不记录管理语句和不使用索引的语句, 但是log_slow_admin_statements 和 log_queries_not_using_indexes进行设置
+- 默认的慢日志不记录管理语句和不使用索引的语句, 但可通过设置log_slow_admin_statements 和 log_queries_not_using_indexes进行开启
 
 #### 5.4.7 Server Log Maintenance
 - mysqladmin flush-logs刷新日志时: 1.**二进制日志会重新创建一个文件,** 2.**而一般日志(general log)和慢日志只会关闭再重新打开**
@@ -393,9 +394,10 @@ host, proxy_host在存到授权表前转换为小写,权限表User, Proxied_user
 #### 6.2.6 Access Control, Stage 2: Request Verification
 user表中设置全局的基础权限, 比如授权了全局的delete权限,那么他可delete任何database的数据即使设置了默认的database. 所以如非必要, user表的权限都设置为N,在颗粒级别更具体的地方设置权限.
 
-#### 6.2.7 Adding Accounts, Assigning Privileges, and Dropping Accounts
+#### **6.2.7 Adding Accounts, Assigning Privileges, and Dropping Accounts**
 创建用户: create user "username"@"hostname" identified by 'password'; 
 删除用户: drop use "username"@"hostname"
+
 修改密码: set password for "username"@"hostname" = password("password")
 该用户名或主机名: rename user "old_username"@"old_hostname" to "new_username"@"new_hostname"
 修改当前用户密码: set password = password("password")
