@@ -187,7 +187,8 @@
       可以使用 alias 列出所有的别名
 
 - 【误删数据恢复】参考:https://blog.csdn.net/zonghua521/article/details/78200239
-      
+
+- [CentOS7下swap分区创建(添加),删除以及相关配置](https://www.jianshu.com/p/5acd4cdb34e7)      
       
 ##【nginx】
 

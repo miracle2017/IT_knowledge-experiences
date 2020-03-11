@@ -1,1 +1,4 @@
 - utf8mb4: most bytes 4即是使用4个字节来表示utf8
+- buffer和cache区别?
+  - buffer:`A buffer is something that has yet to be "written" to disk.` 这些数据准备写到磁盘的，但还没有写到磁盘，缓存在内存中
+  - cache: `A cache is something that has been "read" from the disk and stored for later use.` 从磁盘上读取数据存储到内存中缓存起来，方便下一次使用。目的是避免频繁的去磁盘上读取数据，直接从内存中读取使用了。
