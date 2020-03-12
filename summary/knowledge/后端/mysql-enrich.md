@@ -140,3 +140,11 @@
    - 你可以将数据库或表从数据库目录移动到其他位置(如空间更大,更快的磁盘),推荐软链接整个数据库目录.软链接myisam表为最后的手段.
   #### 8.12.3.2 Using Symbolic Links for MyISAM Tables on Unix   
    - **仅有myisam表完全支持符号链接.对于其他引擎使用的表文件,如果使用软链接可能会有奇怪的问题.innoDB表如果想要将表放置不同磁盘位置可以用create table的DATA DIRECTORY从句代替软链接而达到这个目的. `SHOW VARIABLES LIKE 'have_symlink';` 查看是否支持或开启软链接**
+ ### 8.13 Measuring Performance (Benchmarking)
+  #### 8.13.1 Measuring the Speed of Expressions and Functions
+   - **测试mysql执行一个表达或函数的速度, 可以使用 select BENCHMARK(count,expr);表示expr重复执行count次.**  
+  #### **8.13.2 The MySQL Benchmark Suite**
+   - 免费的开源数据库基准测试工具:http://osdb.sourceforge.net/
+   - 基准测试
+     - **mysqlslap(mysql自带的)**
+     - 其他如SysBench或DBT2; 
