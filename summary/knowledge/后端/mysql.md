@@ -657,10 +657,12 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 
 #### 8.3.1 How MySQL Uses Indexes
 - 许多索引(PRIMARY KEY, UNIQUE, INDEX, FULLTEXT)都是存储在B-trees中, 除了空间数据类型(spatial data type)索引使用R-trees;内存表(memory table)也支持hash索引;**innoDB对fulltext使用反向列表**(INVERTED LIST FOR FULLTEXT INDEXS)
-
+ - 扩展
+   - hash索引方法只有memory和NDB表支持
+   
 - mysql使用索引进行如下操作:
   - 快速的找到与where语句匹配的行
-  - 从考虑中消除行, 如果有多个索引可供选择,mysql通常会使用找到最少行的索引(最具选择性的索引)
+  - 从考虑中消除行,如果有多个索引可供选择,mysql通常会使用找到最少行的索引(最具选择性的索引)
   - 如果表有多列索引, 任何最左前缀索引都能被使用.如有一个3列的索引(col1, col2, col3),你已经在(col1), (col1, col2), (col1,col2, col3)上建立了索引搜索功能
   - 执行join时从其他表检索行,如果声明了相同的类型和大小(same type and size),mysql可以更有效的在列上使用索引.在这种情况下varchar和char声明为相同的大小则认为它们相同, 如varchar(10)和char(10)大小相同,但varchar(10)和char(15)大小不相同.
     - 对于非二进制字符串列之间的比较两个列应使用相同的字符集(如将utf8列于latin1列进行比较就不能使用到索引). 
@@ -1383,9 +1385,9 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - Unique Indexes
   - 一个Unique Indexes创建了一个约束以使索引中所有值必须互不相同.如果为唯一索引指定前缀长度,那么列值在前缀内必须唯一.唯一索引允许多个null列值.
 - Full-Text Indexes
-  - 全文索引只支持innoDB和myisam表,并且只能是char,varchar,text列.索引总是在整列上进行的,所以不支持前缀索引,若指定了将忽略.
+  - 全文索引只支持innoDB和myisam表,并且只能是char,varchar,text列.索引总是索引整列,所以不支持前缀索引,若指定了将忽略.
 - Index Options
-  - 每个存储引擎支持索引类型
+  - 每个存储引擎支持的索引类型
     - innoDB: BTREE
     - MYISAM：BTREE
     - MEMORY/HEAP:HASH,BTREE
@@ -2064,6 +2066,40 @@ s)不能相互使用.
       
 #### 14.17.3 InnoDB Standard Monitor and Lock Monitor Output      
 - Lock Monitor与Standard Monitor的输出是相同,除了多了锁(lock)信息.
+
+## Chapter 15 Alternative Storage Engines
+### 15.2 The MyISAM Storage Engine
+#### 15.2.3 MyISAM Table Storage Formats
+- MyISAM支持3中行格式:fixed,dynamic,compressed.如果你没有特别声明行格式则mysql会根据所使用的列的类型来自动选择,而compressed行格式只能由myisampack工具产生.
+
+## Chapter 18 MySQL NDB Cluster 7.3 and NDB Cluster 7.4
+- MySQL NDB Cluster(NDB 集群)是适用于分布式计算环境的MySQL的高可用性，高冗余版本.     
+    
+## Chapter 19 Partitioning   
+
+### 19.2 Partitioning Types
+- 支持的类型: range, list, hash, key, range column, list column,linear hash,linear key.自己总结简单记就是: range, list, hash, key
+
+#### 19.2.3 COLUMNS Partitioning
+- range column和list column分别range和list的变种.range和list只能是单列并且得为整数,而 range column和list column允许多列作为分区键,支持非整数列,具体支持的数据类型如下:
+  - 所有整数类型
+  - date和datetime
+  - char,varchar,binary和varbinary.(注意blob和text是不行的)
+
+#### 19.2.4 HASH Partitioning
+- HASH分区主要用于确保在预定数量的分区之间均匀分布数据.你只要指定分区数,具体怎么分则不用你操心,mysql会自己分.实际它的算法就是取模,比如你指定4个分区,基于c1列,那么用以下公式可以算出数据应该处于哪个分区:mod(c1, 4)
+#### 19.2.4.1 LINEAR HASH Partitioning
+- linear hash分区和hash分区不同在于使用的算法不同(有linear的使用的是二次幂算法,常规的哈希分区使用的取模算法).线性哈希优点是添加,删除,合并和分割分区更快,缺点是于常规哈希相比数据分布比较不均匀.
+
+#### 19.2.5 KEY Partitioning
+- key partitioning和hash partitioning相似,除了哈希分区使用的是用户自定义的表达式.key partitioning和hash partitioning一样都是取模算法.此外还有linear key partitioning,加了linear对key partitioning与对hash partitioning的作用是一样的,他们只是算法不同,加了linear的使用二次幂算法,而没有加linear的使用取模算法.
+
+#### 19.2.6 Subpartitioning
+- 子分区就是对分区再进一步分区
+
+#### 19.6.2 Partitioning Limitations Relating to Storage Engines
+- **不支持的存储引擎:MERGE,FEDERATED,CSV**
+- InnoDB:外键和分区表是不兼容的(也仅innoDB支持外键).分区表不能有外键,有外键则不能建分区.
       
 # mysql术语
 - adaptive hash index(自适应哈希索引)
@@ -2169,30 +2205,19 @@ mysqli_multi_query()   :执行多条语句
 
 ## 函数:
 - FROM_UNIXTIME('时间戳字段', '%Y-%m-%d');     格式化时间戳为时间格式 
-
 - UNIX_TIMESTAMP([date]);   转换为时间戳,不传入参数为当前时间戳, 给定date(格式为正常日期时间格式如 2019-6-6 10:10:10)时则返回当时的时间戳
    current_timestamp()/ current_time()/ now()/ current_date() 获取当前的时间戳/ 完整的日期加时间/ 时间(10:10:01)/ 日期(2019-12-01)
-   
 - TIMESTAMPDIFF(unit, datetime_expr1, datetime_expr2): datetime_expr2, datetime_expr1可以是date或datetime, 返回datetime_expr2 − datetime_expr1的值, unit控制结果的单位. 例: TIMESTAMPDIFF(MONTH,'2002-02-01 12:12:12','2003-05-01'); 结果15
-    
 - length(string)            -- string长度，字节
-
 - char_length(string)        -- string的字符个数
-
 - substring(str, position [,length])        -- 从str的position开始,取length个字符
-
 - replace(str ,search_str ,replace_str)    -- 在str中用replace_str替换search_str
-
 - CONCAT(str1, str2, ...):  拼接字符串
-
 - count()高级用法: 如下:
-    select count(IF(status=1, 1, NULL) as total, count(IF(status=0, 1, NUll) as open from table_name; (该句获取status为1的数量和status为0的数量)
-
+    `select count(IF(status=1, 1, NULL) as total, count(IF(status=0, 1, NUll) as open from table_name; (该句获取status为1的数量和status为0的数量)`
 - IF 用法: IF(表达式1, expr2, expr3); 表达式1为true 返回expr2; 否则返回expr3.  表达式中可用的条件运算符: "=、<、<=、>、>=、!="
-
 - group by: 单独使用只能获取分组中的一个数据, 可以和 group_concat(name1, name2)使用(获取name1拼接上name2字段的值的整个数组):如下
     select group_concat('{id:"', name, ';:"title":"', title, '"}' from table_name; 获取出一组内容为json格式,之间逗号隔开的字符串
-
 - ON DUPLICATE KEY:
     INSERT INTO TABLE (a,c) VALUES (1,3) ON DUPLICATE KEY UPDATE c=c+1; (存在重复值则更新)
 
@@ -2340,7 +2365,7 @@ mysqli_multi_query()   :执行多条语句
 	  - text: 占用空间:实际需要字节+2字节; 取值为0 ~ 65535字节.需要注意的是:如果都是存中文(一个中文占3个字节)那么只能存储21845个,所以它能存的字符个数取决于什么时候字符串长度达到65535字节.(text是非二进制字符串)
 	  - BINARY(M): 占用空间:M字节; 取值为0~255字节(取1字节时为该列值大小在0~255字节间,取值为2字节为该列值大于255字节)
 	  - varbinary(m): 占用空间: 数据存储所需的字节 + 1~2字节
-	  - blob: 存储数据所需的字节 + 2字节; 取值范围: 0~65535(0<2^16)字节
+	  - blob:(blog is binary large object即blog是二进制大对象) 存储数据所需的字节 + 2字节; 取值范围: 0~65535(0<2^16)字节
 	  - note:
 	    - 手机号建议存成字符串类型
 	    - mysql中utf8字符集最多占用3个字节.需要明确的是字符集为utf8的字符并都是占用3个字节,英文占用1个字节,中文占用3个字节(gbk字符集中中文占2字节). 以下举个栗子:select length("好g"); //结果为4
@@ -2354,10 +2379,8 @@ mysqli_multi_query()   :执行多条语句
       
     
 ## Mysql工具使用集合
-
-- ### monyog --- mysql性能检测工具(window)  
-
-- ### mysql主从同步,主主同步（可用于读写分离)
+### monyog --- mysql性能检测工具(window)  
+### mysql主从同步,主主同步（可用于读写分离)
  
   [参考https://blog.csdn.net/mycwq/article/details/17136001](https://blog.csdn.net/mycwq/article/details/17136001)
   [参考https://www.jianshu.com/p/0d07b446ae33](https://www.jianshu.com/p/0d07b446ae33)
@@ -2369,22 +2392,30 @@ mysqli_multi_query()   :执行多条语句
     - Slave I/O thread: 连接并接收主服务器发送的数据并存储在中继日志(relay log)文件上
     - Slave SQL thread: 读取中继日志(relay log )文件, 执行其中的事件
     
-- ### Percona toolkit分析mysql工具
+### Percona toolkit分析mysql工具
   >感觉不是很有用
   
-- ### PXC(Percona XtraDB Cluster)实现mysql集群
+### PXC(Percona XtraDB Cluster)实现mysql集群
    [参考https://www.jianshu.com/p/db7190658926](https://www.jianshu.com/p/db7190658926)
    
-- ### mysql性能检测工具之 innotop
+### mysql性能检测工具之 innotop
   - 安装
    `yum install innotop`
   - 使用
     innotop -u username -p 'password'
     进入后输入 ` 模式代码字母(大小写敏感)` 进行模式切换
   
-## 忘记密码
+### 忘记密码
   [How to Reset the Root Password官网](https://dev.mysql.com/doc/refman/5.6/en/resetting-permissions.html)
+ 
+### mysql的4种事务隔离详解? innoDB行锁的算法?
+  - 讲得挺清楚的[五分钟搞清楚MySQL事务隔离级别](https://www.jianshu.com/p/4e3edbedb9a8)
+  - InnoDB存储引擎使用三种行锁的算法用来满足相关事务隔离级别的要求.
+    - Record Locks:只锁定单个索引行(查询一定要有索引可以用,不然行锁就无从谈起,会变成表锁)
+    - Gap Locks:该锁会锁定一个范围，但是不括记录本身
+    - Next-key Locks:该锁就是 Record Locks 和 Gap Locks 的组合，即锁定一个范围并且锁定该记录本身。
 
+  
 ## 杂项
 - innodb默认是行锁，**前提条件是建立在索引之上的**。如果筛选条件没有建立索引，会降级到表锁。
 即如果where条件中的字段都加了索引，则加的是行锁；否则加的是表锁。
@@ -2395,11 +2426,9 @@ b字段有索引时能用到索引,mysql能快速定位要更新的位置速度�
 - mysql使用UNIX sock方式或者tcp连接
   host是localhost时，优先使用Unix domain sockets方式，也可以使用--protocol指定采用什么方式连接
   在php编程中，host为localhost即可实现使用socket方式连接. [php官网关于数据库连接的说明](https://www.php.net/manual/zh/mysqli.quickstart.connections.php)
-
 - 删除重复字段保留最大或者最小值? 
   - 方法1 (即找出所有重复的id, 然后在找出每组重复id最小值, 然后去除此部分. 需要用到一个中间表, 不然会报错因为不能对一个表又select又delete(update等)操作)
-  
-    DELETE FROM ls_article_new WHERE id in
+    `DELETE FROM ls_article_new WHERE id in
     (SELECT id FROM
     (SELECT
     id
@@ -2409,10 +2438,9 @@ b字段有索引时能用到索引,mysql能快速定位要更新的位置速度�
     id in (SELECT id FROM `ls_article_new` GROUP BY  out_article_id HAVING COUNT(out_article_id) > 1)
     AND
     id NOT in (SELECT min(id) FROM `ls_article_new` GROUP BY  out_article_id HAVING COUNT(out_article_id) > 1)
-    ) as a)
+    ) as a)`
     
 - Foreign Keys: InnoDB表才支持
-
 - 字符串搜索是否大小敏感? 
   [Case Sensitivity in String Searches](https://dev.mysql.com/doc/refman/5.6/en/case-sensitivity.html)
   - 以下2种情况大小写敏感

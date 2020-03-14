@@ -46,6 +46,8 @@
 
 - chown -R git:git    修改文件的所属者
 
+- date "+%Y-%m-%d %H:%M:%S": 输出时间,还有更多用法
+
 - mysql -uroot -p  登录mysql数据库
 
 - service nginx restart  重启nginx
@@ -97,6 +99,7 @@
   sed -n 's/old/new/p': n和p组合表示打印出匹配的内容不会修改内容
 
 - wget url地址: 下载文件, 支付http(s),ftp协议
+  wget: 强大的下载工具, 可以用其递归扒站
 
 - split: 分割大文件为小文件
   - -a: 指定后缀的长度
@@ -105,13 +108,12 @@
   - -l：每个输出文件片段的行数
   
   例子:
-  - a.按照输入文件行数分割 
-    - split -l 300 test.sql -d -a 3 new_file_name 每300行拆分成一个文件, 使用数字作为后缀, 后缀长度3, 文件名为new_file_name  
-  - b.按照输出大小文件大小分割 
-    - split -b 2G mysql-slow.log -d -a 1 new.log 每2G拆分成一个文件, 使用数字为后缀, 后缀长度1, 文件名new.log
-  
+     - a.按照输入文件行数分割 
+       - split -l 300 test.sql -d -a 3 new_file_name 每300行拆分成一个文件, 使用数字作为后缀, 后缀长度3, 文件名为new_file_name  
+     - b.按照输出大小文件大小分割 
+       - split -b 2G mysql-slow.log -d -a 1 new.log 每2G拆分成一个文件, 使用数字为后缀, 后缀长度1, 文件名new.log
+      
 - nohup
-
   不挂断运行命令, 一般与&一起使用, 即关闭当前终端窗口也能在后台运行; 
   而如果只用&, 只能在后台运行, ctrl + c不会退出进程, 但是当前终端关闭了就会结束后台进程
   
@@ -120,7 +122,7 @@
   `nohup ./myprogram.sh > result.log 2>&1 & echo $! > run.pid  //将输入和输出结果记录到result.log中, 将pid号记录到run.pid中`
   `nohup node server.js 1>log.out 2>err.out > & echo $! > run.pid` //将正常信息和错误信息分别对应输出到log.out和err.out文件, pid记录到run.pid文件中
    &>file:将标准输出和标准错误输出都重定向到file中
-   2>&1: 将标准错误输出
+   2>&1: 将标准错误重定向到标准输出
   
 - HASH-TYPE名字+'sum'后缀 filename :(如sha1sum,sha512sum,md5sum等)计算文件(不能是文件夹, 要是单一文件, 文件夹可以先打包压缩)哈希值(sha1, sha512, md5等)  
  
@@ -164,8 +166,7 @@
   env: 查看所有环境变量
   set: 查看所有本地定义的环境变量
   export: 查看所有导出的环境变量
-  
-- wget: 强大的下载工具, 可以用其递归扒站
+
 
 - 多个文件合并成一个
   方法1: `cat data* > merge.sql`  #将所有data开头的文件合并成名为merge.txt的文件 

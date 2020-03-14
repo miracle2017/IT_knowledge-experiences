@@ -29,7 +29,7 @@
  ### 8.2 Optimizing SQL Statements
   ##### 8.2.1.1 WHERE Clause Optimization
    - **通过尝试所有的可能来找到最佳的联表联结组合.ORDER BY或GROUP BY从句中的所有列都来自同一个表,那么join时首先将他放前面**
-   - **如果一个ORDER BY从句和一个不同的GROUP BY从句, 或者ORDER BY or GROUP BY从句中的列不是来自联表(join)顺序中第一个表的列, 都会创建临时表**
+   - **如果一个ORDER BY从句和一个不同的GROUP BY从句,或者ORDER BY or GROUP BY从句中的列不是来自联表(join)顺序中第一个表的列, 都会创建临时表**
   #### 8.2.1.9 Outer Join Simplification
    - **在解析阶段(parse stage), 带有right join的查询会被等效转换成只带有left join的语句**
   #### 8.2.1.13 ORDER BY Optimization
@@ -52,14 +52,16 @@
   #### 8.3.7 InnoDB and MyISAM Index Statistics Collection
    - **平均值组的大小与表基数有关,表基数就是值数的数目.show index语句显示的基数值字段(cardinality)基于N/S, N为表的所有行数, S为值组的平均大小, 该比率指示着表中大约多少个值组.**
    - 对于基于<=>的join, null与其他任何值都一样: null<=>null(为true), 就像N<=>N(为true)一样.(**`<=>`操作符为比较两个变量,相同返回1不同返回0,其中对于null:只有当两个都是null才返回1,只有一个为null时返回0,而平常的`=`操作符null于其它任何值相比都是返回null**)
+   
+   
  ### 8.4 Optimizing Database Structure
   #### **8.4.1 Optimizing Data Size**
    - Table Columns
      - **如果可能声明列不为null,通过更好的使用索引并消除测试每个值是否为null的开销可加快sql的操作.如果确实需要使用null值,就使用但是避免设置默认值为null.**
    - Row Format
-      - **在mysql 5.6中,innoDB表默认使用COMPACT row存储格式(ROW_FORMAT=COMPACT)**.紧凑的行格式系列包括了COMPACT, DYNAMIC, COMPRESSED,减少了行存储空间但增加某些操作的cpu使用率.如果你的工作负载是典型的受缓存命中率和磁盘速度,则会更快;如果仅仅只是受限于cpu速度, 那么反而会更慢.
+      - **在mysql 5.6中,innoDB表默认使用COMPACT row存储格式(ROW_FORMAT=COMPACT)**.紧凑的行格式系列包括了COMPACT, DYNAMIC, COMPRESSED,(innoDB支持的行格式:COMPACT,DYNAMIC,COMPRESSED,REDUNDANT)减少了行存储空间但增加某些操作的cpu使用率.**如果你的工作负载是典型的受缓存命中率和磁盘速度,则会更快;如果仅仅只是受限于cpu速度, 那么反而会更慢.**
         - **紧凑的行格式还可以优化使用了可变长度字符集(如utf8mb3或utf8mb4时)的char列存储.如果ROW_FORMAT=REDUNDANT,则char(N)占用N x 字符集最大字节长度.许多语言主要可使用单字节utf8字符集编写, 所以一个固定的存储长度往往是浪费空间的.使用紧凑的行格式系列,InnoDB通过剥离尾部的空格, 在N到N x 该列字符集的最大字节长度的范围内分配存储长度.在典型情况下, 最小的存储长度为N字节以方便就地更新.**
-        - **要通过压缩的形式存储表数据来进一步减少空间,可在创建innoDB表时指定ROW_FORMAT=COMPRESSED,或对已存在的myisam表执行myisampack命令.(innoDB压缩表是可读写的,而myisam压缩表只能读)**  
+        - **要通过压缩的形式存储表数据来进一步减少空间,可在创建innoDB表时指定ROW_FORMAT=COMPRESSED,或对已存在的myisam表执行myisampack命令(myisam采用compressed的行格式只能有myisampack工具产生).(innoDB压缩表是可读写的,而myisam压缩表只能读)**  
   #### 8.4.2.1 Optimizing for Numeric Data
    - **对于唯一id或其他可以被表示为数字或字符串的值,数字列好于字符串列.因为大数值可以比相应的字符串存储使用更少的字节,因此使用更少内存的来传输和比较(比如存储ip使用无符号的int就够了,存取时要做个转换.php的ip2long()可将ip转为数字,long2ip()则为逆向操作)**     
   ##### 8.4.2.3 Optimizing for BLOB Types
