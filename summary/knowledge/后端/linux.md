@@ -60,13 +60,11 @@
 - free [-h|-m|-g] 查看运行内存，-h方便人阅读自动调整单位, -m以M为单位, -g以G为单位
 
 - top [-b|显示全部进程] [-n number|显示数据刷新次数] 查看进程 （按下1看cpu情况， 默认以cpu列排序,shift + < > 左右切换排序的列
-
+- iostat: 查看I/O状态
+- vmstat: 查看服务器状态包括cpu,内存,I/O等的使用情况
 - du -sh [指定目录]: 当前文件夹的大小(指定目录), -h为自动调整人便于阅读的单位
-
 - df -h: 列举各个文件大小, -h为自动调整人便于阅读的单位
-
 - chatter [-R] (+|-|=)(A|S|a|c|D|d|I|i|j|s|T|t|u): 对文件属性的更改
-
 - lscpu: 查看系统的一些信息
     
     >CPUs = Threads per core X cores per socket X sockets

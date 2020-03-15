@@ -704,7 +704,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - 随着索引的平均值组的增大, 该索引在上述的两个方面中的用途越小, 因为每次查询到的行数增加.为了使索引更好的用于优化,每个索引最好对应着数据表中比较少的行数.当一个给定的索引值对应着大量的行时,则mysql不太可能使用它.
   - **平均值组的大小与表基数有关,表基数就是值数的数目.show index语句显示的基数值字段(cardinality)基于N/S, N为表的所有行数, S为值组的平均大小, 该比率指示着表中大约多少个值组.**
   - 对于基于<=>的join, null与其他任何值都一样: null<=>null(为true), 就像N<=>N(为true)一样.(**`<=>`操作符为比较两个变量,相同返回1不同返回0,其中对于null:只有当两个都是null才返回1,只有一个为null时返回0,而平常的`=`操作符null于其它任何值相比都是返回null**)
-  - 基于=运算符的join, null与其他non-null值不相等, 当expr1或expre2为null(或两者都是)时, expr1 = expr2不为true.这会影响到ref访问以tabl_name.key = expr形式比较,如果expr值为null,则mysql不会访问表因为比较不会为真.(也就是`=`操作符,null与其它任何值相比都是返回null)
+  - 基于=运算符的join, null与其他non-null值不相等,当expr1或expre2为null(或两者都是)时, expr1 = expr2不为true.这会影响到ref访问以tabl_name.key = expr形式比较,如果expr值为null,则mysql不会访问表因为比较不会为真.(也就是`=`操作符,null与其它任何值相比都是返回null)
 - **对于=比较,表中有多少null值都无关紧要.出于优化目的,相关值是非null值组的平均大小, 目前mysql还不支持收集和使用该平均值.**
 - 对于innoDB和MyISAM表,可以通过系统变量innodb_stats_method and myisam_stats_method来控制表统计信息的收集.这两个值有以下3个可能的值:
   - nulls_equal,所有null值都会被认为相等(即它们是同一个值组)
@@ -788,7 +788,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   
 ### 8.4.3 Optimizing for Many Tables  
 #### 8.4.3.1 How MySQL Opens and Closes Tables
-- **mysql是多线程的, 所以当有许多客户端同时对一个表进行查询,为了最小化多个客户端会话对于同一张表具有不同的状态的问题,该表由于并发的会话独立打开,这会二外增加内存但通常会增加性能.对于myisam表,对于每个打开表的客户端, 打开数据文件(data file)都需要一个额外的文件描述符(相反索引文件(index file)描述符在所有会话间是共享的)** 
+- **mysql是多线程的, 所以当有许多客户端同时对一个表进行查询,为了最小化多个客户端会话对于同一张表具有不同的状态的问题,该表由于并发的会话独立打开,这会额外增加内存但通常会增加性能.对于myisam表,对于每个打开表的客户端, 打开数据文件(data file)都需要一个额外的文件描述符(相反索引文件(index file)描述符在所有会话间是共享的)** 
 - **table_open_cache和max_connections系统变量影响着服务器保持打开的最大文件的数量,如果你增加其中一个或两个值,你可能也需要提高由你操纵施加的每个进程打开的文件描述符的数量.许多操作系统都允许你增加打开文件的限制.**
 - table_open_cache: 该值与max_connections有关,比如200个并行的连接, 那么指定该值最少200*N,N为任何你要的执行查询语句中联表的最大数量, 同时你必须为临时表和文件保留额外的文件描述符
 - **对于myisam存储引擎需要注意的是,每个唯一打开的表都需要两个文件描述符.对于有分区的mysql表,每个分区都需要两个文件描述符.当mysql打开带有分区的myisam表时,都会打开所有的分区表不管查询语是否有指定分区.如要增加mysql可用的文件描述符的数量,可以设置open_files_limit.**
@@ -845,6 +845,10 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - **mysql硬性限制表最大4096列,但实际有效列可能比这小, 具体取决如下情况:**
     - 最大行大小限制了列的数量(也可能是大小)
     - 存储引擎可能施加其他的限制,**比如innoDB限制每个表最大1017列**
+    - 自己扩展:
+      - 一个表可以建多少个索引取决存储引擎.,mysiam最多64个索引,innoDB最多64个二级索引  
+      - **innoDB: 最多创建1017列,最多64个索引,单个索引最多16列,索引长度767字节,行大小最大65536字节**
+      - **myisam: 最多4096列,最多64个二级索引,单个索引最多16列,索引长度1000字节,行大小最大65536字节**
 - Row Size Limits
   - **mysql表内部表示形式最大行大小限制为65536字节(bytes),即使是存储引擎能提供更大的值也是如此.BLOB和TEXT列仅对行大小贡献9-12字节,因为它们的内容与行的其余部分分开存储**
   - innoDB(数据本地存储在一个数据页面中)的最大行大小略小于页的一半.例如,对于默认16kb的innodb页面大小(page size),最大行大小略小于8kb,该页面大小由innodb_page_size设置.
@@ -2122,10 +2126,11 @@ s)不能相互使用.
   - ibdata file是一系列名字如ibdata1,ibdata2等的文件,这一系列文件组成了innoDB的系统表空间(system tablespace).这些文件包含了innoDB表的元数据,(innoDB data dictionary(数据词典))和一个或多个的undo logs(撤消日志)、change buffer、doublewrite buffer(双写缓冲)的存储区域.这些文件包含了部分或全部表的数据(部分还是全部这取决于所有表创建时innodb_file_per_table选项是否关闭),启用innodb_file_per_table时,新建表的数据和索引将单独存储在.ibd文件中,而不是系统表空间中.ibdata文件的增长受innodb_autoextend_increment配置影响.
 - ib_logfile
   - 形成redo log(重做日志)的一组文件,通常命名为ib_logfile0和ib_logfile1.有时也被称为log group(日志组).这些文件记录着尝试更改innoDB表中数据的语句.这些语句会在系统崩溃之后的启动时自动重播(replay)以更正由不完整事务写入的数据.当然ib_logfile文件是不能被用于手动恢复的,若需要手动恢复请使用binary log.
+- innodb_log_buffer_size: innoDB用于写入到磁盘上的redo log的缓冲区大小.该值较大的话可以使大型事务可以运行，而无需在事务提交之前将日志写入磁盘。所以如果有涉及许多行的大事务,那么较大的日志缓冲区可以节省I/O.
+- innodb_log_file_size:控制redo log文件的大小,因该有信心使用较大的值,因为该值越大缓冲池中检查点(checkpoint)刷新活动就越少,这能节省I/O.当然太大的redo log会是崩溃恢复速度变慢.  
 - **key_buffer_size:缓存myisam表的索引.通常分配服务器总内存的25%是可接受的,但是也不能太高,比如超过服务器总内存的50%,你的服务器就开始分页并变得非常慢,因为mysql还依赖于操作系统为数据读取(即mysiam表的数据读取,key_buffer_size只是缓存mysiam的索引)执行文件系统缓存.为此你要留内存给文件系统缓存以及也要考虑到其他存储引擎的使用.实际要分配多少我可以show status查看,Key_blocks_unused * key_cache_block_size就是分配的key cache有多少没被用到.**  
 - LSN
   - log sequence numberde首字母缩写,这个不断增加的值表示着与重做日志(redo log)中操作记录对应的时间点.(此时间点不受事务边界限制,它可以落在一个或多个事务的中间).在崩溃恢复期间,innoDB在内部使用它来管理缓冲池.
-  
 - rollback segment
   - 一个包含撤消日志(undo logs)的存储区域.回滚段(rollback segment)传统上位于系统表空间中.从mysql5.6起回滚段可以驻留在撤消表空间(undo tablespaces)中,mysql5.7开始,回滚段也分配给全局临时表空间.  
 - secondary index

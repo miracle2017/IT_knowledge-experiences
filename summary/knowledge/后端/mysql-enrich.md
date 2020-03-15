@@ -38,7 +38,6 @@
    - Influencing ORDER BY Optimization
       - **如果想要提高order by速度,先检查下能否使用索引而不是需要额外的排序阶段(用索引不用排序),** 如果不可能,可尝试一下策略:
         - **增加sort_buffer_size系统变量值**.理想的该值应该足够大以装下整个结果集在sort buffer中(避免写入到磁盘和合并过程), 监视合并的次数(合并临时文件),**可以查看Sort_merge_passes状态变量, 如果该值很大则应考虑增加sort_buffer_size的值**
-
  ### 8.3 Optimization and Indexes
   #### 8.3.4 Column Indexes
    - Index Prefixes
@@ -68,7 +67,7 @@
    - **而不是针对一个非常长的文本字符串测试是否相等, 你可以将列值的hash值存储在一个列中并建立索引,然后在查询使用hash查找.由于hash函数可能会由不同输入值产生重复的结果,为此你仍然可以再加上and blob_colname=long_string_value来保证不会将错误结果也包含进来.** 
  ### 8.4.3 Optimizing for Many Tables  
   #### 8.4.3.1 How MySQL Opens and Closes Tables 
-   - **检查你的table cache是否太小,检查opened_tables状态变量,这指示着自服务器启动以来表打开操作的数量.如果该值很大或增加迅速,即使你没有执行许多flash table语句,那么在服务器启动时要增加table_open_cache值**
+   - **检查你的table_open_cache是否太小,检查opened_tables状态变量,这指示着自服务器启动以来表打开操作的数量.如果该值很大或增加迅速,即使你没有执行许多flash table语句,那么在服务器启动时要增加table_open_cache值(table_open_cache是所有线程能打开的表数)**
   #### 8.4.5 **Limits on Number of Databases and Tables**
    - mysql对于数据库的数量没有限制,基础文件系可能对目录数量有所限制.
    - mysql对表的数量没有限制,基础文件系统可能对文件数量有所限制;各个存储引擎可能会强加特定于引擎的约束,**innodb最多40亿张表** 
@@ -77,6 +76,11 @@
      - **mysql硬性限制表最大4096列,但实际有效列可能比这小, 具体取决如下情况:**
        - 最大行大小限制了列的数量(也可能是大小)
        - 存储引擎可能施加其他的限制,**比如innoDB限制每个表最大1017列**
+     - 自己扩展:
+       - 一个表可以建多少个索引取决存储引擎.,mysiam最多64个索引,innoDB最多64个二级索引  
+       - **innoDB: 最多创建1017列,最多64个二级索引,单个索引最多16列,索引长度767字节,行大小最大65536字节**
+       - **mysiam: 最多4096列,最多64个二级索引,单个索引最多16列,索引长度1000字节,行大小最大65536字节**
+       
    - Row Size Limits
      - **mysql表内部表示形式最大行大小限制为65536字节(bytes),即使是存储引擎能提供更大的值也是如此.BLOB和TEXT列仅对行大小贡献9-12字节,因为它们的内容与行的其余部分分开存储**
    - Row Size Limit Examples    
