@@ -79,17 +79,17 @@
      - 自己扩展:
        - 一个表可以建多少个索引取决存储引擎.,mysiam最多64个索引,innoDB最多64个二级索引  
        - **innoDB: 最多创建1017列,最多64个二级索引,单个索引最多16列,索引长度767字节,行大小最大65536字节**
-       - **mysiam: 最多4096列,最多64个二级索引,单个索引最多16列,索引长度1000字节,行大小最大65536字节**
-       
+       - **mysiam: 最多4096列,最多64个二级索引,单个索引最多16列,索引长度1000字节,行大小最大65536字节**      
    - Row Size Limits
      - **mysql表内部表示形式最大行大小限制为65536字节(bytes),即使是存储引擎能提供更大的值也是如此.BLOB和TEXT列仅对行大小贡献9-12字节,因为它们的内容与行的其余部分分开存储**
    - Row Size Limit Examples    
     - **对于myisam表, null列在行中需要占用额外的空间以记录其值是否为null,每个null列都要多加1bit,四舍五入到最近的字节.(比如一行有3个null列那么就是占用3bit舍入为1byte)**  
+    
  ### 8.5 Optimizing for InnoDB Tables
   - **一旦你的数据达到稳定大小或者增长了几十或几百兆字节,考虑使用OPTIMIZE TABLE语句重组表并压缩所有浪费的空间.重组后的表需要更少的磁盘I/O执行全表扫描.这是直接的技术**(如改善索引使用或调整程序代码)在其他技术不可行时提高性能.   
   #### 8.5.4 Optimizing InnoDB Redo Logging  
-   - 可以从以下方面考虑优化redo loggin
-     - 使你的redo log文件变大,甚至和缓冲池(buffer pool0一样大.当redo files被innoDB写满时,它必须在检查点(checkpoint)将缓冲池的已修改内存写入磁盘.小的redo log files导致许多不必要的磁盘写入.因此你应该有自信使用大的redo log file.
+   - 可以从以下方面考虑优化redo logging
+     - 使你的redo log文件变大,甚至和缓冲池(buffer pool一样大.当redo files被innoDB写满时,它必须在检查点(checkpoint)将缓冲池的已修改内存写入磁盘.小的redo log files导致许多不必要的磁盘写入.因此你应该有自信使用大的redo log file.
        - **可通过innoDB_log_file_size和innoDB_log_file_in_group系统变量分别控制redo log fiels的大小和数量.**
      - 考虑增加log buffer的大小.一个大的log buffer能够允许大事务的执行在commit前不需要将log写入到磁盘中.因此有更新,插入或删除许多行的事务增大log buffer能够节省磁盘I/O, 可通过innodb_log_buffer_size系统变量来控制log buffer大小.
   ##### 8.5.8 Optimizing InnoDB Disk I/O    

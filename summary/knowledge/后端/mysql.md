@@ -877,7 +877,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - 如果你承受一些最近提交的事务的损失,可将innodb_flush_log_at_trx_commit设置为0.无论如何,innoDB都会每秒刷新一次日志,尽管不能保证刷新成功,另还可将innodb_support_xa设置为0,这将减少由磁盘数据和二进制日志同步而导致的磁盘刷新次数.
   - 修改或删除行后,不会立即删除行和关联的undo log,甚至在提交事务后都不会立即删除.保留旧数据,直到更早或同时开始的事务完成为止,以便那些事务可以访问已修改或已删除行的先前状态.因此长时间的事务可以防止innoDB清除由其它事务更改的数据.
   - 当一个长时间的事务更改或删除了行, 其他事务使用了READ COMMITTED和REPEATABLE READ隔离水平并读取了相同的行,则需要更多的工作去重建较旧的数据.
-  - 当运行时间 长的事务修改表时,来自其他事务对该表的查询不会使用覆盖索引技术.通常可以从二级索引获取所有结果列,而不是从表数据中查找适当值的查询.如果发现二级索引页面PAGE_MAX_TRX_ID太新或者二级索引中的记录带有删除标记,innoDB可能需要使用聚簇索引查找记录
+  - 当运行时间长的事务修改表时,来自其他事务对该表的查询不会使用覆盖索引技术.通常可以从二级索引获取所有结果列,而不是从表数据中查找适当值的查询.如果发现二级索引页面PAGE_MAX_TRX_ID太新或者二级索引中的记录带有删除标记,innoDB可能需要使用聚簇索引查找记录
   
 #### 8.5.3 Optimizing InnoDB Read-Only Transactions 
 - innoDB可以避免与已知为已读的事务设置ID(TRX_ID字段)相关的开销.仅对可能执行写操作或锁定读取的事务(例如select ... for update),才需要事务ID.消除不必要的事务ID,可以减少每次查询或数据更改语句构造读取视图时都要查询的内部数据结构的大小.    
@@ -887,9 +887,9 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   
 #### 8.5.4 Optimizing InnoDB Redo Logging  
 - 可以从以下方面考虑优化redo loggin
-  - 使你的redo log文件变大,甚至和缓冲池(buffer pool0一样大.当redo files被innoDB写满时,它必须在检查点(checkpoint)将缓冲池的已修改内存写入磁盘.小的redo log files导致许多不必要的磁盘写入.因此你应该有自信使用大的redo log file.
-    - **可通过innoDB_log_file_size和innoDB_log_file_in_group系统变量分别控制redo log fiels的大小和数量.**
-  - 考虑增加log buffer的大小.一个大的log buffer能够允许大事务的执行在commit前不需要将log写入到磁盘中.因此有更新,插入或删除许多行的事务增大log buffer能够节省磁盘I/O, 可通过innodb_log_buffer_size系统变量来控制log buffer大小.
+  - **使你的redo log文件变大,可以和缓冲池(buffer pool)一样大(redo log是物理备份,他存储的是数据页的更改,用于崩溃时的数据恢复)**.当redo files被innoDB写满时,它必须在检查点(checkpoint)将缓冲池的已修改内存写入磁盘.小的redo log files导致许多不必要的磁盘写入.比较旧的mysql设置大的redo log在崩溃恢复时会比较慢,但是现在好了很多,因此你应该有自信使用大的redo log file.
+  - **可通过innoDB_log_file_size和innoDB_log_file_in_group系统变量分别控制redo log fiels的大小和数量.** 考虑增加log buffer的大小.一个大的log buffer能够允许大事务的执行在commit前不需要将log写入到磁盘中.因此有更新,插入或删除许多行的事务增大log buffer能够节省磁盘I/O, 可通过innodb_log_buffer_size系统变量来控制log buffer大小.
+- 扩展: [redo log和undo log解释得比较好的文章](https://juejin.im/entry/5ba0a254e51d450e735e4a1f)
 
 ##### 8.5.5 Bulk Data Loading for InnoDB Tables
 >以下的性能技巧补充了8.2.4.1 “Optimizing INSERT Statements”.章节中快速插入的一般指南
@@ -903,7 +903,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 插入多行时,使用多行插入语法可以减少客户端和服务端通讯的开销, 对于其他类型表也有效,不仅是innodb
 - 对带有自增列的表进行批量插入时,可将 set innodb_autoinc_lock_mode设置为2代替默认值1.
 - 当执行批量插入时,按照主键(PRIMARY KEY)顺序插入会更快.innoDB使用了聚簇索引,这使得按primary key顺序使用数据相对较快.对于不完全容纳在缓存池中的表,按照主键顺序批量插入尤为重要.
-- 为了将数据加载到innoDB fulltext索引中时以获得以获最佳性能,请遵循以下步骤:
+- 为了将数据加载到innoDB fulltext索引中时以获最佳性能,请遵循以下步骤:
   1. 创建表时创建一列fts_doc_id(bigint unsigned not null格式), 并对其创建一个唯一索引FTS_DOC_ID_INDEX; 代码例子如下:
     `CREATE TABLE t1 (
      FTS_DOC_ID BIGINT unsigned NOT NULL AUTO_INCREMENT,
