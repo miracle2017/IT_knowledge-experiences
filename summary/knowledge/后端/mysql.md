@@ -2380,7 +2380,7 @@ mysqli_multi_query()   :执行多条语句
     - timestamp: 5.6.4前: 4字节, 5.6.4后: 4字节 + 小数部分存储所需的字节; 取值范围到2038年 
     - note:
       - 5.6.4后datetime变得更加高效,只需要5字节不是之前的8字节.
-      - 定义时间的小数精度: datetime(2)为指定小数部分2位,需要注意的是datetime(0)和普通的datetime一样,即是没有小数部分,所以小数部分是不占用字节数的即可理解为0字节.  
+      - 定义时间的小数精度: datetime(2)为指定小数部分2位,需要注意的是datetime(0)和普通的datetime一样,即没有小数部分,所以小数部分是不占用字节数的即可理解为0字节.  
       
     
 ## Mysql工具使用集合
@@ -2464,3 +2464,7 @@ b字段有索引时能用到索引,mysql能快速定位要更新的位置速度�
 - mysql5.6和mysql5.7区别
   - 5.7以前使用mysql_install_d初始化数据目录, 5.7起使用mysqld的initialize
   
+## mysql实战语句
+ - 分组并获取每组的最大值, 最小值,前N行,后N行? 
+   [分组取前N条-参考](https://blog.csdn.net/junzi528/article/details/84404412)  
+   [mysql分组取最大(最小、最新、前N条)条记录](https://www.cnblogs.com/fps2tao/p/9041175.html)

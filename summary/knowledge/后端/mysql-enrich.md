@@ -39,7 +39,7 @@
       - **如果想要提高order by速度,先检查下能否使用索引而不是需要额外的排序阶段(用索引不用排序),** 如果不可能,可尝试一下策略:
         - **增加sort_buffer_size系统变量值**.理想的该值应该足够大以装下整个结果集在sort buffer中(避免写入到磁盘和合并过程), 监视合并的次数(合并临时文件),**可以查看Sort_merge_passes状态变量, 如果该值很大则应考虑增加sort_buffer_size的值**
  ### 8.3 Optimization and Indexes
-  #### 8.3.4 Column Indexes
+  #### 8.3.4 Column Indexes 
    - Index Prefixes
      当有一个字符串列col_name(N),你可以只索引前N个字符,这样会使索引更小.当你对BLOB或TEXT列作索引时, 你必须指定索引前缀长度.**索引最长可达到1000字节(bytes)(innoDB最大767bytes,但系统变量innodb_large_prefix被设置后可以更大).** **前缀限制的长度以字节为单位, 而create table, alter table和create index语句的前缀长度被解释为非二进制字符串类型的字符数和二进制字符串类型.所以在为多字节集的非二进制字符串列指定前缀长度时,需要考虑到这点.**
    - FULLTEXT Indexes
@@ -96,7 +96,7 @@
    - 增加buffer pool大小
       - **通过innodb_buffer_pool_size设置,此内存区域非常重要,因此建议配置为系统的50%-75%.**
  ### 8.6 Optimizing for MyISAM Tables
- >**由于表锁定限制了同时更新的能力,因此myisam存储引擎在以只读数据为主要或低并发操作方面表现最佳.** 
+ >**由于表锁定限制了同时更新的能力,因此myisam存储引擎在以只读数据为主要或低并发操作方面表现最佳.**   
   #### 8.6.1 **Optimizing MyISAM Queries**
   - **在加载数据后使用ANALYZE TABLE或myisamchk --analyze,这将为每个索引部分更新上一个值**,该值指示着具有相同值的平均行数.在不是恒定表达式(nonconstant express)的表join中优化器使用该值决定使用哪个索引.
   - **根据某个索引对数据和索引进行排序这会使得如果有一个唯一索引要从中按顺序读取所有的行的查询更快;** myisamchk --sort-index --sort-records=1(sort-index为将索引树按高低顺序排序,sort-records则是将表行记录按索引号排序.假设你要对索引号为1的索引进行排序,索引号可从show index语句获得)
