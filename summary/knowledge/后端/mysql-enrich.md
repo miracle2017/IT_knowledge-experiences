@@ -103,7 +103,7 @@
   - mysql支持并发插入数据,如果表的数据文件中间没有空闲块(free block),则可以在其他线程正在读取数据的同时,向其中插入新行.如果能够做到这一点对于你很重要,那么请考虑避免删除表行,**另一个可能就是当你删除许多行后使用OPTIMIZE TABLE语句整理碎片.通过设置concurrent_insert系统变量可以控制并发插入行的行为,该变量可采用如下的值:**
   - **使用alter table table_name order by expr1, expr2,...对表进行按照索引的顺序将数据进行排序,这样会有利于后续你查询数据时以expr1,expr2..的顺序查询**(expr格式字段名加上可选的顺序(asc,desc)默认asc,比如alter table a order by c desc就是将表的数据行按照表的c字段降序,但之后的插入和更新的数据不一定还按这个顺序的)
   - **定期的执行OPTIMIZE TABLE语句避免动态格式的myisam表碎片化.**
-  - **使用DELAY_KEY_WRITE=1选项声明在建myisam表时(该选项有仅适用于myisam),可以加快是索引更新更快因为在关闭表时才会将索引的更新刷新到磁盘**.
+  - **使用DELAY_KEY_WRITE=1选项声明在建myisam表时(该选项有仅适用于myisam),可以加快是索引更新更快因为在关闭表时才会将索引的更新刷新到磁盘**. 
   
  ### 8.8 Understanding the Query Execution Plan 
   #### 8.8.1 Optimizing Queries with EXPLAIN
@@ -116,9 +116,11 @@
  ### 8.10 Buffering and Caching   
   #### 8.10.2 The MyISAM Key Cache
    - **为了最小化磁盘I/O,myisam存储引擎,它使用了缓存机制将最常访问的表块数据保留在内存中.**
-     - **对于index block(索引块),由于一种叫key cache(or key buffer)的特殊结构维护**
+     - **对于index block(索引块),由于一种叫key 
+     (or key buffer)的特殊结构维护**
      - **对于数据块(data block),myslq没使用特殊的缓存.相反,它们依赖于本机操作系统文件系统缓存.**
-   - **通常的mysql服务器遵循LRU(Least Recently Used)策略(最近最少使用),当选择一块作为替换对象时,它选择最近最少使用的索引块.为了使选择变得简单, key cache module维护着所有使用过的块在一个由使用的次数排序的特殊列表(LRU chain).当一个块访问时,它是最近访问所以放置到列表底部;当需要一个块被替换时,最经常使用的块置于该列表的底部,而该列表的开头成为第一个驱逐的候选者.**
+   - **通常的mysql服务器遵循LRU(Least Recently Used)策略(最近最少
+   使用),当选择一块作为替换对象时,它选择最近最少使用的索引块.为了使选择变得简单, key cache module维护着所有使用过的块在一个由使用的次数排序的特殊列表(LRU chain).当一个块访问时,它是最近访问所以放置到列表底部;当需要一个块被替换时,最经常使用的块置于该列表的底部,而该列表的开头成为第一个驱逐的候选者.**
 
   ##### **8.10.2.2 Multiple Key Caches**
    - **对于key cache的共享访问并不能消除会话间的竞争关系.为了减少这种key cache访问的竞争,mysql提供了多个key caches,即允许将不同的表索引分配到不同的key caches.默认的,所有myisam表的indexs都被缓存(cache)在同一个key cache上.你可以使用cache index table_name[,table_name] in key_cache_name语句为表索引分配到指定名字的key cache上,同时还可以设置其大小.(ps:load index into cache tab_index_list则是将表索引预先加载到刚cache index语句指定的key_cache_name上).当有一个key cache被销毁时,所有分配到这上的所有索引都将被重新分配到默认的key cache上.**
@@ -148,6 +150,7 @@
    - **仅有myisam表完全支持符号链接.对于其他引擎使用的表文件,如果使用软链接可能会有奇怪的问题.innoDB表如果想要将表放置不同磁盘位置可以用create table的DATA DIRECTORY从句代替软链接而达到这个目的. `SHOW VARIABLES LIKE 'have_symlink';` 查看是否支持或开启软链接**
  ### 8.13 Measuring Performance (Benchmarking)
   #### 8.13.1 Measuring the Speed of Expressions and Functions
+  
    - **测试mysql执行一个表达或函数的速度, 可以使用 select BENCHMARK(count,expr);表示expr重复执行count次.**  
   #### **8.13.2 The MySQL Benchmark Suite**
    - 免费的开源数据库基准测试工具:http://osdb.sourceforge.net/
