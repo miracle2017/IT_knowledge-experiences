@@ -156,7 +156,7 @@
 - profiling: 
 - query_cache_limit:如果一个查询结果超过此字节数(byte),则不会缓存.
 - query_cache_size:
-- query_cache_type:
+- **query_cache_type:开启查询缓存,0为禁止,1为开启,2为根据sql指示决定是否开启缓存语句**
 - query_prealloc_size
 - **read_only:当该设置开启时,mysql服务器不会允许任何客户端更新操作除了超级用户.但即使该值开启,mysql服务器仍然允许如下操作:**
   - 由从线程(slave threads)执行的更新,**如果是从服务器上,则开启read_only很有帮助这能确保从服务器只接受主服务器的更新而不是其他客户端的.**

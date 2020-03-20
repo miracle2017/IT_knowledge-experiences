@@ -61,12 +61,12 @@
       - **在mysql 5.6中,innoDB表默认使用COMPACT row存储格式(ROW_FORMAT=COMPACT)**.紧凑的行格式系列包括了COMPACT, DYNAMIC, COMPRESSED,(innoDB支持的行格式:COMPACT,DYNAMIC,COMPRESSED,REDUNDANT)减少了行存储空间但增加某些操作的cpu使用率.**如果你的工作负载是典型的受缓存命中率和磁盘速度,则会更快;如果仅仅只是受限于cpu速度, 那么反而会更慢.**
         - **紧凑的行格式还可以优化使用了可变长度字符集(如utf8mb3或utf8mb4时)的char列存储.如果ROW_FORMAT=REDUNDANT,则char(N)占用N x 字符集最大字节长度.许多语言主要可使用单字节utf8字符集编写, 所以一个固定的存储长度往往是浪费空间的.使用紧凑的行格式系列,InnoDB通过剥离尾部的空格, 在N到N x 该列字符集的最大字节长度的范围内分配存储长度.在典型情况下, 最小的存储长度为N字节以方便就地更新.**
         - **要通过压缩的形式存储表数据来进一步减少空间,可在创建innoDB表时指定ROW_FORMAT=COMPRESSED,或对已存在的myisam表执行myisampack命令(myisam采用compressed的行格式只能有myisampack工具产生).(innoDB压缩表是可读写的,而myisam压缩表只能读)**  
-  #### 8.4.2.1 Optimizing for Numeric Data
+  ##### 8.4.2.1 Optimizing for Numeric Data
    - **对于唯一id或其他可以被表示为数字或字符串的值,数字列好于字符串列.因为大数值可以比相应的字符串存储使用更少的字节,因此使用更少内存的来传输和比较(比如存储ip使用无符号的int就够了,存取时要做个转换.php的ip2long()可将ip转为数字,long2ip()则为逆向操作)**     
   ##### 8.4.2.3 Optimizing for BLOB Types
    - **而不是针对一个非常长的文本字符串测试是否相等, 你可以将列值的hash值存储在一个列中并建立索引,然后在查询使用hash查找.由于hash函数可能会由不同输入值产生重复的结果,为此你仍然可以再加上and blob_colname=long_string_value来保证不会将错误结果也包含进来.** 
- ### 8.4.3 Optimizing for Many Tables  
-  #### 8.4.3.1 How MySQL Opens and Closes Tables 
+ #### 8.4.3 Optimizing for Many Tables  
+   #### 8.4.3.1 How MySQL Opens and Closes Tables 
    - **检查你的table_open_cache是否太小,检查opened_tables状态变量,这指示着自服务器启动以来表打开操作的数量.如果该值很大或增加迅速,即使你没有执行许多flash table语句,那么在服务器启动时要增加table_open_cache值(table_open_cache是所有线程能打开的表数)**
   #### 8.4.5 **Limits on Number of Databases and Tables**
    - mysql对于数据库的数量没有限制,基础文件系可能对目录数量有所限制.
@@ -133,7 +133,7 @@
   #### 8.10.3 The MySQL Query Cache
    - **查询缓存将select语句和对应的发送到客户端的结果存储起来.以便后续有相同查询语句时可以直接从查询缓存获取而不必再解析执行.这对于表没有经常改而又经常用相同语句取数据的环境很有帮助.查询缓存不会返回陈旧的数据,当表被更改时,则对应的查询缓存条目都将被刷新.** **分区表不支持查询缓存,涉及分区表的查询将自动禁止查询缓存.**
   #### **8.10.3.2 Query Cache SELECT Options**
-   - **查询语句中可以指定两个与查询缓存相关的选项**
+   - **查询语句中可以指定两个与查询缓存相关的选项** query_cache_type控制缓冲语句是否开启 
      - SQL_CACHE
      - SQL_NO_CACHE 
  ### 8.11 Optimizing Locking Operations   
