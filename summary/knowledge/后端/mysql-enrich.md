@@ -157,3 +157,69 @@
    - 基准测试
      - **mysqlslap(mysql自带的)**
      - 其他如SysBench或DBT2; 
+     
+## Chapter 13 SQL Statements
+### 13.1.13 CREATE INDEX Statement 
+- Index Options
+  - **每个存储引擎支持的索引类型**
+    - innoDB: BTREE
+    - MYISAM：BTREE
+    - MEMORY/HEAP:HASH,BTREE
+    - NDB: HASH/BTREE
+- Table Options
+  - **ENGINE**
+    - innoDB:具有行锁和外键的事务安全表
+    - MyISAM:
+    - MEMORY:
+    - CSV:以逗号分隔值格式存储行的表
+    - ARCHIVE: 
+    - EXAMPLE:
+    - FEDERATED:访问远程表的存储引擎.
+    - HEAP:MEMORY表的同义词
+    - MERGE:myisam的集合用作一张表.也称为MRG_MyISAM.
+    - NDB:群集的，基于内存的容错表，支持事务和外键。也称为NDBCLUSTER     
+
+#### 13.1.16 CREATE SERVER Statement    
+- Indexes and Foreign Keys
+  - PRIMARY KEY
+    - **主键是not null的唯一索引,如果没有显示指定not null则mysql会静默的设置为not null.一个表只能有一个主键,主键的名称始终为primary,所以primary不能用作其他索引的名称.主键可以是多列的**.    
+  - FOREIGN KEY
+    - **仅innoDB存储引擎支持外键,innoDB的分区表不支持外键**  
+    
+#### 13.1.33 TRUNCATE TABLE Statement
+- **TRUNCATE TABLE语句将完全的清空表,需要drop权限.逻辑上,TRUNCATE TABLE操作类似于删除了所有行的delete操作,或drop table然后再create table的操作.但是为了更好的性能,它绕过了删除数据的DML方法,所有它无法被回滚,也不会触发on delete触发器,也不能用于具有父子外键关系的innoDB表.**
+- **TRUNCATE TABLE虽类似于delete,但被归类于DDL,而不是DML;它与delete有如下不同:**
+  - **TRUNCATE TABLE语句drop再re-create表,这比一行行的删除表更快,特别是大表**
+  - **TRUNCATE TABLE导致隐私的提交,且无法回滚**
+  - **AUTO_INCREMENT重为开始值,即使是innoDB和myisam表也是.** 
+  - **对于分区表,TRUNCATE TABLE语句会保留分区;也就是说数据和索引文件会被删除并重新创建,而分区定义文件(.par)不受影响.**   
+  
+#### 13.3.2 Statements That Cannot Be Rolled Back
+- **有些语句无法被回滚.通常,这些包含数据定义语句(DDL),如表的create或drop,创建,删除或更改表或存储例程(procedures and functions)的语句.你应该设计你的事务不能包含这些语句.**
+
+##### 13.7.2.4 OPTIMIZE TABLE Syntax
+>reorganizes the physical storage of table data and associated index date, to reduce storage space and improve I/O efficiency
+- **支持的存储引擎: InnoDB,MyISAM,ARCHIVE**     
+
+### 14.1.2 Best Practices for InnoDB Tables
+- **不要使用lock tables语句.innoDB能处理多个会话的对于同个表的同时读和写.如果要获取一组行的排他性写访问权限,请使用select ... for update语法锁定要更新的行.**
+
+#### 14.5.1 Buffer Pool
+- **可使用SHOW ENGINE INNODB STATUS语句来查看innoDB标准监视输出,
+
+### 14.5.2 Change Buffer    
+- 自己理解总结:**change buffer就是缓存那些对二级索引页面的更改且这些页面没有在缓冲池中(因为这些页面没有在缓冲池中所以没办法直接合并),当后面有读操作将相关的页面读取到缓冲池时才合并.更新的页面会后面刷新(flush)到磁盘中**
+
+##### 14.6.2.1 Clustered and Secondary Indexes
+- 每个innoDB表都有一个特殊的索引称为聚簇索引(clustered index),用于存储行数据.通常地,**聚簇索引与主键是同义的.**
+  - 当你为表定义一个主键时,innoDB使用它作为聚簇索引.
+  - 如果你没有为表定义一个主键,则mysql会定位第一个所有键列都为not null的唯一索引(unique index)并且innoDB将该唯一索引作为聚簇索引.
+  - 如果一个表没有主键和合适的唯一索引(所有键列都为not null的唯一索引),innoDB内部会在包含行ID的合成列上产生一个隐藏的聚簇索引名为GEN_CLUST_INDEX.这些行由innoDB分配给此表中的行ID排序.行ID是一个6字节的字段,随着插入新行而单调增加.因此,按行ID排序实际上是为插入的顺序.
+  
+##### 14.6.3.1 The System Tablespace
+- **系统表空间(system tablespaces)是一个存储innoDB数据字典(data dictionary),双写缓冲区(doublewrite buffer),更改缓冲区(change buffer),撤消日志(undo log).此外,它还可能包含包表和索引数据(即该表是在file-per-table选项关闭情况下创建的,所有表和索引数据都包含在系统表空间内).系统表空间位于mysql的data目录下,名称类似ibdata1,ibdata2(系统表空间可以有多个文件).系统表空间数据文件的数量和大小由innodb_data_file_path在mysql启动时定义的.**
+
+#### 14.17.2 Enabling InnoDB Monitors  
+- **当innoDB监视器被开启时,innoDB大约每15秒会将结果写入mysql服务器的标准错误输出(stderr)中.开启的方式如下2种**
+  - 创建一个名为innodb_monitor的innoDB表.
+  - **开启innodb_status_output或innodb_status_output_locks系统变量,前者变量为InnoDB Standard Monitor out,后者为Lock Monitor Output,区别就是后者比前者多了关于lock的信息**

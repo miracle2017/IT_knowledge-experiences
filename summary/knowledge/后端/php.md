@@ -76,6 +76,8 @@
 
 - str_pad()			补齐字串长度
 
+- base_convert(number,frombase,tobase): 不同进制的相互转换
+
 字符串编码转换：
 
 - mb_convert_encoding($string, $to_encoding [, $from_encoding]) : 例如 mb_convert_encoding($string, 'UTF-8', 'GBK');

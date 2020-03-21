@@ -402,7 +402,7 @@ user表中设置全局的基础权限, 比如授权了全局的delete权限,那�
 修改当前用户密码: set password = password("password")
 用户授权: GRANT all on "." to "username"@"hostname"
 撤销权限: revoke all on "." from "username"@"hostname"
-显示用户权限: show grants for "username"@"hostname"
+**显示用户权限: show grants for "username"@"hostname"**
 
 #### 6.2.8 When Privilege Changes Take Effect
 修改权限表何时生效? 
@@ -1245,7 +1245,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 当将二进制数据插入到字符串列时(例如BLOB列),有些字符需要使用转义序列表示,\和用于引字符串的引号必须转义.在某些客户端环境中需要转义nul和Control+Z.mysql会截断引号字符串中nul字符,在window上,Control+Z可能会被当作是END-OF-FILE.
 
 #### 9.1.2 Numeric Literals
-- 数字包含精确的值(整数和DECIMAL)和近似值(浮点).精确值可能包含整数或小数部分,或者两个都有(如果.2,3.4,-5.5).用科学记数法表示的带有尾数和指数是近视值数字(如1.2E3, 1.2E-3)
+- **数字包含精确的值(整数和DECIMAL)和近似值(浮点).精确值可能包含整数或小数部分**,或者两个都有(如果.2,3.4,-5.5).用科学记数法表示的带有尾数和指数是近视值数字(如1.2E3, 1.2E-3)
 - 两个数字看似相似但是被不同对待,如2.34是精确值(定点(fixed-point))而2.34E0是近似值(浮点(floating-point)).
 - DECIMAL数据类型是定点类型(fixed-point)计算精确,也称为NUMERIC,DEC,FIXED; double和float数据类型是浮点类型(floating-point),计算值是近似的.
 - 在浮点上下文中使用整数,它被解释为等效的浮点数.
@@ -1265,7 +1265,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 在数字上下文中,位值(bit-value)被视为整数.为了确保被当作数字对待,可以加上0或使用CAST(... AS UNSIGNED)将其转化为unsigned.
 
 ####　9.1.6 Boolean Literals
-- 常量true和false被评估为1和0,常量的名字可以用任何字母大小书写.
+- **常量true和false被评估为1和0,常量的名字可以用任何字母大小书写.**
 
 #### 9.1.7 NULL Values
 - NULL值表示无数据.null可以用任何大小写字母书写.其同义词是\N(大小敏感).
@@ -1273,7 +1273,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - 为了处理null值,可以使用is null, is not null运算符和IFNULL()函数.
   - null与其他任何值(null与null结果也不是true)比较都不会是true.
   - 表达式中包含null,结果永远都是null(如1+null结果还是null)(除非表达式中涉及的操作符和函数在文档有明确指出其他情况)
-  - 聚合函数(如果sum(),count(),max()等)会对null值忽略.count()例外,它计算的是行值而不是列值.举个例子, count(*)和count(age)可能会产生不同的结果,前者计算表的行数而后者计算age列非null行的行数.
+  - 聚合函数(如果sum(),count(),max()等)会对null值忽略.count()例外,它计算的是行值而不是列值.举个例子, __count(*)和count(age)可能会产生不同的结果,前者计算表的所有行数而后者计算age列非null行的行数__.
 - 对于使用LOAD DATA或SELECT ... INTO OUTFILE执行的文本文件导入或导出操作，NULL使用\N表示.
 - **在ORDER BY操作中,NULL值在升序中排在所有数据之前,在降序中排在所有数据之后.**
 
@@ -1299,7 +1299,6 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 数据库和表名标识符可以使用任何字符除了ascii NUl(X'00')
 
 #### 9.2.5 Function Name Parsing and Resolution
-
 - Function Name Resolution
   - 自定义函数和存储函数在同一个命名空间,所以自定义函数和存储函数创建的名称不能相同.
 
@@ -1316,14 +1315,14 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 用户变量不能直接在sql语句中作为标识符或者标识符的一部分.(例如用作表名,数据库名,或保留关键字如select都是不行),即使是加了quote也不行..当时对于该原则有个例外是当你构建字符串以用在预处理语句( prepared statement)中.
 
 ### 9.5 Expressions
-- Temporal Intervals(时间间隔)
+- **Temporal Intervals(时间间隔)**
   - 时间间隔的语法:INTERVAL expr unit;expr表示数量,unit为单位,时间间隔常用于某些函数,如果DATE
   _ADD(),DATE_SUB();时间间隔表达式还可以用在与日期或日期时间的+,-操作(时间间隔为位于+左右两边都可以,在-运算中只能位于右边)
 
 ### 9.6 Comment Syntax
 - mysql支持3中注释样式:
   - 从#到行尾
-  - 从--到行尾,-- 后面必须仅跟着至少一个空格或控制字符(如果空格,tab等)
+  - 从--到行尾,-- 后面必须仅跟着至少一个空格或控制字符(如空格,tab等)
   - 从/*和*/间
 - 默认的嵌套注释是不被支持(即使在某些情况下可能可以,但用户应该避免使用嵌套注释)
 - 对/*![version]  MySQL-specific code */形式的注释,其他sql语言会忽略,但是mysql会执行其中的语句,如果指定了version,则表示mysql版本大等于该版本才执行.
@@ -1338,8 +1337,8 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - Character Set Conversion
   - 当character set有变化时, binary collation的字符串的值不会改变
 - Lettercase Conversion
-  nobinary string的collation提供字母大小信息, 而二进制字符串没有
-  如使用 select upper(binary 'aZ'); 结果还是 'aZ', upper要生效需将collation转换为非二进制的
+  **nobinary string的collation提供字母大小信息, 而二进制字符串没有
+  如使用 select upper(binary 'aZ'); 结果还是 'aZ', upper要生效需将collation转换为非二进制的**
 
 - Trailing Space Handling in Comparisons
   - 进行比较时,nobinary string会裁掉尾部的空格, select 'a' = 'a  '结果是1.
@@ -1357,7 +1356,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 浮点(float-point)为大约值(如float,double等),定点(fixed-point)为精确值(如int,decimal等).
 
 ### **11.7 Data Type Storage Requirements**
-- **数据类型存储所需的空间,重要手册**, [链接](https://dev.mysql.com/doc/refman/8.0/en/storage-requirements.html)
+- **数据类型存储所需的空间,重要的手册**, [链接](https://dev.mysql.com/doc/refman/8.0/en/storage-requirements.html)
 
 
 ## Chapter 13 SQL Statements
@@ -1391,13 +1390,13 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - Full-Text Indexes
   - 全文索引只支持innoDB和myisam表,并且只能是char,varchar,text列.索引总是索引整列,所以不支持前缀索引,若指定了将忽略.
 - Index Options
-  - 每个存储引擎支持的索引类型
+  - **每个存储引擎支持的索引类型**
     - innoDB: BTREE
     - MYISAM：BTREE
     - MEMORY/HEAP:HASH,BTREE
     - NDB: HASH/BTREE
 - Table Options
-  - ENGINE
+  - **ENGINE**
     - innoDB:具有行锁和外键的事务安全表
     - MyISAM:
     - MEMORY:
@@ -1411,7 +1410,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - COMMENT: 表注释,最大2048字符
   - INSERT_METHOD:仅适用于MERGE表.定义怎么插入行,取值first,last,no分别表示插入表前,表后,和防止插入.
   - STATS_AUTO_RECALC
-      - 指定是否为一个innoDB表重新计算统计持久信息,该值为`default`时,则一个表的持久统计信息设置由innodb_stats_auto_recalc决定(该值为1时: 当innoDB表的10%被更改时则重新计算统计信息;该值为0:防止自动计算表统计信息,所以你要手动执行analyze table语句以重新计算统计信息)
+      - 指定是否为一个innoDB表重新计算统计持久信息,该值为`default`时,**则一个表的持久统计信息设置由innodb_stats_auto_recalc决定(该值为1时: 当innoDB表的10%被更改时则重新计算统计信息;该值为0:防止自动计算表统计信息,所以你要手动执行analyze table语句以重新计算统计信息)**
   - STATS_PERSISTENT
       - 是否为innoDB表开启持久统计信息(即存入到磁盘),该值为`default`时,则是否开启持久统计信息取决于 innodb_stats_persistent系统变量(该值1表示开启,0为关闭)
   - STATS_SAMPLE_PAGES  
@@ -1419,14 +1418,13 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 
 ##### 13.1.17.1 CREATE TABLE Statement Retention
 - 创建表时,原始的create table语句(包含所有规范和表选项)都将被mysql存储起来,以便使用ALTER TABLE语句改变表存储引擎等其他信息时,之前指定的表选项还能保留着.
-- 由于是保存的是原始语句的文本.但是由于某些值或选项可以被静默的重新配置(如row_format),所以活动表的定义(通过describe或show table status获取)和表创建的字符串(通过SHOW CREATE TABLE获取)得到的值可能会有所不同. 
+- **由于是保存的是原始语句的文本.但是由于某些值或选项可以被静默的重新配置(如row_format),所以活动表的定义(通过describe或show table status获取)和表创建的字符串(通过SHOW CREATE TABLE获取)得到的值可能会有所不同**.
     
-
 #### 13.1.16 CREATE SERVER Statement
 - Column Data Types and Attributes
   - AUTO_INCREMENT
-    - 每个表只能有一个自增列且必须被索引;不能有默认值;自增列仅在只包含正值的情况才能正常工作.
-    - 对于myisam表,可以指定为多个索引的第二列设置AUTO_INCREMENT,则该自增值会根据第一列相同值为一组各自自增.(如果有其他索引将该自增列列为第一个那么就不会按组了)
+    - **每个表只能有一个自增列且必须被索引**;不能有默认值;自增列仅在只包含正值的情况才能正常工作.
+    - **对于myisam表,可以指定为多个索引的第二列设置AUTO_INCREMENT,则该自增值会根据第一列相同值为一组各自自增.(如果有其他索引将该自增列列为第一个那么就不会按组了)**
   - comment 
     - 对于每一列的注释最大长度为1024字符(characters)
   - COLUMN_FORMAT
@@ -1435,17 +1433,17 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
     - 只能用于NDB存储引擎.可选择STORAGE DISK和STORAGE MEMORY.
 - Indexes and Foreign Keys
   - PRIMARY KEY
-    - 主键是not null的唯一索引,如果没有显示指定not null则mysql会静默的设置为not null.一个表只能有一个主键,主键的名称始终为primary,所以primary不能用作其他索引的名称.主键可以是多列的.
+    - **主键是not null的唯一索引,如果没有显示指定not null则mysql会静默的设置为not null.一个表只能有一个主键,主键的名称始终为primary,所以primary不能用作其他索引的名称.主键可以是多列的**.
     - 如果表没有主键,则当应用程序要查询主键时则返回没有NULL列的第一个UNIQUE索引作为主键.
     - 在创建表时,按照主键第一,紧接着唯一索引然后非唯一索引位置来,这样有助于优化器确定哪个索引优先使用和更快检测重复的unique keys.
     - 表中有主键或unique not null索引时,且该索引由整数类型的单列组成,则可以在select语句中使用_rowid来引用索引列(index column)
     - 主键名字为primary,其他索引如果没有指定名字则用索引第一个列作为名字.
   - KEY | INDEX
-    - 通常key是index的同义词.
+    - **通常key是index的同义词.**
   - unique
     - 对于所有引擎,允许包含null的列的唯一索引允许存在多个null.如果为列值的前缀加唯一索引,则在该前缀长度内列值必须唯一.
   - FOREIGN KEY
-    - 仅innoDB存储引擎支持外键,innoDB的分区表不支持外键
+    - **仅innoDB存储引擎支持外键,innoDB的分区表不支持外键**
 
 #### 13.1.17.2 Files Created by CREATE TABLE    
 - mysql通过数据目录中的.frm表格式(表定义)文件表示每表.存储引擎可能还会创建其他文件.
@@ -1462,12 +1460,12 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - TEMPORARY表仅在当前会话中可见(其他会话不可见),会话结束后自动删除,TEMPORARY表与数据库的关系非常松散。删除数据库不会自动删除该库中创建的任何TEMPORARY表,
 
 #### 13.1.17.4 CREATE TABLE ... LIKE Statement    
-- 使用CREATE TABLE ... LIKE语句根据另外一个表的定义(包含原表中定义的任何列属性和索引)来创建一个空表.like仅使用于基表(base),不合适视图表(views).不会保留原表的DATA DIRECTORY,INDEX DIRECTORY,外键选项.
+- **使用CREATE TABLE ... LIKE语句根据另外一个表的定义(包含原表中定义的任何列属性和索引)来创建一个空表**.like仅使用于基表(base),不合适视图表(views).不会保留原表的DATA DIRECTORY,INDEX DIRECTORY,外键选项.
 - 如果原表是TEMPORARY表,该语句不会存为TEMPORARY表,要保存为TEMPORARY表使用CREATE TEMPORARY TABLE ... LIKE语句.
 - 重要提示: 当lock table有效时,不能执行CREATE TABLE或CREATE TABLE ... LIKE. CREATE TABLE ... LIKE.不仅仅是复制.frm文件,这意味着如果当前的sql mode和创建原表的有效模式不同时,则该表定义可能被认为对当前模式无效,并且该语句可能失效,
 
 #### 13.1.17.5 CREATE TABLE ... SELECT Statement
-- 根据另一个表创建一个表(包含了原表的数据),在CREATE TABLE后面可以指定增加新列.如果在复制数据到表中时出现错误,则会将其自动删除而不会创建.select语句可以是复杂语句如联表
+- **根据另一个表创建一个表(包含了原表的数据),在CREATE TABLE后面可以指定增加新列.如果在复制数据到表中时出现错误,则会将其自动删除而不会创建.select语句可以是复杂语句如联表**
 - CREATE TABLE ... SELECT Statement不会自动创建索引,需要自行指定.(这是故意为之,以便更灵活的设置)
 - 某些数据类型可能会发生转变.例如不保留auto_increment属性,varchar可能会变为char.
 
@@ -1520,15 +1518,15 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 任何为旧表或旧视图授权的任何特权都不会迁移到新的当中,这需要手动更改.
 
 #### 13.1.33 TRUNCATE TABLE Statement
-- TRUNCATE TABLE语句将完全的清空表,需要drop权限.逻辑上,TRUNCATE TABLE操作类似于删除了所有行的delete操作,或drop table然后再create table的操作.但是为了更好的性能,它绕过了删除数据的DML方法,所有它无法被回滚,也不会触发on delete触发器,也不能用于具有父子外键关系的innoDB表.
-- TRUNCATE TABLE虽类似于delete,但被归类于DDL,而不是DML;它与delete有如下不同:
-  - TRUNCATE TABLE语句drop再re-create表,这比一行行的删除表更快,特别是大表
-  - TRUNCATE TABLE导致隐私的提交,且无法回滚
+- **TRUNCATE TABLE语句将完全的清空表,需要drop权限.逻辑上,TRUNCATE TABLE操作类似于删除了所有行的delete操作,或drop table然后再create table的操作.但是为了更好的性能,它绕过了删除数据的DML方法,所有它无法被回滚,也不会触发on delete触发器,也不能用于具有父子外键关系的innoDB表.**
+- **TRUNCATE TABLE虽类似于delete,但被归类于DDL,而不是DML;它与delete有如下不同:**
+  - **TRUNCATE TABLE语句drop再re-create表,这比一行行的删除表更快,特别是大表**
+  - **TRUNCATE TABLE导致隐私的提交,且无法回滚**
   - 如果有会话持有活动表锁时,则无法执行TRUNCATE TABLE
   - 对于innoDB和NDB表如果存在来自其他表的外键约束引用了该表,则执行TRUNCATE TABLE语句失败.允许在同一表的列之间使用外键约束.
   - **只要表格式文件(table_name.frm)是有效的,TRUNCATE TABLE语句就可以将表重建为一个空表即使数据文件和索引文件被损坏了.** 
-  - AUTO_INCREMENT重为开始值,即使是innoDB和myisam表也是. 
-  - 对于分区表,TRUNCATE TABLE语句会保留分区;也就是说数据和索引文件会被删除并重新创建,而分区定义文件(.par)不受影响.
+  - **AUTO_INCREMENT重为开始值,即使是innoDB和myisam表也是.** 
+  - **对于分区表,TRUNCATE TABLE语句会保留分区;也就是说数据和索引文件会被删除并重新创建,而分区定义文件(.par)不受影响.**
   - TRUNCATE TABLE不会触发on delete触发器
 - TRUNCATE TABLE可以与 Performance Schema summary tables一起使用,但结果还是将summary columns置位null或0,而不是移除行.
 
@@ -1555,7 +1553,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - DO执行表达式但不返回任何结果.在许多方面,DO是select expr方式的语句(只能是表达式,如涉及到表是不允许)的简写;所以DO会略微更快些(当你不关心结果时).
 
 #### 13.2.4 HANDLER Statement
-- HANDLER语句提供直接访问表存储引擎的接口,它适用于innoDB和myisam表.HANDLER ... OPEN打开一个表以供后续语句访问,打开的表对象不与其他会话共享,如果没有被关闭则会话结束后会被关闭.如果没有加limit修饰则都会只返回一行.
+- **HANDLER语句提供直接访问表存储引擎的接口,它适用于innoDB和myisam表**.HANDLER ... OPEN打开一个表以供后续语句访问,打开的表对象不与其他会话共享,如果没有被关闭则会话结束后会被关闭.如果没有加limit修饰则都会只返回一行.
 - 使用HANDLER代替普通的select有几个理由:
   - HANDLER比select更快
     - 指定的存储引擎处理程序对象分配HANDLER ...OPEN.该对象可被后续的HANDLER语句重复使用,不需要再初始化.
@@ -1570,10 +1568,10 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - HANDLER不支持分区表
 
 #### 13.2.5 INSERT Statement
-- ON DUPLICATE KEY UPDATE从句表示要插入的新行导致唯一索引或主键重复时,则会更新表中存在的行.
+- **ON DUPLICATE KEY UPDATE从句表示要插入的新行导致唯一索引或主键重复时,则会更新表中存在的行.**
 - default关键为列值明确指定使用默认值(如 set col_name = default),表达式default(col_name)可以获取col_name列的默认值.
-- value关键词是values关键字同义词
-- INSERT影响的行数可以使用ROW_COUNT()函数获取
+- **value关键词是values关键字同义词**
+- **INSERT影响的行数可以使用ROW_COUNT()函数获取**
 - INSERT支持一下修饰词:
   - LOW_PRIORITY: INSERT的执行将延迟,直到没有读取表为止.该选项只适合于使用表锁级别的存储引擎(如MyISAM,MEMORY,MERGE)  
     - 通常不要对myisam表怎么做因为会禁止并行插入.
@@ -1586,7 +1584,6 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 
 #### 13.2.5.2 INSERT ... ON DUPLICATE KEY UPDATE Statement
 - 通常你应该避免在有多个唯一索引表上使用该语句,因为要插入的行与现有的多行在唯一索引上冲突时,只有一行会被更新.
-
 
 #### 13.2.8 REPLACE Statement
 - REPLACE的工作方式和insert完全相同,不同之处在于如果要插入的行与表中的旧行在主键或唯一索引上重复时,则在插入新行前先删除旧行.
@@ -1602,7 +1599,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 #### 13.2.9 SELECT Statement     
 - where从句:可以使用任何mysql支持的函数和运算符,除了集合函数(having从句可以使用集合函数)
 - select语句中也可以不引用任何表(select 1+1)或引用假表(select 1+1 from DUAL) 
-- DUAL单纯就是为了方便哪些要求select应具有from从句或其他子句的情况.
+- **DUAL单纯就是为了方便哪些要求select应具有from从句或其他子句的情况.**
 - select_exp:表示要取出哪些列,为了列使用别名(为了好习惯建议加as):select_exp [AS] alias,该别名可以用于GROUP BY,ORDER BY,HAVING从句中,但不能用于where从句中(因为这时列值可能还没确定)
 - order by:没有指定默认是asc排序.order by也可以用于子查询中,但是外部查询的order by优先与内部.
 - group by: **使用group by时,输出的行将根据group by的列进行排序,就像你对该列使用order by一样,所以为了避免group by产生的排序开销,请添加order by null语句.如果有需要产生特定的顺序那么还是要指定(group by ... [asc|desc] 或order by ... [asc|desc], 两种效果是一样的)**     
@@ -1613,9 +1610,9 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - STRAIGHT_JOIN:强制优化器以from从句给定表的顺序进行联表,这在mysql优化器以非最佳顺序联表时,你可以这样强制指定来加快查询速度.
     - 一些较深的细节,此处先略过.要看原文.
   - SQL_BIG_RESULT或SQL_SMALL_RESULT:和GROUP BY或DISTINCT一起使用,该修饰符告诉优化器结果会是大还是小.对于SQL_BIG_RESULT,mysql会直接使用磁盘临时表(如果需要);对于SQL_SMALL_RESULT,mysql使用内存临时表.
-  - SQL_BUFFER_RESULT:这会将结果强制放到临时表上,以便可以更早的释放表锁定,这对于需要较长的时间将结果集发送到客户端尤为有用.该修饰词只能用于顶级的select语句,不能用于子查询语句或UNION后 
+  - **SQL_BUFFER_RESULT:这会将结果强制放到临时表上,以便可以更早的释放表锁定,这对于需要较长的时间将结果集发送到客户端尤为有用.该修饰词只能用于顶级的select语句,不能用于子查询语句或UNION后**
   - SQL_CALC_FOUND_ROWS:告诉mysql计算结果集会有多少行,而不管limit从句,该数值可使用SELECT FOUND_ROWS()获取.
-  - SQL_CACHE and SQL_NO_CACHE:表示是否缓存查询结果.
+  - **SQL_CACHE and SQL_NO_CACHE:表示是否缓存查询结果.**
   
 ##### 13.2.9.1 SELECT ... INTO Statement  
 - SELECT ... INTO语句可以将查询结果保存到变量或文件中
@@ -1625,7 +1622,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 
 ##### 13.2.9.2 JOIN Clause
 - 在mysql中,JOIN，CROSS JOIN和INNER JOIN是等效的,它们可以互相替换.
-- 单个连接(join)中最多引用61个表  
+- **单个连接(join)中最多引用61个表**  
 - 在没有连接的条件下, 逗号(,)和INNER JOIN语义上是等效的,虽然逗号(,)运算级别比inner join低.
 - 通常on从句是指示表如何连接,where从句则限制要在结果集中包含哪些行.
 - USING(join_column_list)从句:join_column_list列出的列名必须存在两个联表中(如`a LEFT JOIN b USING (c1, c2)`)
@@ -1637,7 +1634,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   2. 其次为第一个表的唯一列
   3. 最后为第二个表的唯一列
 - STRAIGHT_JOIN与join类似,不同在于左边的表总是先于右边表被读取.这可用于优化器使用的联表顺序不是最优的情况(不过这种情况很少),以指示优化器使用最优的联表顺序.
-- USING从句能被重写为指定了比较相应列的ON子句.但尽管USING和ON相似,但它们并不完全相等(在查询哪行满足条件时是相等;但是选取列可能会有不同,因为using语句是会去除重复列的)
+- USING从句能被重写为指定了比较相应列的ON子句.**但尽管USING和ON相似,但它们并不完全相等(在查询哪行满足条件时是相等;但是选取列可能会有不同,因为using语句是会去除重复列的)**
 
 ##### 13.2.9.3 UNION Clause  
 - union将来至多个select语句的结果组合成为单个结果集中.结果集的列名取至第一个select语句的列名.
@@ -1668,7 +1665,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 ##### 13.2.10.6 Subqueries with EXISTS or NOT EXISTS        
 
 ##### 13.2.10.7 Correlated Subqueries
--  correlated subquery就是子查询语句中引用外部的表(在子查询引用一个from从句没有指定的表,则mysql会从子查询语句向外部开始查找该表.)
+-  **correlated subquery就是子查询语句中引用外部的表(在子查询引用一个from从句没有指定的表,则mysql会从子查询语句向外部开始查找该表.)**
 
 ##### 13.2.10.8 Derived Tables
 - 派生表(derived table): 查询语句的from从句中的子查询是派生表,如`SELECT ... FROM (subquery) [AS] tbl_name ...` AS关键字是强制要有的.
@@ -1703,11 +1700,11 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - 开始一个事务会导致任何未决事务(pendin transaction)被提交.开始一个事务同样也会由LOCK TABLE语句获取的表锁被释放,就像执行了UNLOCK TABLES一样.但是开始一个事务不会无法释放由FLUSH TABLES WITH READ LOCK语句全局读锁.
 - 为了最好的结果,事务中应该只使用一种事务安全型的存储引擎,否则会有以下可能发生:
   - 如果你在事务中使用的不是事务安全的存储引擎表,那么对于非事务安全表的更改会被马上存储而不管autocommit模式.事务中在对非事务表更改后发出ROLLBACK语句将会有一个警告产生,对于事务安全表的更改会被回滚,但对于非事务安全表的更改则无法回滚.
-- commit后,每个事务都以一个块的形式存储在二进制日志中(binary log).回滚的事务不会被记录.(除了:回滚的事务中包含了对非事务表的更改,那么整个事务都将在末尾使用ROLLBACK语句记录下来,以确保后续复制也复制了对非事务表的修改)
+- commit后,每个事务都以一个块的形式存储在二进制日志中(binary log).**回滚的事务不会被记录.(除了:回滚的事务中包含了对非事务表的更改,那么整个事务都将在末尾使用ROLLBACK语句记录下来,以确保后续复制也复制了对非事务表的修改)**
 - 可以使用SET TRANSACTION语句更改事务的隔离级别和访问模式.
 
 #### 13.3.2 Statements That Cannot Be Rolled Back
-- 有些语句无法被回滚.通常,这些包含数据定义语句(DDL),如表的create或drop,创建,删除或更改表或存储例程(procedures and functions)的语句.你应该设计你的事务不能包含这些语句.
+- **有些语句无法被回滚.通常,这些包含数据定义语句(DDL),如表的create或drop,创建,删除或更改表或存储例程(procedures and functions)的语句.你应该设计你的事务不能包含这些语句.**
 
 #### 13.3.3 Statements That Cause an Implicit Commit
 - 这些语句大多数会在语句执行后导致隐式提交,目的是在其自己的特殊事务中处理每个这样的语句,因为他无论如何都不能回滚.
@@ -1721,7 +1718,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - Replication control statements
 
 #### 13.3.4 SAVEPOINT, ROLLBACK TO SAVEPOINT, and RELEASE SAVEPOINT Statements
-- InnoDB支持SAVEPOINT, ROLLBACK TO SAVEPOINT, RELEASE SAVEPOINT语句.
+- **InnoDB支持SAVEPOINT, ROLLBACK TO SAVEPOINT, RELEASE SAVEPOINT语句.**
 - RELEASE SAVEPOINT:从当前事务的savepoints集中删除指定的savepoint.
 - 在执行commit或没有指定具体savepoint的rollback语句时,当前事务中所有savepoint都将被删除.
 
@@ -1737,7 +1734,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 	    - 持有该锁的会话只能读表(不能写)
 	    - 多个会话能获取同时获取同一个表锁.
 	    - 其他会话不用明确获取一个读锁(READ LOCK)就可以读取表
-	    - LOCAL修饰词使得持有该锁时,其他会话能够执行无冲突的插入(insert)语句,即并发插入(concurrent inserts).如果你想要在持有锁的同时使用外部处理程序操作数据库则不能使用READ LOCAL.对于innodb表,READ LOCAL和READ是一样的.
+	    - **LOCAL修饰词使得持有该锁时,其他会话能够执行无冲突的插入(insert)语句,即并发插入(concurrent inserts).如果你想要在持有锁的同时使用外部处理程序操作数据库则不能使用READ LOCAL.对于innodb表,READ LOCAL和READ是一样的.**
 	  - [LOW_PRIORITY] WRITE lock:
 	    - 持有该锁的会话可以读表和写表
 	    - 只有持有该锁的会话才能访问表,其他会话只能在锁被释放后才能访问.当表的WRITE锁被持有时,其他会话对于该表的锁请求将被阻塞.
@@ -1846,8 +1843,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 
 ##### 13.7.2.4 OPTIMIZE TABLE Syntax
 >reorganizes the physical storage of table data and associated index date, to reduce storage space and improve I/O efficiency
-
-- 支持的存储引擎: InnoDB, MyISAM,ARCHIVE
+- **支持的存储引擎: InnoDB,MyISAM,ARCHIVE**
 - 可在如下场合中使用
   1. after doing substantial insert, update, or 
   delete operations on an InnoDB table.( innodb_file_per_table配置要是ON)
@@ -1862,7 +1858,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - 在修复表时服务器崩溃了, 在重启服务器后请必须马上先再执行修复表命令, 在做其他操作之前. 在最坏的情况, 你可能会有一个新的索引文件而没有包含任何数据文件信息 所以这就是提前备份的价值.
   - 如果修复一张在master的损坏表, 其对原始表的修改变化不会被传播到slaves上
 - 参数选项
-  - QUICK: 仅仅修复索引文件, 不会修复数据文件  
+  - **QUICK: 仅仅修复索引文件, 不会修复数据文件**
 
 ### 13.8 Utility Statements
 #### 13.8.1 DESCRIBE Statement 
@@ -1873,28 +1869,27 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - EXPLAIN中的FORMAT修饰词指示了结果是以表格还是json格式展示.
 
 #### 13.8.4 USE Statement
-- 告知mysql使用给定的数据库作为默认数据库以便手续的语句可以使用.
+- 告知mysql使用给定的数据库作为默认数据库以便后续的语句可以使用.
 
-    
 ## 14.innoDB storage Engine
 ### 14.1 Introduction to InnoDB
 - innoDB是一个兼顾了高可靠性和高性能的通用存储引擎,在mysql5.6中为默认存储引擎.
 - Key Advantages of InnoDB(主要优势)
-  - 它的DML操作遵循ACID模型,并具有commit,rollback,crash-recovery功能的事务,以保护用户数据.
+  - **它的DML操作遵循ACID模型**,并具有commit,rollback,crash-recovery功能的事务,以保护用户数据.
   - 行锁和Oracle-style的读一致可提高多用户并发性和性能
   - innoDB表将数据安排在磁盘上,以基于主键优化查询.每个innoDB表都有一个主键索引称为聚簇索引的(ps:clustered index(中文聚簇索引)术语表示innoDB的主键索引),该索引组织书以最小化主键查找的I/O.
   - 为了维护数据的一致性,innoDB支持外键(FOREIGN KEY)限制,以确保不同表间的一致性.
 
 ### 14.1.2 Best Practices for InnoDB Tables
-- 不要使用lock tables语句.innoDB能处理多个会话的对于同个表的同时读和写.如果要获取一组行的排他性写访问权限,请使用select ... for update语法锁定要更新的行.
+- **不要使用lock tables语句.innoDB能处理多个会话的对于同个表的同时读和写.如果要获取一组行的排他性写访问权限,请使用select ... for update语法锁定要更新的行.**
 - 启动innodb_file_per_table,这可将单个表的数据和索引放入单独的文件中而不是系统表空间.
 
 ### 14.2 InnoDB and the ACID Model
 
 ### 14.3 InnoDB Multi-Versioning
-- innoDB是一个多版本控制的存储引擎,它保存保存了被更改行的旧版本信息,以便支持如并发和回滚的事务功能.该信息以称为回滚段(rollback segment)数据结构存储在表空间中.innoDB使用这些信息来在回滚事务中执行撤销操作,同时也被用于构建行的早期版本以实现读一致.
+- **innoDB是一个多版本控制的存储引擎,它保存了被更改行的旧版本信息,以便支持如并发和回滚的事务功能.该信息以称为回滚段(rollback segment)数据结构存储在表空间中.innoDB使用这些信息来在回滚事务中执行撤销操作,同时也被用于构建行的早期版本以实现读一致.**
 - 内部的,innoDB向存储在数据库中每行添加三个字段.6字节的DB_TRX_ID字段指示插入或更新该行的最后一个事务标识符,此外删除在内部被视为更新,在该更新中,行中的特殊位(bit)被置为将其标记为已删除行;每行还包含一个7字节的DB_ROLL_PTR字段,称为滚动指针,该滚动指针指向一个写入在回滚片段中撤销日志记录(undo log record),如果行被更新,撤销日志记录包含了重建更新前的行的内容所必要的信息;6字节的DB_ROW_ID字段包含行ID,该行ID随着插入新行而单调增加,如果innoDB自动生成聚集索引,则该索引包含ID值,否则DB_ROW_ID列不会出现在任何索引中.
-- 回滚段中的撤销日志分为插入和更新撤销日志.插入撤销日志仅在事务回滚时需要,并且在事务一提交后就立即丢弃.更新撤销日志也用于一致读,但只有当不存在事务中有需要更新撤销日志信息去创建早期的数据库行版本的innoDB分配的事务,才可丢弃该更新撤销日志.
+- **回滚段中的撤销日志分为插入和更新撤销日志.插入撤销日志仅在事务回滚时需要,并且在事务一提交后就立即丢弃.更新撤销日志也用于一致读,但只有当不存在事务中有需要更新撤销日志信息去创建早期的数据库行版本的innoDB分配的事务,才可丢弃该更新撤销日志.**
 - 回滚段中的撤销日志记录的物理大小通常小于相应的插入或更新的行,你可以用此信息来计算回滚段所需要的大小.
 - 在innoDB多版本方案中,当你删除语句时,并不会立即从数据库中物理删除该行,innoDB只会在丢弃了为删除而编写的更新撤销日志记录时,才会物理地删除相应的行以及索引.此清除(removal)操作称为清除(purge),它非常快,通常和执行删除操作的sql语句顺序相同.
 - Multi-Versioning and Secondary Indexes
@@ -1904,7 +1899,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 #### 14.5.1 Buffer Pool
 - 缓冲池(buffer pool)是一个内存中一个区域,访问innoDB表和索引数据时会缓存在该内存中.缓冲池允许直接冲内存中处理经常使用的数据,从而加快处理速度.在专用的服务器上,通常将多达80%的物理内存分配给缓冲池.为了提高大容量读取操作的效率,缓冲池分为多页面,这些页面可以潜在的容纳多行.为了高效的管理缓存,缓冲池被实现为页面的链接列表,使用LRU算法的变体将很少使用的数据老化掉.
 - Buffer Pool LRU Algorithm
-  - 缓冲池被作为列表进行管理,使用最近最少使用算法(LRU)的变体.当需要添加新的页面到缓冲池中,则最少使用的页面被驱逐,然后新页面加入到列表的中间.中间点插入策略将列表视为两个子列表对待: 一个是新子列表包含最近访问的页面,另一个是旧子列表包含了最近最少访问的页面,作为驱逐的候选对象.
+  - **缓冲池被作为列表进行管理,使用最近最少使用算法(LRU)的变体**.当需要添加新的页面到缓冲池中,则最少使用的页面被驱逐,然后新页面加入到列表的中间.中间点插入策略将列表视为两个子列表对待: 一个是新子列表包含最近访问的页面,另一个是旧子列表包含了最近最少访问的页面,作为驱逐的候选对象.
   - 默认地,该算法运行方式如下:
     - 缓冲池的3/8分配给旧页子列表
     - 当innoDB读取一个页面到缓冲池时,它首先如插入到列表中间点(旧子列表的头部).一个页面会被读取到缓冲池是在用户启动的操作(如sql查询),或innoDB自动执行的预读操作的一部分.
@@ -1915,7 +1910,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
   - 可控值在后台flush时是否根据工作负载动态调整flush速率.
   - 可控制innoDB如何保存当前缓存池状态来避免在服务器启动后需要长时间的预热.
 - Monitoring the Buffer Pool Using the InnoDB Standard Monitor
-  - 可使用SHOW ENGINE INNODB STATUS语句来查看innoDB标准监视输出,缓冲池指标位于该输出中 BUFFER POOL AND MEMORY部分.
+  - **可使用SHOW ENGINE INNODB STATUS语句来查看innoDB标准监视输出,缓冲池指标位于该输出中 BUFFER POOL AND MEMORY部分.**
 - Monitoring the Buffer Pool Using the InnoDB Standard Monitor
   - 使用SHOW ENGINE InnoDB STATUS语句查看innoDB的标准监视输出.
   - 注意:
@@ -1924,13 +1919,13 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 
 ### 14.5.2 Change Buffer    
 - change buffer是一种特殊的数据结构,它是缓存(cache)对二级索引页面的更改并且这些页面没有存在缓冲池中.更改的缓冲(buffered changes)是由insert,update,delete操作结果引起,更改的缓冲会(buffered changes)与相关的页面被以后其他读的操作加载到缓冲池时而合并然后再放入到缓冲池中.不像聚簇索引,二级索引值通常不是唯一的,插入到二级索引通常是随机的顺序,同样地,删除和更新二级索引页面在索引树上可能不是相邻的.缓存的更改(cached changes)会在之后合并,即当其他读操作将受影响的页面读取到缓冲池中才会合并,这避免了从磁盘中将二级索引读取到缓冲池所需要的大量随机I/O访问. 定期地,purge操作会在系统大部分空闲时或者缓慢关机时将已更新了的索引页面写入到磁盘上,这比一有数据更新就写入磁盘高效.change buffer的合并在受影响行数很多和被更新的二级索引很多时有可能需要花费几个小时.在内存上,change buffer占据一部分缓冲池(buffer pool).在磁盘上,change buffer是系统表的一部分,当数据库服务器关闭时缓冲索引的更改.change buffer由 innodb_change_buffering系统变量控制.当索引列中包含降序列或主键包含降序索引列则Change buffering不支持secondary index.
-  - 自己理解总结:change buffer就是缓存那些对二级索引页面的更改且这些页面没有在缓冲池中(因为这些页面没有在缓冲池中所以没办法直接合并),当后面有读操作将相关的页面读取到缓冲池时才合并.更新的页面会后面刷新(flush)到磁盘中,
+  - 自己理解总结:**change buffer就是缓存那些对二级索引页面的更改且这些页面没有在缓冲池中(因为这些页面没有在缓冲池中所以没办法直接合并),当后面有读操作将相关的页面读取到缓冲池时才合并.更新的页面会后面刷新(flush)到磁盘中,**
 - Configuring Change Buffering
   - change buffer能减少磁盘的读和写,特别是受限于I/O的负载最有价值(例如具有大量DML操作(如批量插入)的应用),但是如果change buffer占了缓冲池太多的内存或表的二级索引相对较少,那么禁止change buffer可能会更有帮助.为此可通过innodb_change_buffering设置change buffer缓冲程度:可以开启或禁止插入,删除操作(索引记录最初被标记为删除)和purge操作(索引记录被物理删除).更新操作即为插入和删除的组合.具体取值如下:
     - all: 默认值,缓冲insert,delete-marking和purge操作.
     - none: 不缓冲任何操作
     - inserts: 缓冲插入操作
-    - deletes: 缓冲标记删除(delete-marking)操作
+    - deletes: 缓冲标记删除(delete-marking)操作 
     - changes: insert和delete-making操作
     - purges: 缓冲后台执行物理删除操作. 
 - Configuring the Change Buffer Maximum Size
@@ -1967,11 +1962,11 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
      - 使用statement-based replication: 设置innodb_autoinc_lock_mode为0或1同时master和slaves必须同一个值, 这样是安全的
      - row-based or mixed-format replication: innodb_autoinc_lock_mode的所有模式都安全
      - "Lost" auto-increment values and sequence gaps
-        所有模式中, 当一个值已经分配给自增键, 这个值都不会再被使用, 无论事务是否回滚
+        **所有模式中, 当一个值已经分配给自增键, 这个值都不会再被使用, 无论事务是否回滚**
      - 自增值超过定义类型的最大值: 会报错duplicate entry ...
      
  - InnoDB AUTO_INCREMENT Counter Initialization
-   在InnoDB中, 自增计数器存储内存中; 空表默认1(auto_increment_offset可以设置)开始; 当服务器重启了, 自增计数器会在第一次插入操作或show table status时初始化(做类似的操作: SELECT MAX(ai_col) FROM table_name FOR UPDATE;)
+   **在InnoDB中, 自增计数器存储内存中; 空表默认1(auto_increment_offset可以设置)开始;** 当服务器重启了, 自增计数器会在第一次插入操作或show table status时初始化(做类似的操作: SELECT MAX(ai_col) FROM table_name FOR UPDATE;)
 
 ##### 14.6.1.6 AUTO_INCREMENT Handling in InnoDB
 - InnoDB AUTO_INCREMENT Lock Mode Usage Implications
@@ -1994,7 +1989,7 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 
 #### 14.6.2 Indexes    
 ##### 14.6.2.1 Clustered and Secondary Indexes
-- 每个innoDB表都有一个特殊的索引称为聚簇索引(clustered index),用于存储行数据.通常地,聚簇索引与主键是同义的.
+- 每个innoDB表都有一个特殊的索引称为聚簇索引(clustered index),用于存储行数据.通常地,**聚簇索引与主键是同义的.**
   - 当你为表定义一个主键时,innoDB使用它作为聚簇索引.
   - 如果你没有为表定义一个主键,则mysql会定位第一个所有键列都为not null的唯一索引(unique index)并且innoDB将该唯一索引作为聚簇索引.
   - 如果一个表没有主键和合适的唯一索引(所有键列都为not null的唯一索引),innoDB内部会在包含行ID的合成列上产生一个隐藏的聚簇索引名为GEN_CLUST_INDEX.这些行由innoDB分配给此表中的行ID排序.行ID是一个6字节的字段,随着插入新行而单调增加.因此,按行ID排序实际上是为插入的顺序.
@@ -2009,9 +2004,9 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 页面大小(InnoDB page size)不同的两个mysql实例,数据文件和日志文件(data files and log file
 s)不能相互使用. 
 
-#### 14.6.3 Tablespaces
+#### 14.6.3 Tablespaces  
 ##### 14.6.3.1 The System Tablespace
-- 系统表空间(system tablespaces)是一个存储innoDB数据字典(data dictionary),双写缓冲区(doublewrite buffer),更改缓冲区(change buffer),撤消日志(undo log).此外,它还可能包含包表和索引数据(即该表是在file-per-table选项关闭情况下创建的,所有表和索引数据都包含在系统表空间内).系统表空间位于mysql的data目录下,名称类似ibdata1,ibdata2(系统表空间可以有多个文件).系统表空间数据文件的数量和大小由innodb_data_file_path在mysql启动时定义的.
+- **系统表空间(system tablespaces)是一个存储innoDB数据字典(data dictionary),双写缓冲区(doublewrite buffer),更改缓冲区(change buffer),撤消日志(undo log).此外,它还可能包含包表和索引数据(即该表是在file-per-table选项关闭情况下创建的,所有表和索引数据都包含在系统表空间内).系统表空间位于mysql的data目录下,名称类似ibdata1,ibdata2(系统表空间可以有多个文件).系统表空间数据文件的数量和大小由innodb_data_file_path在mysql启动时定义的.**
 - Resizing the System Tablespace    
   - 增加系统表空间大小
     - 最简单的方法就是在配置文件中设置innodb_data_file_path选项为最后一个系统表空间文件为autoextend(自动扩展),每次自动扩展大小由innodb_autoextend_increment设置,然后重启mysql服务器生效.(ps:表空间有个大小最大64TB的限制)
@@ -2054,7 +2049,7 @@ s)不能相互使用.
 #### 14.6.7 Undo Logs    
 - 与单个读写事务关联的撤消日志记录的集合是撤消日志.一个撤消日志记录包含着怎么撤消一个事务对聚簇索引的最新更改的信息,如果另一个事务需要查看原始数据,则将从该撤消日志记录中检索未修改的数据.撤消日志存在与撤消日志段(undo log segments)中,而撤消日志段存在于回滚段(rollback segments)中.默认地,回滚段存放与系统表空间中,但同样也可以存放在撤消表空间中(undo tablespaces).
 - 回滚段支持的事务数量取决于回滚段上的撤消插槽(undo slot)的数量和每个事务需要的撤消日志数量.一个事务最多分配2个撤消日志:一个为插入操作,另一个为更新或删除操作.
-- 基于以上的讨论我们可以估算出innoDB支持多少个并发读写事务.
+- **基于以上的讨论我们可以估算出innoDB支持多少个并发读写事务.**
   - 假设每个事物都是只有插入操作或者更新,删除操作(即这种情况只要分配一个撤消日志),则并发数公式如下:(innodb_page_size单位byte)
     `(innodb_page_size / 16) * innodb_rollback_segments`
   - 假设每个事务都有插入操作和更新或删除操作,公式如下:(innodb_page_size单位byte)
@@ -2062,9 +2057,9 @@ s)不能相互使用.
 
 ### 14.17 InnoDB Monitors
 #### 14.17.2 Enabling InnoDB Monitors  
-- 当innoDB监视器被开启时,innoDB大约每15秒会将结果写入mysql服务器的标准错误输出(stderr)中.开启的方式如下2中
+- **当innoDB监视器被开启时,innoDB大约每15秒会将结果写入mysql服务器的标准错误输出(stderr)中.开启的方式如下2种**
   - 创建一个名为innodb_monitor的innoDB表.
-  - 开启innodb_status_output或innodb_status_output_locks系统变量,前者变量为InnoDB Standard Monitor out,后者为Lock Monitor Output,区别就是后者比前者多了关于lock的信息
+  - **开启innodb_status_output或innodb_status_output_locks系统变量,前者变量为InnoDB Standard Monitor out,后者为Lock Monitor Output,区别就是后者比前者多了关于lock的信息**
 - Obtaining Standard InnoDB Monitor Output On Demand
   - 作为启动innoDB Standard Monitor定期输出的替代方法,可以使用`SHOW ENGINE INNODB STATUS`语句按照需要查询
       
@@ -2079,8 +2074,7 @@ s)不能相互使用.
 ## Chapter 18 MySQL NDB Cluster 7.3 and NDB Cluster 7.4
 - MySQL NDB Cluster(NDB 集群)是适用于分布式计算环境的MySQL的高可用性，高冗余版本.     
     
-## Chapter 19 Partitioning   
-
+## **Chapter 19 Partitioning**   
 ### 19.2 Partitioning Types
 - 支持的类型: range, list, hash, key, range column, list column,linear hash,linear key.自己总结简单记就是: range, list, hash, key
 
@@ -2094,7 +2088,6 @@ s)不能相互使用.
 - HASH分区主要用于确保在预定数量的分区之间均匀分布数据.你只要指定分区数,具体怎么分则不用你操心,mysql会自己分.实际它的算法就是取模,比如你指定4个分区,基于c1列,那么用以下公式可以算出数据应该处于哪个分区:mod(c1, 4)
 #### 19.2.4.1 LINEAR HASH Partitioning
 - linear hash分区和hash分区不同在于使用的算法不同(有linear的使用的是二次幂算法,常规的哈希分区使用的取模算法).线性哈希优点是添加,删除,合并和分割分区更快,缺点是于常规哈希相比数据分布比较不均匀.
-
 #### 19.2.5 KEY Partitioning
 - key partitioning和hash partitioning相似,除了哈希分区使用的是用户自定义的表达式.key partitioning和hash partitioning一样都是取模算法.此外还有linear key partitioning,加了linear对key partitioning与对hash partitioning的作用是一样的,他们只是算法不同,加了linear的使用二次幂算法,而没有加linear的使用取模算法.
 
@@ -2103,7 +2096,7 @@ s)不能相互使用.
 
 #### 19.6.2 Partitioning Limitations Relating to Storage Engines
 - **不支持的存储引擎:MERGE,FEDERATED,CSV**
-- InnoDB:外键和分区表是不兼容的(也仅innoDB支持外键).分区表不能有外键,有外键则不能建分区.
+- **InnoDB:外键和分区表是不兼容的(也仅innoDB支持外键).分区表不能有外键,有外键则不能建分区.**
       
 # mysql术语
 - adaptive hash index(自适应哈希索引)
@@ -2112,7 +2105,7 @@ s)不能相互使用.
   - 存有innoDB表数据和索引数据缓存的内存区域.为了高效的读取,该缓冲池被分为多个页面(pages),这些页面可能包含多个行.为了提高缓存管理效率,缓冲池被使实现为页面的链接列表(a linked list of pages).使用的是LRU算法的变体.在有大内存的系统上,可以将缓存池划分为多个缓冲池实例来提高并发性. 
   - 从5.6起,可通过在mysql服务器关闭时间保存缓存池状态并在启动时恢复到相同的状态来避免重启mysql后漫长的预热.
 - clustered index  
-  - 聚簇索引(clustered index)是对innoDB主键的术语.
+  - **聚簇索引(clustered index)是对innoDB主键的术语.**
 - data dictionary 
   - innoDB数据字典(data dictionary)由内部系统表组成,这些系统表包含了跟踪与innoDB相关的对象(例如表,索引和表列)的元数据.元数据位于innoDB系统表空间中.由于历史原因,词典元数据在某种程度上与innoDB表元数据文件(.frm文件)中存储的信息重叠.
 - data files 
@@ -2188,7 +2181,6 @@ s)不能相互使用.
 - 查看mysqld会以什么参数启动或初始化
   `bin/mysqld [--defaults-file=path/my.cnf] --print-defaults`
   
-
 【数据库迁移,导出及其导入】
 
 - 导出(备份)： mysqldump -u root -p --all-databases > $destDir/all_databases_20180314.bak   直接在linux命令行中输入
@@ -2413,13 +2405,12 @@ mysqli_multi_query()   :执行多条语句
 ### 忘记密码
   [How to Reset the Root Password官网](https://dev.mysql.com/doc/refman/5.6/en/resetting-permissions.html)
  
-### mysql的4种事务隔离详解? innoDB行锁的算法?
+### **mysql的4种事务隔离详解? innoDB行锁的算法?**
   - 讲得挺清楚的[五分钟搞清楚MySQL事务隔离级别](https://www.jianshu.com/p/4e3edbedb9a8)
   - InnoDB存储引擎使用三种行锁的算法用来满足相关事务隔离级别的要求.
     - Record Locks:只锁定单个索引行(查询一定要有索引可以用,不然行锁就无从谈起,会变成表锁)
     - Gap Locks:该锁会锁定一个范围，但是不括记录本身
     - Next-key Locks:该锁就是 Record Locks 和 Gap Locks 的组合，即锁定一个范围并且锁定该记录本身。
-
   
 ## 杂项
 - innodb默认是行锁，**前提条件是建立在索引之上的**。如果筛选条件没有建立索引，会降级到表锁。
