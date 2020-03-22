@@ -186,6 +186,9 @@
   - FOREIGN KEY
     - **仅innoDB存储引擎支持外键,innoDB的分区表不支持外键**  
     
+##### 13.1.17.1 CREATE TABLE Statement Retention
+- **由于是保存的是原始语句的文本.但是由于某些值或选项可以被静默的重新配置(如row_format),所以活动表的定义(通过describe或show table status获取)和表创建的字符串(通过SHOW CREATE TABLE获取)得到的值可能会有所不同**.
+    
 #### 13.1.33 TRUNCATE TABLE Statement
 - **TRUNCATE TABLE语句将完全的清空表,需要drop权限.逻辑上,TRUNCATE TABLE操作类似于删除了所有行的delete操作,或drop table然后再create table的操作.但是为了更好的性能,它绕过了删除数据的DML方法,所有它无法被回滚,也不会触发on delete触发器,也不能用于具有父子外键关系的innoDB表.**
 - **TRUNCATE TABLE虽类似于delete,但被归类于DDL,而不是DML;它与delete有如下不同:**
@@ -205,7 +208,7 @@
 - **不要使用lock tables语句.innoDB能处理多个会话的对于同个表的同时读和写.如果要获取一组行的排他性写访问权限,请使用select ... for update语法锁定要更新的行.**
 
 #### 14.5.1 Buffer Pool
-- **可使用SHOW ENGINE INNODB STATUS语句来查看innoDB标准监视输出,
+- **可使用SHOW ENGINE INNODB STATUS语句来查看innoDB标准监视输出**
 
 ### 14.5.2 Change Buffer    
 - 自己理解总结:**change buffer就是缓存那些对二级索引页面的更改且这些页面没有在缓冲池中(因为这些页面没有在缓冲池中所以没办法直接合并),当后面有读操作将相关的页面读取到缓冲池时才合并.更新的页面会后面刷新(flush)到磁盘中**

@@ -336,7 +336,14 @@
 - binlog_error_action系统变量控制二进制日志记录出错时所采用的动作
   - IGNORE_ERROR(默认): 服务器会将继续进行中的事务并记录错误, 然后停止二进制日志记录,但会继续执行更新.排除错误要重启服务器才能从新记录二进制日志.这对于二进制日志是不重要的情况可以怎么做
   - **ABORT_SERVER(推荐): 停止二进制日志记录并关闭服务器.**
-- **sync_binlog控制每N个提交组后将二进制日志同步到磁盘. 最安全的值为1,但仍然存在二进制日志和表内容不一致的可能当宕机时**
+- **sync_binlog控制每N个提交(commit)后将二进制日志同步到磁盘. 最安全的值为1,但仍然存在二进制日志和表内容不一致的可能当宕机时**
+  - 0:mysql不同步二进制日志到磁盘上,而是依赖于系统不时的刷新到磁盘上.
+  - 1: 在commit前都先将二进制日志刷新到磁盘上,这个最安全的但会影响性能.
+  - N: 大于1,即N个commit后才提交.
+  - note:以下的配置能获取到最大的持久性和一致性(最安全的设置但影响性能)
+    - sync_binlog=1.
+    - innodb_flush_log_at_trx_commit=1.
+    
 - max_binlog_size: 指定二进制单个文件最大值, 如果达到就旋转日志(即按序列重起一个文件存储binlog)
   
 在一个语句或事务后但在释放任何锁或任何提交(commit)之前立即执行二进制日志记录; 在执行对非事务表的更新后立即存储在二进制日志中。在未提交事务中, 所有改变事务表更新操作都会被缓存直到服务器接收commit语句, 此时在commit执行前将整个事务写入二进制日志; 对于非事务表的改变是无法被回滚,如果一个事务包含对非事务表的更改回滚了, 则二进制日志会在事务后记录所有rollback语句以确保这些表的更改
@@ -1236,9 +1243,9 @@ DISTINCT和ORDER BY的结合使用, 在许多场景中都需要创建一个临�
 - 多个带引号的字符串相邻被串联成单个字符串.如 `'a' ' ' 'string'` 与 `'a string` 等价
 - ANSI_QUOTES模式开启时, "与` 一样被解释为标识符,所以就不用来引(quote)字符串了
 - 二进制字符串是字节字符串(a binary string is a string of bytes); 非二进制字符串是字符的字符串(a nonbinary string is a string of characters). 对于这两种字符串的比较都是基于字符串单位的数值,二进制字符串的单位为byte,
-- 字符串文字可能具有可选的字符集介绍程序(character set)和COLLATION从句
+- **字符串文字可能具有可选的字符集介绍程序(character set)和COLLATION从句
   `[_charset_name]'string' [COLLATE collation_name]` 
-  `例如: SELECT _utf8'string' COLLATE utf8_danish_ci;`
+  `例如: SELECT _utf8'string' COLLATE utf8_danish_ci;`**
 - 在NO_BACKSLASH_ESCAPES模式没有开启时,在字符串中,某些序列具有特殊含义.这些序列以\开头的序列被称为转义字符.mysql可以识别表9.1,特殊字符转义序列中的所示的转义序列.对所有其他转义序列将忽略\,即是将转义字符解释为好像没有转义,同时这些序列是大小敏感的,例如:\x只是x;\b是退格字符,而\B只是B.
 - 有几种在字符串包含引号字符的方法:
   - 在由单引号引起来的字符串中两个单引号表示一个单引号;同理双引号中,两个双引号表示为一个双引号.在引号前加转义字符\.在双引号中的单引号和单引号中双引号不用特殊处理,可以正常显示.
@@ -2203,7 +2210,7 @@ mysqli_multi_query()   :执行多条语句
 ## 函数:
 - FROM_UNIXTIME('时间戳字段', '%Y-%m-%d');     格式化时间戳为时间格式 
 - UNIX_TIMESTAMP([date]);   转换为时间戳,不传入参数为当前时间戳, 给定date(格式为正常日期时间格式如 2019-6-6 10:10:10)时则返回当时的时间戳
-   current_timestamp()/ current_time()/ now()/ current_date() 获取当前的时间戳/ 完整的日期加时间/ 时间(10:10:01)/ 日期(2019-12-01)
+-  UNIX_TIMESTAMP(NOW()) / NOW()/ current_time() / current_date() 获取当前的时间戳/ 完整的日期加时间/ 时间(10:10:01)/ 日期(2019-12-01)
 - TIMESTAMPDIFF(unit, datetime_expr1, datetime_expr2): datetime_expr2, datetime_expr1可以是date或datetime, 返回datetime_expr2 − datetime_expr1的值, unit控制结果的单位. 例: TIMESTAMPDIFF(MONTH,'2002-02-01 12:12:12','2003-05-01'); 结果15
 - length(string)            -- string长度，字节
 - char_length(string)        -- string的字符个数
@@ -2213,8 +2220,8 @@ mysqli_multi_query()   :执行多条语句
 - count()高级用法: 如下:
     `select count(IF(status=1, 1, NULL) as total, count(IF(status=0, 1, NUll) as open from table_name; (该句获取status为1的数量和status为0的数量)`
 - IF 用法: IF(表达式1, expr2, expr3); 表达式1为true 返回expr2; 否则返回expr3.  表达式中可用的条件运算符: "=、<、<=、>、>=、!="
-- group by: 单独使用只能获取分组中的一个数据, 可以和 group_concat(name1, name2)使用(获取name1拼接上name2字段的值的整个数组):如下
-    select group_concat('{id:"', name, ';:"title":"', title, '"}' from table_name; 获取出一组内容为json格式,之间逗号隔开的字符串
+- group by: 单独使用只能获取分组中的一个数据, 可以和 group_concat(name1, name2)使用(获取name1拼接上name2字段的值的整个数组):如
+    select group_concat('{id:"', name, ';:"title":"', title, '"}') from table_name; 获取出一组内容为json格式,之间逗号隔开的字符串
 - ON DUPLICATE KEY:
     INSERT INTO TABLE (a,c) VALUES (1,3) ON DUPLICATE KEY UPDATE c=c+1; (存在重复值则更新)
 
@@ -2352,7 +2359,7 @@ mysqli_multi_query()   :执行多条语句
     - text和blob类型分别与varchar和varbinary有什么区别?  
       在大多方面,你可以将blob视为varbinary,只是blob可以根据需要任意大;同样的,可将text视为varchar.此外它们在以下方面有不同.
       - 对于在text和blob列上的索引,你必须指定索引前缀长度,而对于char和varchar则指定索引前缀长度是可选的
-      - text和blob列不能有默认值
+      - **text和blob列不能有默认值**
       - 此条有待确认?mysql的硬性要求行的所列加起来大小<=65535字节的限制对于text和blob数据类型不起作用,因为text和blob字符类型仅对行大小的这个限制贡献9到12个字节
     - 多字节存储在使用单字节的字符集上会报错.
       比如一个列为latin字符集(单字节),如果插入中文(要多个字节表示)   
@@ -2450,7 +2457,8 @@ b字段有索引时能用到索引,mysql能快速定位要更新的位置速度�
   - binary collate string和nobinary string的比较?[参考](#1085)
 
 - navicat使用技巧
-  在输入查询语句时按下esc为智能提示 
+  在输入查询语句时按下esc为
+  智能提示 
   
 - mysql5.6和mysql5.7区别
   - 5.7以前使用mysql_install_d初始化数据目录, 5.7起使用mysqld的initialize

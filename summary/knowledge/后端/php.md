@@ -1,92 +1,72 @@
 [完善的纯中文版手册](https://php.golaravel.com/)
 
-#变量类型(共9中原始数据类型)
-
+##变量类型(共9中原始数据类型)
 - 四种标量类型
   1. boolean(布尔型)
   2. integer(整型)
   3. float(浮点型, 也称为double, 实际上float和double是相同的, 由于历史两个名称同时存在) 
   4. string(字符串)
-
 - 三种复合类型
   5. array(数组)
   6. object(对象)
   7. callable(可调用)
-  
 - 两种特殊类型
   8. resource(资源)
   9. NULL(无类型)
 
 #常用核心函数
-
->##变量处理
-
+##变量处理
 - isset($var, [...$_]); 检测变量是否已设置并且非 NULL
-
-- empty($var); 判断一个变量是否被认为是空的(false, 0, "0", null, "", 0.0, array(), 没有被赋值的变量); 当变量不存在, 不会产生警告
-
+- empty($var); 判断一个变量是否被认为是空的(false, 0, "0", null, "", 0.0, array(), 没有被赋值的变量); 当变量不存在,不会产生警告,但如下这种写法会报错empty($v = $not_exist_var)
 - is_null($var); 检测变量是否为 NULL, 变量不存在时会产生一个notice
 
->##字符串:
+##字符串:
+- htmlspecialchars(); 只是转换特殊的几个html标签(',",<,>,&)为实体字符
+- htmlspecialchars_decode(): 将实体字符转换为html以便在浏览器中显示,对htmlspecialchars()的还原
+- htmlentities(): 将所有的标签转化为实体字符, 这样就能在浏览器中原样输出(但是浏览器不会执行它只是原样显示,例如htmlentities("<script>alert(123)</script>"),它转换后字符串为&lt;script&gt;alert(123)&lt;/script&gt;如果这个字符串给浏览器显示那么他会显示<script>alert(123)</script>,因为浏览器会处理这些实体字符如&lt;会显示为<)
+- html_entity_decode(): 将所有的实体字符转换为对应的html(如), htmlentities()的反向操作
+
+- strip_tags($string [, $allow_tags]): 删除html和php的标签符号, 标签符号中的内容还在,始终会脱离html的注释 
+
 - explode($delimiter, $string);       按照某个字符分割字符成数组
-
-- str_split($strin, $split_length:int):	按照固定长度将字串分割成数组
-
-- preg_split():   按照正则作为分割符分割字串成数组
-
 - implode()/别名:join();
 
-- strlen();			获取字符串长度
+- str_split($strin, $split_length:int):	按照固定长度将字串分割成数组
+- preg_split():   按照正则作为分割符分割字串成数组
 
-- mb_strlen();		获取字符串长度(可将中文字符按照一个算)
+- pre_match('/正则/', $string [,$match]) / pre_match_all() ; $match[0]为完整模式的所有匹配(pre_match_all会是一个二维数组), $match[1]为第一个子组的所有匹配(pre_match_all也是一个二维数组)  
+- preg_replace('/正则/', $replacement, $subject)		替换字串  $0表示全部的匹配字串,$n?表示第n个匹配的字串. preg_replace_callback()
 
-- pre_match('/正则/', $string [,$match]) / pre_match_all() ; $match[0]为完整模式的所有匹配(pre_match_all会是一个二维数组), $match[1]为第一个子组的所有匹配(pre_match_all也是一个二维数组)   
-
-- preg_replace('/正则/', $replacement, $subject)		替换字串  $0表示全部的匹配字串,$n?表示第n个匹配的字串
-
-- str_replace()		子字串替换	str_ireplace()	/忽略大小写
-
-- strtr()		    替换字串的字
-
-- substr_replace()	子字串替换
-
-- htmlspecialchars(); 只是转换特殊的几个html(',",<,>,&)为实体字符
-
-- htmlspecialchars_decode(); 对htmlspecialchars()的还原
-
-- htmlentities: 将全部的html标签转化为实体字符, 这样就能在浏览器中原样输出
-
-- htmlspecialchars_decode: 将实体字符转换为html以便在浏览器中显示, htmlentities()的还原
-
-- strip_tags($string [, $allow_tags]);       删除html和php的标签符号, 标签符号中的内容还在,始终会脱离html的注释     
-
-- strpos()			查找字串首次出现的位置.    stripos()	忽略大小写	strrpos() / strripos()
+- str_replace(): 子字串替换.	str_ireplace():忽略大小写
+- strtr() : 替换字串的字(单字节),被替换和替换的长度应当一样,若不一样长则以短的为准多余的丢弃
+- substr_replace(): 子字串替换
 
 - strstr($haystack, $needle [, $before_needle:bool]):   返回子字符第一在住字符串中匹配到的位置到字符串结束的所有字符, $before_needle为true时则返回前面一部分. stristr()大小写不敏感
 
-- substr($string, $start, $length);     截取字符串
+- substr($string, $start, $length): 截取字符串
 
-- strrev()			反转字符串
+- strpos(): 查找字串首次出现的位置. stripos()	忽略大小写. 	strrpos() / strripos():字符串最后出现的位置
 
 - strtoupper() / strtolower()
 
-- substr_count();		计算字符串出现的次数
+- strlen():	获取字符串长度; mb_strlen():	获取字符串长度(可将中文字符按照一个算)
 
-- count_char()		计算字串出现
+- strrev()			反转字符串
 
-- str_pad()			补齐字串长度
+- substr_count(): 计算字符串出现的次数
+
+- count_char(): 计算字串出现
+
+- str_pad(): 补齐字串长度
 
 - base_convert(number,frombase,tobase): 不同进制的相互转换
 
 字符串编码转换：
-
 - mb_convert_encoding($string, $to_encoding [, $from_encoding]) : 例如 mb_convert_encoding($string, 'UTF-8', 'GBK');
-
 - iconv($in_charset, $out_charset, $string):  例如iconv('UTF-8', 'GBK', $string);
 
 
->##数组:
-
+##数组:
 - array_slice($array, $offset  [, $length, $prserve_keys]);       获取数组的某一部分
 
 - array_splice(&$input, $offset, [$length, $replacement]);  去除数组某一部分并用其他代替,变种出$replacement为空就是**删除某部分元素**, $length为空就是**单纯的向数组中增加元素**
@@ -148,8 +128,7 @@
 
 - count(array|object $array [, $mode]); 计算数组(或可计算var)长度, $mode=1时则为递归计算
 
->##时间:
-
+##时间:
 - date(string $format [, int $timestamp | time()]);   返回时间格式
  
 - **strtotime($time [, $now = time()])**;  将英文时间字符串转换为时间戳, $now为计算相对时间的基准时间
@@ -174,18 +153,19 @@
             
             strtotime('third Sunday 2018-6')
 
-            
-
 - time(); 返回当前的UNIX时间戳
 
-- getdate();			获取一个日期信息数组
+- microtime():返回微妙和时间戳
+
+- getdate():获取一个日期信息数组
 
 - time_sleep_until($timestamp); 使脚本睡眠到指定时间, 然后被唤起
 
 - time_nanosleep($seconds, $nanoseconds); 休眠若干秒和若干纳秒
 
->##文件:
+- usleep():休眠若干微秒(1微秒=10的-6次方秒)
 
+##文件:
 - file_get_content(); 将文件读入一个字符串
 
 - file_put_content();	写入数据到文件中
@@ -196,29 +176,26 @@
 
 - mkdir(); 第三个参数为true可创建多级目录
 
->##错误处理:
-
+##错误处理:
 - error_get_last();	返回最近一次的错误
 
->##错误追踪
-
+##错误追踪
     todo
     
-    debug_print_backtrace(); 打印一条回溯。
-    debug_backtrace();  产生一条回溯跟踪(backtrace)
+- debug_print_backtrace(); 打印一条回溯。
+- debug_backtrace();  产生一条回溯跟踪(backtrace)
     
->##魔术常量:
+##魔术常量:
+- __DIR__ : 文件所在目录的绝对路径
 
-    __DIR__ : 文件所在目录的绝对路径
+- __FILE__ : 文件绝对路径, 文件完整路径加文件名
+
+- __LINE__ : 所在行数
+
+- __FUNCTION__ : 函数名
     
-    __FILE__ : 文件绝对路径, 文件完整路径加文件名
-    
-    __LINE__ : 所在行数
-    
-    __FUNCTION__ : 函数名
-    
->##正则 PCRE
-   [官方文档](https://www.php.net/manual/zh/reference.pcre.pattern.syntax.php)
+##正则(PCRE)
+[官方文档](https://www.php.net/manual/zh/reference.pcre.pattern.syntax.php)
 
 - 自己经验技巧
   - 匹配所有字符(包括换行): [\s\S] (\s为空白字符, \S为非空白字符, 结合起来就是空白非空白字符都可以就是全部了)
@@ -229,44 +206,30 @@
 获取dom树时,正则就有点无能为力了, 用xpath可以方便的找出
    
 ## 加密扩展
-
 #### OpenSSL
 - 签名与验证签名(数据并没有被加密这是和以下数据加密的区别及应用场景)
   - openssl_sign(): 计算给定数据的签名(使用私钥)
   - openssl_verify(): 验证签名是否正确(使用公钥)
-
 - 使用公钥和密钥对数据进行加密
   - openssl_public_decrypt() -> 用 openssl_private_encrypt() 解
   - openssl_private_decrypt() ->  用 openssl_public_encrypt() 解
 
->##其他:
-
+##其他:
 - rand($min, $max); 产生一个在[$min, $max]闭区间随机数
-
 - mt_rand([$min, $max]); 生成更高更快的随机数
-
 - array_rand($array [,$num]); 从数组中随机返回$num个键值, 如果要直接返回值并且你的值是唯一的:array_rand(array_flip($input_array), $num)
-
 - uniqid([$prefix, $more_entropy]); 生成一个唯一id, UUID生成可以基于此函数
-
 - eval();				将字符串code作为php代码执行
-
 - PHP_EOF				换行,依据不同平台换行
-
 - goto: 可以用来跳转到程序中的另一位置
-
 - get_defined_vars(); 获取所有已经定义的变量
-
 - get_declared_classes(); 获取已经定义的类
-
 - 反单引号作用: 直接执行服务器的系统命令 ` echo "<pre>". `ipconfig` . "</pre>";` 前提shell_exec()函数被允许
-
 - socket函数(用php监听ip+端口)
-  
   - 应用demo
   [用php实现一个动态web服务器](https://segmentfault.com/a/1190000003029173)
   
-- streams
+- streams()
 
 ## 数据库扩展
 ### 数据库抽象层
@@ -284,8 +247,7 @@
   
 
 ##类与对象
->###访问控制(可见性)
-
+###访问控制(可见性)
 public的权限最大，既可以让子类使用，也可以支持实例化之后的调用，
 
 protected表示的是受保护的，访问的权限是只有在子类和本类中才可以被访问到
@@ -301,13 +263,11 @@ final 修饰;
    2. final类**不能被继承**
    3. final方法不能被重写 
 
->###重载:
-
+###重载:
 - 属性重载: __set(), __get(), __isset(), __unset()
-
 - 方法重载: __call(), __callStatic()
 
->###抽象类和接口类
+###抽象类和接口类
 - [参考地址1](https://blog.csdn.net/sunlylorn/article/details/6124319),
 - [参考地址2](https://www.jianshu.com/p/4a05c55872c3)
 
@@ -332,7 +292,7 @@ final 修饰;
     
     - 接口中也可以定义常量。接口常量和类常量的使用完全相同，但是不能被子类或子接口所覆盖。(将常量变量放在 interface 中违背了其作为接口的作用而存在的宗旨，也混淆了 interface 与类的不同价值)
     
->###新特性
+###新特性
 
 - 标量类型声明之可为空（Nullable）类 
 
@@ -347,13 +307,9 @@ final 修饰;
 - className::class 获取一个字符串，包含了类 ClassName 的完全限定名称.(`php>5.5`新特性)
 
 ##【xdebug】
-
 - window上
-
   1. [超快速简单详细的安装指导](https://xdebug.org/wizard.php)
-  
   2. 常规配置
-              
          xdebug.profiler_append = 0
          xdebug.profiler_enable = 1
          xdebug.profiler_enable_trigger = 0
@@ -368,11 +324,8 @@ final 修饰;
          xdebug.auto_trace = 0
          
 - linux上
-
   1. [超快速简单详细的安装指导](https://xdebug.org/wizard.php)
-  
   2. 配置
-  
          zend_extension=xdebug.so
          xdebug.remote_enable=1
          ;如果remote_connect_back(推荐开启这个)没有开启,就要开启remote_host=(你phpstorm端电脑的ip地址), 这个只能指定一个触发, 多人用时还是推荐前者, 比较智能
@@ -384,8 +337,7 @@ final 修饰;
          xdebug.remote_log="/usr/local/php/var/log/xdebug_remote.log"
  
     
- ##【Composer】
-  
+##【Composer】
  - ###安装
     - Linux [官网指南](https://getcomposer.org/download/)
         //安装composer
@@ -403,43 +355,28 @@ final 修饰;
     Memcached是一种基于内存的key-value存储，用来存储小块的任意数据（字符串、对象）。这些数据可以是数据库调用、API调用或者是页面渲染的结果。
     一般的使用目的是，通过缓存数据库查询结果，减少数据库访问次数，以提高动态Web应用的速度、提高可扩展性。
 
->###window下安装memcache服务
+###window下安装memcache服务
+- 下载安装包
+- 路径\memcache.exe -d start [-p 端口号 -m 分配的内存(兆)] 开启服务(默认11211端口)
+- 连接上服务 telnet 127.0.0.1 11211
 
-下载安装包
+###window下php安装memcache扩展:
+- php7.0以上版本memcache的dll文件下载地址: https://github.com/nono303/PHP7-memcache-dll.git
+- 将dll文件放入php的ext扩展目录中
+- 在php.ini中加入类似语句 extension=php_memcache.dll引入dll文件
+- 重启Apache并检查确认phpinfo()有无存在memcache模块
 
-路径\memcache.exe -d start [-p 端口号 -m 分配的内存(兆)] 开启服务(默认11211端口)
-
-连接上服务 telnet 127.0.0.1 11211
-
->###window下php安装memcache扩展:
-
-php7.0以上版本memcache的dll文件下载地址: https://github.com/nono303/PHP7-memcache-dll.git
-
-将dll文件放入php的ext扩展目录中
-
-在php.ini中加入类似语句 extension=php_memcache.dll引入dll文件
-
-重启Apache并检查确认phpinfo()有无存在memcache模块
-
->###php连接的简单实例:
-    
-    $memcache = new Memcache;
-    
+###php连接的简单实例:
+    `$memcache = new Memcache;
     $memcache->connect('localhost', 11211);
-    
-    $memcache->set("foo", 123);
+    $memcache->set("foo", 123);`
 
 ##【swoole扩展】
- 
-    学习前最好看 《linux高性能服务器编程》
-    
+>学习前最好看 《linux高性能服务器编程》
 >ThinkPHP使用(`version>5.1`) 
-
 [入手好文](https://www.kancloud.cn/thinkphp/think-swoole/722895)
 
-
 ##【easyswoole】
-
 [文档](https://www.easyswoole.com/Manual/3.x/Cn/_book/noobCourse/Introduction.html)
 
 WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器与服务器全双工(full-duplex)通信——允许服务器主动发送信息给客户端。
@@ -447,29 +384,25 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
 - 附录:好文
   - [php多进程模型](https://easyswoole.oss-cn-shenzhen.aliyuncs.com/入门教程1/php多进程模型.pdf)
 
-##php缓存技术
+## php缓存技术
 [参考https://www.cnblogs.com/godok/p/6341300.html](https://www.cnblogs.com/godok/p/6341300.html)
 [参考https://juejin.im/entry/5c871001e51d4539a756f734](https://juejin.im/entry/5c871001e51d4539a756f734)
 
-- ###内置缓存
-  >缓存函数
+### 内置缓存
+- 缓存函数
   - ob_flush(): 把当前缓存写入到上级缓存, 如果用了一个ob_start(), 那么上级就是Apache, 或者nginx
   - flush(): 将Apache缓存写入到浏览器中, nginx要做些参数配置才能实现相应的效果
 
-- ###opcache使用
-  >[参考https://blog.csdn.net/u011250882/article/details/49431053](https://blog.csdn.net/u011250882/article/details/49431053)
-  >
-  - window上
-    [参考https://blog.csdn.net/xgocn/article/details/86669091](https://blog.csdn.net/xgocn/article/details/86669091)
+### opcache使用
+>[参考https://blog.csdn.net/u011250882/article/details/49431053](https://blog.csdn.net/u011250882/article/details/49431053)
+- window上[参考https://blog.csdn.net/xgocn/article/details/86669091](https://blog.csdn.net/xgocn/article/details/86669091)
 
-- ###nginx配置静态缓存
-  
+###nginx配置静态缓存
   例如: 
-  location ~ \.(img|jpg)$ {
+  `location ~ \.(img|jpg)$ {
       expires 1d;   //比如缓存1天, 但是如果文件有更改时, 浏览器则会重新下载
-  } 
+  }` 
   
-
 - tp5使用消息队列
 [参考](https://www.kancloud.cn/yangweijie/learn_thinkphp5_with_yang/367645)
 
@@ -478,72 +411,53 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
 [参考](https://segmentfault.com/a/1190000003895734)
 
 - webgrind(Xdebug分析的前端, 即是将Xdebug产生的cache.out文件显示出来)
-
-  [参考](https://github.com/jokkedk/webgrind)
+[参考](https://github.com/jokkedk/webgrind)
 
 - XHProf(分析`PHP`性能工具)
-  
-  >介绍:　xhprof是一个开源的,但是不兼容php7以上, 且不再维护. tideway的xhprof_extension分析器可以使用php7及以上, 结合xhgui开源免费的图形界面进行分析(tideway也提供了图形界面但是收费, 故我们用xhgui代替) 
-  
-    
-  [参考](https://learnku.com/laravel/t/3142/php-performance-tracking-and-analysis-tool-xhprof-installation-and-use)
-  [参考](http://www.voidcn.com/article/p-zdxrjwwb-bou.html)
+>介绍:　xhprof是一个开源的,但是不兼容php7以上, 且不再维护. tideway的xhprof_extension分析器可以使用php7及以上, 结合xhgui开源免费的图形界面进行分析(tideway也提供了图形界面但是收费, 故我们用xhgui代替)  
+[参考](https://learnku.com/laravel/t/3142/php-performance-tracking-and-analysis-tool-xhprof-installation-and-use)
+[参考](http://www.voidcn.com/article/p-zdxrjwwb-bou.html)
   
 - wnidow上
-
   1. 下载及安装[tideway-xhprof-extension的window版本下载](https://ci.appveyor.com/project/tideways/php-profiler-extension)
       [项目github地址](https://github.com/tideways/php-xhprof-extension)
   2. 从github上拉取xhgui项目
   3. - 安装mongodb(xhgui基于它实现的)
-     - 安装php mongodb扩展
-     
-- linux上     
-     
+     - 安装php mongodb扩展 
+- linux上 
     //todo
     
 ##MongoDB
-
 - window上
   [mongodbzaiwindow安装参考](https://www.mongodb.org.cn/tutorial/55.html)
   [phpmongodb驱动参考](https://www.php.net/manual/zh/mongodb.installation.windows.php)
-  
 - linux上
-
   //todo    
 
 ##实现session分布式
-
-- php.ini中设置session.handler将session存在redis， mysql等上面
-
+- php.ini中设置session.handler将session存在redis，mysql等上面
 
 ##php.ini文件配置
-
 [完善的纯中文版手册](https://php.golaravel.com/)
 [核心配置官网](https://www.php.net/manual/zh/ini.core.php)
 [配置选项列表官网](https://www.php.net/manual/zh/ini.list.php)
 
 ##php爬虫
-
 - 使用curl模拟登录后获取cookie进行爬去其他页面 
-
 [参考](http://www.voidcn.com/article/p-rcxgdvsy-xe.html)
 [参考](https://www.cnblogs.com/wangluochong/p/9849647.html)
 
 - Guzzle(php http client)
-
-   [中文文档](https://guzzle-cn.readthedocs.io/zh_CN/latest/overview.html)
-   [git文档](https://github.com/guzzle/guzzle)
+  [中文文档](https://guzzle-cn.readthedocs.io/zh_CN/latest/overview.html)
+  [git文档](https://github.com/guzzle/guzzle)
 
 - php异步执行的几种方法(不阻塞后续执行)?
-
 [参考:PHP非阻塞模式](http://www.4wei.cn/archives/1002336) 
 
   - 1.提前结束会话
     - FastCGI模式下, 使用fastcgi_finish_request()函数能马上结束会话
-    
       - 注意: fastcgi_finish_request官方介绍页面下的评论提出需要注意的点[链接](https://www.php.net/manual/zh/function.fastcgi-finish-request.php)
-        正常脚本结束时php会自动调用session_write_close()函数, 而脚本在处理中的时候占用者session锁,对于后续请求来说是阻塞的.所以要尽快手动调用session_write_close()结束并保存session数据. 这对于其他有竞争锁情况同样适用,没有用了要尽快释放
-        
+        正常脚本结束时php会自动调用session_write_close()函数, 而脚本在处理中的时候占用者session锁,对于后续请求来说是阻塞的.所以要尽快手动调用session_write_close()结束并保存session数据. 这对于其他有竞争锁情况同样适用,没有用了要尽快释放    
     - 一般模式下(如Apache, Nginx, FastCGI(直接使用fastcgi_finish_request()更方便等), 提前输出内容, 结束会话
       
       <?php
@@ -565,14 +479,12 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
       //至此,连接已经关闭. 但是进程还不会结束, 以下程序还能运行但不会输出
       sleep(10);
       file_put_contents('./log.txt', '10s后我写入log文本: 时间' . date('Y-m-d H:i:s'));
-      
       - 注意: 在以下情况中,该方法失效:无论那个模式,gzip一定要关闭; 是window32下web服务不行;   [官方说明](https://www.php.net/manual/zh/function.flush.php)
       
         个别web服务器程序，特别是Win32下的web服务器程序，在发送结果到浏览器之前，仍然会缓存脚本的输出，直到程序结束为止。
         
         有些Apache的模块，比如mod_gzip，可能自己进行输出缓存，这将导致flush()函数产生的结果不会立即被发送到客户端浏览器。
-      
-      
+         
   - 2.请求子进程网址, 不等待返回结果
     - fsockopen打开一个网络连接或者一个Unix套接字连接, 忽略返回结果(不等待返回结果)
     - curl 设置超时时间为1s, 忽略返回结果(不等待返回结果,直接超时,但最短要1s)
@@ -615,14 +527,12 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
     - proc_open 开启异步子进程
       >与popen()一样, 只是该函数有更强的控制程序执行的能力, 可以双向(读又写)
       >参考例子(https://my.oschina.net/eechen/blog/745504)
-      
     - pcntl_fork 需要扩展支持较麻烦
-      
+     
   - 4.借助框架如swoole等
   
 #**收藏问题整理**
 
 ###PHP7下的协程实现 
-   
 [参考](https://segmentfault.com/a/1190000012457145)
 

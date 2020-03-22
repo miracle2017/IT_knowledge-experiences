@@ -54,6 +54,8 @@
 
 - service php-fpm restart  重启php
 
+- systemctl: 是系统服务管理器指令，它实际上将 service 和 chkconfig 这两个命令组合到一起。
+
 - crontab    定时任务
   > 注意: %有特殊作用, 所以\%才是表达%. 如使用$(date +"\%Y.\%m.\%d")
 
@@ -69,12 +71,11 @@
     
     >CPUs = Threads per core X cores per socket X sockets
     
-    >Cores = Cores per socket X Sockets
+    >Cores = Cores per socket X Sockets  
     - sockets: 插槽, 即实际物理cpu数
     - cores per socket: 每个cpu包含的核数
     - Threads per core: 每个核有几个线程(超线程)
     
-
 - ll /proc/进程id : 查看进程具体信息
 
 - netstat [参数]:  如netstat -ap | grep 9501
@@ -96,7 +97,7 @@
   sed -i 's/user.*=.*nobody/user = www/g;s/group.*=.*nobody/group = www/g' w.cnf : 多个匹配替换
   sed -n 's/old/new/p': n和p组合表示打印出匹配的内容不会修改内容
 
-- wget url地址: 下载文件, 支付http(s),ftp协议
+- wget url地址: 下载文件, 支持http(s),ftp协议
   wget: 强大的下载工具, 可以用其递归扒站
 
 - split: 分割大文件为小文件
@@ -126,7 +127,6 @@
  
  
 - shell命令之间分号`;`, `&&`, `&`, `||`, `|` 的作用?
-  
   - 分号(`;`) : 顺序独立执行各条命令, 彼此不关系是否失败, 所有命令都会执行
   - `&&` : 顺序执行, 只有当前一条执行成功才会执行后面的
   - `&` : 多个命令同时执行, 不关心彼此是否执行成功
@@ -137,8 +137,10 @@
     - ctrl + z： 挂起
     - ctrl + c： 终止
     - ctrl + \: 退出
-    - ctrl + r: 历史命令搜索
+    - **ctrl + r: 历史命令搜索**
+    - ctrl + p/n: 快速向前/向后查找历史命令
     - ctrl + u: 当前位置删除到行首
+    - ctrl + w: 删除光标前的单词
     - ctrl + a/e : 光标移到行首/行尾
     - tab: 自动补全
 
@@ -146,12 +148,12 @@
   - i 进入插入,模式
   - esc + :(冒号) 进入命令行模式
   - wq保存并退出
-  - u： 撤销
-  - ctrl + r： 反撤销
+  - **u： 撤销**
+  - **ctrl + r： 反撤销**
 
 - su root:服务器上切换用户, su(switch user)
-  su - username: 加-,表示环境变量进行切换
-          命令行前的#表示超级用户, $表示普通用户
+  su - username: 加-,表示环境变量进行切换. 
+  显示的时候看到命令行前的#表示超级用户, $表示普通用户
 
 - useradd 用户名  ：Linux下添加一个用户同时会在home下生成一个用户名的目录, -s /sbin/nologin 选项为禁止远程登录
 
@@ -190,7 +192,6 @@
 - [CentOS7下swap分区创建(添加),删除以及相关配置](https://www.jianshu.com/p/5acd4cdb34e7)      
       
 ##【nginx】
-
 >- 重新nginx配置文件(不停服)
 >- /usr/local/nginx/sbin/nginx -t  :检测配置文件的语法正确性(很重要)
 >- /usr/local/nginx/sbin/nginx -s reload  :重新加加载配置文件(-s有stop的意思)
@@ -205,7 +206,7 @@
 >- Nginx 是非阻塞IO & IO复用模型，通过操作系统提供的类似 epoll 的功能，可以在一个线程里处理多个客户端的请求。
 >- Nginx 的进程就是线程，即每个进程里只有一个线程，但这一个线程可以服务多个客户端。
 
->- PHP-FPM 是阻塞的单线程模型，pm.max_chfirewallildren 指定的是最大的进程数量，pm.max_requests 指定的是每个进程处理多少个请求后重启(因为 PHP 偶尔会有内存泄漏，所以需要重启).
+>- PHP-FPM 是阻塞的单线程模型，pm.max_children 指定的是最大的进程数量，pm.max_requests 指定的是每个进程处理多少个请求后重启(因为 PHP 偶尔会有内存泄漏，所以需要重启).
 >- PHP-FPM 的每个进程也只有一个线程，但是一个进程同时只能服务一个客户端。
 
 >- mysql是单进程多线程的架构.每个客户端连接(会话)都会在服务器进程中拥有一个线程,这个连接的查询只会在这个单独的线程中执行.一个mysql实例会有一个管理线程的线程池.
@@ -225,7 +226,7 @@
     wait  
     echo 'finish'
   
-### linux的编译安装程序
+### **linux的编译安装程序**
  - ./configure: 检测安装平台的目标特征的, 生成Makefile  
  - make: 编译,从Makefile中读取指令,然后编译。
  - make install: 也是从Makefile中读取指令, 将程序安装到指定目录
@@ -259,8 +260,7 @@
     3. 配置my.cnf
     4. 加入系统服务, 复制/support/mysql.server到/etc/init.d/下 
     
-## linux上php不需要重新编译php添加扩展?
-
+## **linux上php不需要重新编译php添加扩展?**
  0. 如果你之前编译安装php的源码还在则忽略; 否则从官网下载当前安装php版本的源码
  1. 在源码的/ext下, 找到你要安装的扩展并进入, 运行phpize, 生成configure文件
  2. ./configure --with-php-config=你的php-config文件路径 
