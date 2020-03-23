@@ -273,6 +273,7 @@ final 修饰;
    3. final方法不能被重写 
 
 ###重载:
+>PHP所提供的重载（overloading）是指动态地创建类属性和方法。我们是通过魔术方法（magic methods）来实现的。当调用当前环境下未定义或不可见的类属性或方法时，重载方法会被调用。
 - 属性重载: __set(), __get(), __isset(), __unset()
 - 方法重载: __call(), __callStatic()
 
