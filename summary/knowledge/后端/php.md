@@ -250,20 +250,17 @@
   注意: 开始一个事务时会先将autocommit设为0(关闭), $dbh->commit()或$dbh->rollBack();后恢复autocommit到开始事务之前的状态
       /* 开始一个事务，关闭自动提交(如果是开启的话) */
       $dbh->beginTransaction();
+      
 - PDO, PDO_MYSQL, Mysqlnd是什么关系?
-
-  [参考](https://stackoverflow.com/questions/41812651/what-is-the-difference-between-mysqlnd-pdo-and-pdo-mysql-extensions-in-php)
-  PDO: 是一个数据访问抽象层, PDO为访问不同数据库提供了一个轻量级的一致接口
-  PDO_MYSQL: 实现PDO接口的驱动. PDO_MYSQL可以选择使用mysqlnd库(>php5.4时为默认)或libmysqlclient库
-  Mysqlnd(MySQL Native Driver): 只处理php与mysql的通讯, Mysqlnd并没有直接提供新API给php程序调用, Mysqli,PDO MYSQL使用Mysqlnd提供的服务去与mysql服务器通讯, 因此你不能认为Mysqlnd是一个API. MySQL Native Driver是MySQL Client Library (libmysqlclient)的替代品, 拥有许多优势, 推荐使用.
+[参考](https://stackoverflow.com/questions/41812651/what-is-the-difference-between-mysqlnd-pdo-and-pdo-mysql-extensions-in-php)
+PDO: 是一个数据访问抽象层, PDO为访问不同数据库提供了一个轻量级的一致接口
+PDO_MYSQL: 实现PDO接口的驱动. PDO_MYSQL可以选择使用mysqlnd库(>php5.4时为默认)或libmysqlclient库
+Mysqlnd(MySQL Native Driver): 只处理php与mysql的通讯, Mysqlnd并没有直接提供新API给php程序调用, Mysqli,PDO MYSQL使用Mysqlnd提供的服务去与mysql服务器通讯, 因此你不能认为Mysqlnd是一个API. MySQL Native Driver是MySQL Client Library (libmysqlclient)的替代品, 拥有许多优势, 推荐使用.
   
-
 ##类与对象
 ###访问控制(可见性)
 public的权限最大，既可以让子类使用，也可以支持实例化之后的调用，
-
 protected表示的是受保护的，访问的权限是只有在子类和本类中才可以被访问到
-
 private 表示的是私有，只能够是在当前的类中可以被访问到
 
 trait关键字: 同class相似, 一种代码复用的方法,但不用像class要继承.
@@ -284,24 +281,15 @@ final 修饰;
 - [参考地址2](https://www.jianshu.com/p/4a05c55872c3)
 
 - 抽象类 abstract class
-
-    - 定义为抽象的类不能被实例化(子类必须实现全部的抽象后才能实例化,不然还是抽象类)。任何一个类，如果它里面至少有一个方法是被声明为抽象的，那么这个类就必须被声明为抽象的。被定义为抽象的方法只是声明了其调用方式（参数），不能定义其具体的功能实现。
+  - 定义为抽象的类不能被实例化(子类必须实现全部的抽象后才能实例化,不然还是抽象类)。任何一个类，如果它里面至少有一个方法是被声明为抽象的，那么这个类就必须被声明为抽象的。被定义为抽象的方法只是声明了其调用方式（参数），不能定义其具体的功能实现。 
+  - 继承一个抽象类的时候，**子类必须定义父类中的所有抽象方法**；另外，**这些方法的访问控制必须和父类中一样（或者更为宽松）**。例如抽象方法被声明为protest, 那么子类不能是更加严厉的private的, 而必须是声明为同样的protest或更为宽松的public。        
     
-    - 继承一个抽象类的时候，**子类必须定义父类中的所有抽象方法**；另外，**这些方法的访问控制必须和父类中一样（或者更为宽松）**。例如抽象方法被声明为protest, 那么子类不能是更加严厉的private的, 而必须是声明为同样的protest或更为宽松的public。        
-    
-
 - 接口类 interface class
-
-    - 使用接口（interface），可以指定某个类必须实现哪些方法，但不需要定义这些方法的具体内容。
-    
-    - 接口是通过 interface 关键字来定义的，就像定义一个标准的类一样，但其中定义所有的方法都是空的。
-    
+  - 使用接口（interface），可以指定某个类必须实现哪些方法，但不需要定义这些方法的具体内容。
+  - 接口是通过 interface 关键字来定义的，就像定义一个标准的类一样，但其中定义所有的方法都是空的。
     - **接口中定义的所有方法都必须是公有，这是接口的特性。**
-    
     - 要实现一个接口，使用 implements 操作符。**类中必须实现接口中定义的所有方法**，否则会报一个致命错误。**类可以实现多个接口，用逗号来分隔多个接口的名称**。(实现多个接口时，接口中的方法不能有重名。)
-     
     - 接口也可以继承，通过使用 extends 操作符
-    
     - 接口中也可以定义常量。接口常量和类常量的使用完全相同，但是不能被子类或子接口所覆盖。(将常量变量放在 interface 中违背了其作为接口的作用而存在的宗旨，也混淆了 interface 与类的不同价值)
     
 ###新特性
