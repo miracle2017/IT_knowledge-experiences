@@ -293,17 +293,13 @@ final 修饰;
     - 接口中也可以定义常量。接口常量和类常量的使用完全相同，但是不能被子类或子接口所覆盖。(将常量变量放在 interface 中违背了其作为接口的作用而存在的宗旨，也混淆了 interface 与类的不同价值)
     
 ###新特性
-
 - 标量类型声明之可为空（Nullable）类 
-
-    传入参数或返回值类型前加上`?` 表示要么是给定类型或者null(如果没有设置`?` 传入null会报错); 即是可以为传入和传出null . 例如  function test(?int param): ?array  { //todo}
+  传入参数或返回值类型前加上`?` 表示要么是给定类型或者null(如果没有设置`?` 传入null会报错); 即是可以为传入和传出null . 例如  function test(?int param): ?array  { //todo}
 
 - 函数传入不确定个数的参数(使用`...`)
-
-    function demo(...$params){
+    `function demo(...$params){
         var_dump($params); //会是一个传入参数的数组
-    }
-
+    }`
 - className::class 获取一个字符串，包含了类 ClassName 的完全限定名称.(`php>5.5`新特性)
 
 ##【xdebug】
@@ -336,7 +332,6 @@ final 修饰;
          xdebug.idekey="PHPSTORM"
          xdebug.remote_log="/usr/local/php/var/log/xdebug_remote.log"
  
-    
 ##【Composer】
  - ###安装
     - Linux [官网指南](https://getcomposer.org/download/)
@@ -351,10 +346,9 @@ final 修饰;
         composer selfupdate
 
 ##【memcache】
-    简介:
-    Memcached是一种基于内存的key-value存储，用来存储小块的任意数据（字符串、对象）。这些数据可以是数据库调用、API调用或者是页面渲染的结果。
-    一般的使用目的是，通过缓存数据库查询结果，减少数据库访问次数，以提高动态Web应用的速度、提高可扩展性。
-
+- 简介:
+  - Memcached是一种基于内存的key-value存储，用来存储小块的任意数据（字符串、对象）。这些数据可以是数据库调用、API调用或者是页面渲染的结果。
+  - 一般的使用目的是，通过缓存数据库查询结果，减少数据库访问次数，以提高动态Web应用的速度、提高可扩展性。
 ###window下安装memcache服务
 - 下载安装包
 - 路径\memcache.exe -d start [-p 端口号 -m 分配的内存(兆)] 开启服务(默认11211端口)
