@@ -71,13 +71,15 @@
 
 - array_splice(&$input, $offset, [$length, $replacement]);  去除数组某一部分并用其他代替,变种出$replacement为空就是**删除某部分元素**, $length为空就是**单纯的向数组中增加元素**
 
-- array_merge($array1, ...$array2); 合并数组,相同键值后面的覆盖前面的,包含数字的索引不会覆盖而是会附上
+- array_merge($array1, ...$array2); 合并数组,相同键值后面的覆盖前面的,相同键如果为数字则不会覆盖而是会附上.数字索引会从0重新排序.
+  - 使用`+`也可合并数组,不过如果有键重复时则后面不会覆盖前面的.数字索引保留原来的
+- array_merge_recursive():如果是相同
+
+- array_replace($array, ...$array1);   后面的数组有和第一数组key名一样的,value则被后面的替换,后面有前面没有的key,则在第一数组中创建. 后一个数组会覆盖前面的. 返回替换后的数组
 
 - array_combine(array $keys, array $values);	将一数组作为一个键,另一数组作值返回新数组
 
 - array_column($array, $column_key  [, $index_key]);	 从多维数组中取出指定的一列值
-
-- array_replace($array, ...$array1);   后面的数组有和第一数组key名一样的,value则被后面的替换,后面有前面没有的key,则在第一数组中创建. 后一个数组会覆盖前面的. 返回替换后的数组
 
 - array_keys($array [, $search_value [, bool $strict]]);		返回数组的键值
 
@@ -176,6 +178,8 @@
 
 - mkdir(); 第三个参数为true可创建多级目录
 
+- pathinfo($path, $options = null):解析路径,返回路径信息相关数组,$option可指定只返回什么信息
+
 ##错误处理:
 - error_get_last();	返回最近一次的错误
 
@@ -200,7 +204,15 @@
 - 自己经验技巧
   - 匹配所有字符(包括换行): [\s\S] (\s为空白字符, \S为非空白字符, 结合起来就是空白非空白字符都可以就是全部了)
   - 加了?表示非贪婪匹配,但是不一定会是我们预期的,因为正则是先找第一个可能的字符然后继续往下匹配(如正则a.*?c，匹配文本(abagc),结果是abagc而不是预想的agc)
-  
+  - 不以某个字符串开头或结尾?
+    ^(?!abc).+(?<!good)$ 
+    - ?的几个用法?
+        (?:str)   非捕获组
+        (?=str) 肯定式向前查找
+        (?!str) 否定式向前查找
+        (?<=str) 肯定式向后查找
+        (?<!str) 否定式向后查找
+
 ## XML(Document Object Model)
 >[官网](https://www.php.net/dom)
 获取dom树时,正则就有点无能为力了, 用xpath可以方便的找出
@@ -220,7 +232,7 @@
 - array_rand($array [,$num]); 从数组中随机返回$num个键值, 如果要直接返回值并且你的值是唯一的:array_rand(array_flip($input_array), $num)
 - uniqid([$prefix, $more_entropy]); 生成一个唯一id, UUID生成可以基于此函数
 - eval();				将字符串code作为php代码执行
-- PHP_EOF				换行,依据不同平台换行
+- PHP_EOF:换行,依据不同平台换行
 - goto: 可以用来跳转到程序中的另一位置
 - get_defined_vars(); 获取所有已经定义的变量
 - get_declared_classes(); 获取已经定义的类
