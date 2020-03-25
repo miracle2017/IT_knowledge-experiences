@@ -65,7 +65,7 @@
    - **对于唯一id或其他可以被表示为数字或字符串的值,数字列好于字符串列.因为大数值可以比相应的字符串存储使用更少的字节,因此使用更少内存的来传输和比较(比如存储ip使用无符号的int就够了,存取时要做个转换.php的ip2long()可将ip转为数字,long2ip()则为逆向操作)**     
   ##### 8.4.2.3 Optimizing for BLOB Types
    - **而不是针对一个非常长的文本字符串测试是否相等, 你可以将列值的hash值存储在一个列中并建立索引,然后在查询使用hash查找.由于hash函数可能会由不同输入值产生重复的结果,为此你仍然可以再加上and blob_colname=long_string_value来保证不会将错误结果也包含进来.** 
- #### 8.4.3 Optimizing for Many Tables  
+  #### 8.4.3 Optimizing for Many Tables  
    #### 8.4.3.1 How MySQL Opens and Closes Tables 
    - **检查你的table_open_cache是否太小,检查opened_tables状态变量,这指示着自服务器启动以来表打开操作的数量.如果该值很大或增加迅速,即使你没有执行许多flash table语句,那么在服务器启动时要增加table_open_cache值(table_open_cache是所有线程能打开的表数)**
   #### 8.4.5 **Limits on Number of Databases and Tables**

@@ -92,7 +92,7 @@
   ln -s target link_name
   ln -s /usr/local/php /home/local(设置软链接, 将/usr/local(实际目录或文件)链接到/home/local，即是/home/local下会多出个php软连接)
 
-- sed: (stream editor)
+- **sed: (stream editor)**
   sed -i "s/oldstring/newstring/g" `grep oldstring -rl path`: -i为直接修改内容; 在path中找出所有存在oldstring的文件, 然后将oldstring替换成newstring; g为全局匹配; /为分界符, 如有冲突可选用| 
   sed -i 's/user.*=.*nobody/user = www/g;s/group.*=.*nobody/group = www/g' w.cnf : 多个匹配替换
   sed -n 's/old/new/p': n和p组合表示打印出匹配的内容不会修改内容
@@ -124,7 +124,6 @@
    2>&1: 将标准错误重定向到标准输出
   
 - HASH-TYPE名字+'sum'后缀 filename :(如sha1sum,sha512sum,md5sum等)计算文件(不能是文件夹, 要是单一文件, 文件夹可以先打包压缩)哈希值(sha1, sha512, md5等)  
- 
  
 - shell命令之间分号`;`, `&&`, `&`, `||`, `|` 的作用?
   - 分号(`;`) : 顺序独立执行各条命令, 彼此不关系是否失败, 所有命令都会执行
@@ -166,7 +165,6 @@
   env: 查看所有环境变量
   set: 查看所有本地定义的环境变量
   export: 查看所有导出的环境变量
-
 
 - 多个文件合并成一个
   方法1: `cat data* > merge.sql`  #将所有data开头的文件合并成名为merge.txt的文件 
@@ -233,7 +231,6 @@
  - make clean: 清除编译时产生的文件
   
 ## Linux下独立编译安装搭建nginx + php + mysql
-  
 [总指南](https://blog.csdn.net/faith306/article/details/78541974)
 
   - 添加需要的用户
@@ -259,6 +256,7 @@
     2. [初始化数据目录-官方手册](https://dev.mysql.com/doc/refman/5.6/en/binary-installation.html) mysql-path/script/mysql_install_db -user=mysql --basedir=customize-path --datadir=customize-path (5.7开始就使用mysqld -initialize程序参数一样)
     3. 配置my.cnf
     4. 加入系统服务, 复制/support/mysql.server到/etc/init.d/下 
+    
     
 ## **linux上php不需要重新编译php添加扩展?**
  0. 如果你之前编译安装php的源码还在则忽略; 否则从官网下载当前安装php版本的源码

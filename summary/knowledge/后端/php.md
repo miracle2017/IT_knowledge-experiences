@@ -61,9 +61,11 @@
 
 - base_convert(number,frombase,tobase): 不同进制的相互转换
 
+- shuffle():打乱数组
+
 字符串编码转换：
 - mb_convert_encoding($string, $to_encoding [, $from_encoding]) : 例如 mb_convert_encoding($string, 'UTF-8', 'GBK');
-- iconv($in_charset, $out_charset, $string):  例如iconv('UTF-8', 'GBK', $string);
+- iconv($in_charset, $out_charset, $string): 例如iconv('UTF-8', 'GBK', $string);
 
 
 ##数组:
@@ -129,6 +131,8 @@
 - extract($var_array, $extract_type, $prefix);	提取数组中变量
 
 - count(array|object $array [, $mode]); 计算数组(或可计算var)长度, $mode=1时则为递归计算
+
+- array_rand($array [,$num]); 从数组中随机返回$num个键值, 如果要直接返回值并且你的值是唯一的:array_rand(array_flip($input_array), $num)
 
 ##时间:
 - date(string $format [, int $timestamp | time()]);   返回时间格式
@@ -231,7 +235,7 @@
 - mt_rand([$min, $max]); 生成更高更快的随机数
 - array_rand($array [,$num]); 从数组中随机返回$num个键值, 如果要直接返回值并且你的值是唯一的:array_rand(array_flip($input_array), $num)
 - uniqid([$prefix, $more_entropy]); 生成一个唯一id, UUID生成可以基于此函数
-- eval();				将字符串code作为php代码执行
+- eval();	将字符串code作为php代码执行
 - PHP_EOF:换行,依据不同平台换行
 - goto: 可以用来跳转到程序中的另一位置
 - get_defined_vars(); 获取所有已经定义的变量
@@ -281,14 +285,14 @@ final 修饰;
 - [参考地址1](https://blog.csdn.net/sunlylorn/article/details/6124319),
 - [参考地址2](https://www.jianshu.com/p/4a05c55872c3)
 
-- 抽象类 abstract class
+- 抽象类(abstract class)
   - 定义为抽象的类不能被实例化(子类必须实现全部的抽象后才能实例化,不然还是抽象类)。任何一个类，如果它里面至少有一个方法是被声明为抽象的，那么这个类就必须被声明为抽象的。被定义为抽象的方法只是声明了其调用方式（参数），不能定义其具体的功能实现。 
-  - 继承一个抽象类的时候，**子类必须定义父类中的所有抽象方法**；另外，**这些方法的访问控制必须和父类中一样（或者更为宽松）**。例如抽象方法被声明为protest, 那么子类不能是更加严厉的private的, 而必须是声明为同样的protest或更为宽松的public。        
+  - 继承一个抽象类的时候，**子类必须定义父类中的所有抽象方法**；另外，**这些方法的访问控制必须和父类中一样（或者更为宽松）**。例如抽象方法被声明为protest, 那么子类不能是更加严厉的private的, 而必须是声明为同样的protest或更为宽松的public(ps:接口的实现,方法都必须是public)。
     
-- 接口类 interface class
-  - 使用接口（interface），可以指定某个类必须实现哪些方法，但不需要定义这些方法的具体内容。
+- 接口类(interface class)
+  - 使用接口（interface），可以指定某个类必须实现哪些方法，但不需要定义这些方法的具体内容。它是完全抽象的即所有方法都是抽象的(而抽象类它可以是非抽象方法即是带有方法体的方法).
   - 接口是通过 interface 关键字来定义的，就像定义一个标准的类一样，但其中定义所有的方法都是空的。
-    - **接口中定义的所有方法都必须是公有，这是接口的特性。**
+    - **接口中定义的所有方法都必须是公有(public)，这是接口的特性。**
     - 要实现一个接口，使用 implements 操作符。**类中必须实现接口中定义的所有方法**，否则会报一个致命错误。**类可以实现多个接口，用逗号来分隔多个接口的名称**。(实现多个接口时，接口中的方法不能有重名。)
     - 接口也可以继承，通过使用 extends 操作符
     - 接口中也可以定义常量。接口常量和类常量的使用完全相同，但是不能被子类或子接口所覆盖。(将常量变量放在 interface 中违背了其作为接口的作用而存在的宗旨，也混淆了 interface 与类的不同价值)
@@ -302,6 +306,11 @@ final 修饰;
         var_dump($params); //会是一个传入参数的数组
     }`
 - className::class 获取一个字符串，包含了类 ClassName 的完全限定名称.(`php>5.5`新特性)
+- ?? ——NULL合并运算符
+- 匿名类
+- <=> 太空船操作符
+- define() 可以定义常量数组
+- 将unicode输出为utf-8编码格式的字符串: 例如 `echo "\u{9999}";//结果 香`
 
 ##【xdebug】
 - window上
@@ -333,6 +342,7 @@ final 修饰;
          xdebug.idekey="PHPSTORM"
          xdebug.remote_log="/usr/local/php/var/log/xdebug_remote.log"
  
+ 
 ##【Composer】
  - ###安装
     - Linux [官网指南](https://getcomposer.org/download/)
@@ -345,21 +355,6 @@ final 修饰;
         composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
         //更新composer
         composer selfupdate
-
-##【memcache】
-- 简介:
-  - Memcached是一种基于内存的key-value存储，用来存储小块的任意数据（字符串、对象）。这些数据可以是数据库调用、API调用或者是页面渲染的结果。
-  - 一般的使用目的是，通过缓存数据库查询结果，减少数据库访问次数，以提高动态Web应用的速度、提高可扩展性。
-###window下安装memcache服务
-- 下载安装包
-- 路径\memcache.exe -d start [-p 端口号 -m 分配的内存(兆)] 开启服务(默认11211端口)
-- 连接上服务 telnet 127.0.0.1 11211
-
-###window下php安装memcache扩展:
-- php7.0以上版本memcache的dll文件下载地址: https://github.com/nono303/PHP7-memcache-dll.git
-- 将dll文件放入php的ext扩展目录中
-- 在php.ini中加入类似语句 extension=php_memcache.dll引入dll文件
-- 重启Apache并检查确认phpinfo()有无存在memcache模块
 
 ###php连接的简单实例:
     `$memcache = new Memcache;
@@ -380,7 +375,7 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
   - [php多进程模型](https://easyswoole.oss-cn-shenzhen.aliyuncs.com/入门教程1/php多进程模型.pdf)
 
 ## php缓存技术
-[参考https://www.cnblogs.com/godok/p/6341300.html](https://www.cnblogs.com/godok/p/6341300.html)
+[参考https://www.cnblogs.com/godok/p/6341300.html](https://www.cnblogs.com/godok/p/6341300.html)shuffle
 [参考https://juejin.im/entry/5c871001e51d4539a756f734](https://juejin.im/entry/5c871001e51d4539a756f734)
 
 ### 内置缓存
@@ -389,10 +384,11 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
   - flush(): 将Apache缓存写入到浏览器中, nginx要做些参数配置才能实现相应的效果
 
 ### opcache使用
+>将PHP代码预编译生成的脚本文件Opcode(操作码,Operation Code)缓存在共享内存中供以后反复使用，从而避免了从磁盘读取代码再次编译的时间消耗。php的四大加速缓存器opcache，apc，xcache，eAccelerator.opcache是官方出的,推荐使用opcache特别是php7以后的
 >[参考https://blog.csdn.net/u011250882/article/details/49431053](https://blog.csdn.net/u011250882/article/details/49431053)
 - window上[参考https://blog.csdn.net/xgocn/article/details/86669091](https://blog.csdn.net/xgocn/article/details/86669091)
 
-###nginx配置静态缓存
+### nginx配置静态缓存
   例如: 
   `location ~ \.(img|jpg)$ {
       expires 1d;   //比如缓存1天, 但是如果文件有更改时, 浏览器则会重新下载
@@ -401,13 +397,10 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
 - tp5使用消息队列
 [参考](https://www.kancloud.cn/yangweijie/learn_thinkphp5_with_yang/367645)
 
-
 ##php性能分析
 [参考](https://segmentfault.com/a/1190000003895734)
-
 - webgrind(Xdebug分析的前端, 即是将Xdebug产生的cache.out文件显示出来)
 [参考](https://github.com/jokkedk/webgrind)
-
 - XHProf(分析`PHP`性能工具)
 >介绍:　xhprof是一个开源的,但是不兼容php7以上, 且不再维护. tideway的xhprof_extension分析器可以使用php7及以上, 结合xhgui开源免费的图形界面进行分析(tideway也提供了图形界面但是收费, 故我们用xhgui代替)  
 [参考](https://learnku.com/laravel/t/3142/php-performance-tracking-and-analysis-tool-xhprof-installation-and-use)
@@ -429,7 +422,37 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
 - linux上
   //todo    
 
-##实现session分布式
+##【memcache】
+- 简介:
+  - Memcached是一种基于内存的key-value存储，用来存储小块的任意数据（字符串、对象）。这些数据可以是数据库调用、API调用或者是页面渲染的结果。
+  - 一般的使用目的是，通过缓存数据库查询结果，减少数据库访问次数，以提高动态Web应用的速度、提高可扩展性。
+### window下安装memcache服务
+- 下载安装包
+- 路径\memcache.exe -d start [-p 端口号 -m 分配的内存(兆)] 开启服务(默认11211端口)
+- 连接上服务 telnet 127.0.0.1 11211
+
+### window下php安装memcache扩展:
+- php7.0以上版本memcache的dll文件下载地址: https://github.com/nono303/PHP7-memcache-dll.git
+- 将dll文件放入php的ext扩展目录中
+- 在php.ini中加入类似语句 extension=php_memcache.dll引入dll文件
+- 重启Apache并检查确认phpinfo()有无存在memcache模块
+
+## redis
+- [较为简单简洁的文档](https://www.runoob.com/redis/redis-transactions.html)
+- 拓展: [10分钟彻底理解Redis的持久化机制：RDB和AOF](https://juejin.im/post/5d09a9ff51882577eb133aa9) 
+- 数据类型
+  - string: 一个key对应一个value。最大能存储 512MB。
+  - hash: 是一个键值(key=>value)对集合。特别适合用于存储对象。每个hash可以存储 2^32 -1 键值对.
+  - list: 是简单的字符串列表，按照插入顺序排序。列表最多可存储 2^32 - 1 元素.
+  - set: string 类型的无序集合.集合内元素的唯一性，第二次插入的元素将被忽略。集合中最大的成员数为 2^32 - 1
+  - zset: 和 set 一样也是string类型元素的集合,且不允许重复的成员。不同的是每个元素都会关联一个double类型的分数。zset的成员是唯一的,但分数(score)却可以重复。
+  
+- Redis是单进程单线程的;Memcache是单进程多线程模型  
+  
+## redis、memcached和mongodb的对比
+[参考](https://github.com/bingbo/blog/wiki/redis%E3%80%81memcached%E5%92%8Cmongodb%E7%9A%84%E5%AF%B9%E6%AF%94)  
+  
+## 实现session分布式
 - php.ini中设置session.handler将session存在redis，mysql等上面
 
 ##php.ini文件配置
@@ -446,9 +469,8 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
   [中文文档](https://guzzle-cn.readthedocs.io/zh_CN/latest/overview.html)
   [git文档](https://github.com/guzzle/guzzle)
 
-- php异步执行的几种方法(不阻塞后续执行)?
+## php异步执行的几种方法(不阻塞后续执行)?
 [参考:PHP非阻塞模式](http://www.4wei.cn/archives/1002336) 
-
   - 1.提前结束会话
     - FastCGI模式下, 使用fastcgi_finish_request()函数能马上结束会话
       - 注意: fastcgi_finish_request官方介绍页面下的评论提出需要注意的点[链接](https://www.php.net/manual/zh/function.fastcgi-finish-request.php)
@@ -522,9 +544,10 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
     - proc_open 开启异步子进程
       >与popen()一样, 只是该函数有更强的控制程序执行的能力, 可以双向(读又写)
       >参考例子(https://my.oschina.net/eechen/blog/745504)
-    - pcntl_fork 需要扩展支持较麻烦
+    - pcntl_fork:(需要扩展支持较麻烦)创建多进程
      
-  - 4.借助框架如swoole等
+  - 4.借助框架如swoole等 
+  
   
 #**收藏问题整理**
 

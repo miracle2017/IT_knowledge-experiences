@@ -2250,6 +2250,7 @@ mysqli_multi_query()   :执行多条语句
 - set profiling = 1; 开启
 - show profile;  显示执行语句各阶段详细执行时间
 - show profiles; 显示语句执行总的时间
+- show profile all:显示执行语句各阶段执行时间,各种资源消耗情况，比如CPU，IO等
 - last_query_cost: 查询成本 show status like 'last_query_cost'
 - mysql语句前加上explain; 显示mysql如何使用索引等情况
 >- [官网参考https://dev.mysql.com/doc/refman/8.0/en/explain-output.html#explain-join-types](https://dev.mysql.com/doc/refman/8.0/en/explain-output.html#explain-join-types)

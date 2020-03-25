@@ -1,4 +1,4 @@
-##字符串属性:
+##字符串属性:(以下的属性都是这样str.action()调用的, 比如"good".math('d'))
 
 - length 	返回字符串的长度
 
@@ -24,8 +24,7 @@
 
 
 ##数组
-
-- join(separator)：将数组的元素组起一个字符串，以separator为分隔符，省略的话则用默认用逗号为分隔符
+- join(separator)：将数组的元素组起一个字符串，以separator为分隔符，省略的话则用默认用逗号为分隔符 
 
 - arr.splice(index[开始位置,包含],  deleteCount[删除几个,没填则从包含index删到尾], new1,new2..[可选,如果是数组那么,这项就是数组])  返回被删除的元素,会改变数组
 
@@ -42,9 +41,9 @@ newstr = str.concat(str1,str2...)            连接多个字符串返回新字�
 
 ##基础
 
-- js数据类型: String, Number, Boolean, Array, Object, Null, Undefined
+- js数据类型(7种): String, Number, Boolean, Array, Object, Null, Undefined
         
-      js中一切皆对象.除了Null, Undefined,其他都是对象
+   js中一切皆对象.除了Null, Undefined,其他都是对象
     
    >原始类型: Undefined, Null, Boolean, Number, String, symbol  (可以直接改变数值)
       
@@ -95,7 +94,7 @@ val = undefined;//推荐
 val = null;
 
 *判断一个变量是否存在undefined还是不存在的undefined(用typeof判断),如果不存在变量console或者使用会是 val is not defined
-'val' in window (存在则返回true反之则返回false)
+'val' in window (存在则返回true反之则返回false,记得加引号)
 
 
 - data函数的一些方法: 使用前一定要使用new不能直接赋值 var d = Date() 
@@ -159,11 +158,8 @@ DOM:文档对象模型(Document Object Model)
 BFC:块级格式化上下文(Block Formatting Contexts):即是元素内的子元素的布局不会影响到外部.
 
 在JavaScript中，有三种常用的绑定事件的方法：
-
 - 在DOM元素中直接绑定； 例如: <div onclick="alert('哈哈')"></div>
-	
 - 在JavaScript代码中绑定；onclick = function(){}  (定义多个click时,前者会被后者覆盖)   btn.onclick = null; // 删除事件处理程序；
-
 - 绑定事件监听函数。
 	
 事件流: 捕获阶段  目标阶段  冒泡阶段 (如果一个元素) 
@@ -354,7 +350,6 @@ const声明的变量不得改变值
 作用域的特点就是，先在自己的变量范围中查找，如果找不到，就会沿着作用域链 **往上找。**
 
 
-
 **常用HTTP消息状态码 (HyperText Transfer Protocol)超文本传输协议**
 
     1xx   服务器收到请求，需要请求者继续执行操作
@@ -441,6 +436,13 @@ if (typeof(result) == "object"){
 } else {  
 	fnObj = obj;
 }
+
+HTML、XML、XHTML 有什么区别?
+- HTML：HyperText Markup Language / 超文本标记语言
+- XHTML: Extensible Hypertext Markup Language / 可扩展超文本标记语
+- XML: Extensible Markup Language / 可扩展标记语言
+>xml被设计用来传输和存储数据,超文本标记语言被设计用来显示数据。XHTML是升级版的html,xhmtl语法更加严格.
+
 
 *算法:冒泡,直插法 ??(需要练习下)
 

@@ -1,35 +1,25 @@
 - position:
-
   static　无定位,元素出现在正常的流中.所有元素定位的默认值,所以可用于还原元素定位的默认值。
-  
   absolute　生成绝对定位的元素，相对于 static 定位以外的第一个祖先元素进行定位。
-  
   fixed　相对于窗口的固定定位,窗口滚动时不会移动
 
-- 内核:  -moz-、-ms-、-webkit- 
-
-      Trident: IE  -moz-
-      Gecko: Firefox  -ms-
-      WebKit: Safari, Google Chrome -webkit-
-
+- 内核: -moz-、-ms-、-webkit- 
+Trident: IE  -moz-
+Gecko: Firefox  -ms-
+WebKit: Safari, Google Chrome -webkit-
 
 - css盒子模型:  (在开头 使用 DOCTYPE 就可以使用W3C盒子)
-
     有两种，IE盒子模型、W3C盒子模型
     盒模型:content、padding、margin、border
     区  别:IE的content部分把 border 和 padding计算了进去
 
 - box-sizing属性:
-
-    content-box:(默认)  width不包含padding 和 border
-    
-    padding-box:padding包含在width
-    
-    border-box(怪异模式):border 和padding 包含在width中
+content-box:(默认)  width不包含padding 和 border
+padding-box:padding包含在width
+border-box(怪异模式):border 和padding 包含在width中
 
 - css选择器:
-
-    选择第n个子元素:    :nth-child(odd[奇偶数]/event/3n+b[n从0开始,b为偏移数量])   
+    选择第n个子元素: :nth-child(odd[奇偶数]/event/3n+b[n从0开始,b为偏移数量])   
     
     第n个指定子元素类型:   :nth-child(p)
 
@@ -56,7 +46,7 @@
     
     rotate( 几度 )  定义以几何中心逆时针旋转  transform: rotate(60deg)
     
-    rotateX( 几deg )      定义以x旋转轴  [还有Y/Z轴的]
+    rotateX( 几deg ) 定义以x旋转轴  [还有Y/Z轴的]
     
     scale(x,y)     定义 2D 缩放转换。 scaleX(1.5)平均向两边扩大.
     
@@ -140,7 +130,6 @@ background-clip  值同origin, 显示的区域, clip裁剪
 background-attachment ( fixed / scroll) 背景图是否固定或会滚动
 
 - 本地离线存储 localStorage 长期存储数据，浏览器关闭后数据不丢失;
-
 sessionStorage 的数据在浏览器关闭后自动删除;
 cookie数据始终在同源的http请求中携带（即使不需要），即会在浏览器和服务器间来回传递。
 sessionStorage和localStorage不会自动把数据发给服务器，仅在本地保存。
