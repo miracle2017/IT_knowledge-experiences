@@ -129,16 +129,13 @@ background-origin [content-box / border-box / padding-box ] 指定从哪开始�
 background-clip  值同origin, 显示的区域, clip裁剪
 background-attachment ( fixed / scroll) 背景图是否固定或会滚动
 
-- 本地离线存储 localStorage 长期存储数据，浏览器关闭后数据不丢失;
-sessionStorage 的数据在浏览器关闭后自动删除;
-cookie数据始终在同源的http请求中携带（即使不需要），即会在浏览器和服务器间来回传递。
-sessionStorage和localStorage不会自动把数据发给服务器，仅在本地保存。
-localStorage    存储持久数据，浏览器关闭后数据不丢失除非主动删除数据,除非主动删除.
-sessionStorage  数据在当前浏览器窗口关闭后自动删除。
-cookie          设置的cookie过期时间之前一直有效，即使窗口或浏览器关闭,没设置默认浏览器关闭失效
 
 - *任意浏览器的默认字体高都是16px。1em = 16px. em为相对于当前对象内文本的字体尺寸。（相对于body的font-size）  rem相对html的font-size的大小。 即是 1rem = html的font-size
 
+- CSS3 新特性？
+[参考](https://juejin.im/entry/595f1e3c5188250d914dd53c)
+- 选择器(上面说的选择器)
+- Transition,Transform和Animation
 
 - *title与h1的区别、b与strong的区别、i与em的区别？
 strong是标明重点内容，有语气加强的含义，使用阅读设备阅读网络时：<strong>会重读，而<B>是展示强调内容,为加粗而加粗。

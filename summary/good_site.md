@@ -11,3 +11,8 @@
   
 - good github
   - https://github.com/openai
+  
+- [关于高并发好的文章博客](http://highscalability.com/all-time-favorites/)
+
+- interview good site
+[](https://zhuanlan.zhihu.com/p/102278033)

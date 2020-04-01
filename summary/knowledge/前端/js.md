@@ -174,7 +174,7 @@ addEventListener("event"[不加on前缀], function[不加括号], useCapture[tru
 阻止冒泡: 在该元素定义event.stopPropagation();
  
 removeEventListener(evernt, function)   
-(attachEvent(type, listener); [事件需要加on]
+(ie9以下使用 attachEvent(type, listener); [事件需要加on] 
 detachEvent(event,function); )
 
 ###添加属性：
@@ -444,8 +444,27 @@ HTML、XML、XHTML 有什么区别?
 >xml被设计用来传输和存储数据,超文本标记语言被设计用来显示数据。XHTML是升级版的html,xhmtl语法更加严格.
 
 
-*算法:冒泡,直插法 ??(需要练习下)
+- 本地离线存储 localStorage 长期存储数据，浏览器关闭后数据不丢失;
+sessionStorage 的数据在浏览器关闭后自动删除;
+cookie数据始终在同源的http请求中携带（即使不需要），即会在浏览器和服务器间来回传递。
+sessionStorage和localStorage不会自动把数据发给服务器，仅在本地保存。
+localStorage    存储持久数据，浏览器关闭后数据不丢失除非主动删除数据,除非主动删除.
+sessionStorage  数据在当前浏览器窗口关闭后自动删除。
+cookie          设置的cookie过期时间之前一直有效，即使窗口或浏览器关闭,没设置默认浏览器关闭失效
 
+## html5新特性?
+- 新元素: 增加了一些语义更好的标签.article,aside,footer等等
+- 视频(Video)和音频(Audio)
+- 画布(canvas) 和 svg
+- WebSockets
+- 本地存储: sessionStorage和localStorage.(区别上一个题)
+- 获取地理位置
+- web sse: 服务器发送事件(Server-Sent Events);即是网页自动获取来自服务器的更新。网页不用询问是否有可用的更新。通过服务器发送事件，更新能够自动到达.例子：Facebook/Twitter 更新、股价更新、新的博文、赛事结果等。
+- 本地sql数据
+
+
+
+*算法:冒泡,直插法 ??(需要练习下)
 
 ##////////////////////AjAX////////////////////
 

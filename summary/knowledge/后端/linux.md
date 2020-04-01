@@ -230,7 +230,7 @@
  - make install: 也是从Makefile中读取指令, 将程序安装到指定目录
  - make clean: 清除编译时产生的文件
   
-## Linux下独立编译安装搭建nginx + php + mysql
+## Linux下独立编译安装搭建LNMP(nginx + php + mysql)
 [总指南](https://blog.csdn.net/faith306/article/details/78541974)
 
   - 添加需要的用户
@@ -253,10 +253,47 @@
     
   - mysql
     1. [社区下载地址](https://dev.mysql.com/downloads/mysql)
-    2. [初始化数据目录-官方手册](https://dev.mysql.com/doc/refman/5.6/en/binary-installation.html) mysql-path/script/mysql_install_db -user=mysql --basedir=customize-path --datadir=customize-path (5.7开始就使用mysqld -initialize程序参数一样)
+    2. [初始化数据目录-官方手册](https://dev.mysql.com/doc/refman/5.6/en/binary-installation.html) mysql-path/script/mysql_install_db -user=` --basedir=customize-path --datadir=customize-path (5.7开始就使用mysqld -initialize程序参数一样)
     3. 配置my.cnf
     4. 加入系统服务, 复制/support/mysql.server到/etc/init.d/下 
-    
+
+## LAMP的独立安装
+- Apache与php的通讯方式
+  - fast-cgi: 即安装好Apache(yum install httpd)后,然后将请求转发给php-fpm监听的端口.httpd.conf的配置例子:
+     `<FilesMatch \.php$>
+        SetHandler "proxy:fcgi://127.0.0.1:9000"
+      </FilesMatch>`
+   - php作为Apache模块运行,简单理解就是每个Apache线程中都内置php解析器.
+     [安装参考](https://www.php.net/manual/zh/install.unix.apache2.php)
+     yum install httpd // 安装Apache
+     yum install httpd-devel  //安装Apache的apxs工具,apxs能让你不用重新编译httpd而能安装扩展模块.  
+     ./configure --with-apxs2=/usr/local/apache2/bin/apxs --with-mysql //下载php,并进入到下载目录中, 如果php需要安装其他扩展需自己加上,这个编译配置是最简的只为走通Apache和php通讯
+     make && make install //安装完后,会生成libphp7.so,就是这个作为Apache模块
+     在Apache的httpd.conf配置如下
+     LoadModule php7_module modules/libphp7.so
+     <FilesMatch \.php$>
+         SetHandler application/x-httpd-php
+     </FilesMatch>
+     搞定
+   - cgi模式:   
+      
+- Apache与php几种通讯方式?
+  [参考比较易懂的解释](9https://blog.csdn.net/c67_dongxue/article/details/83588787)
+- Apache的几种运行方式?
+ 一共有三种稳定的MPM（Multi -Processing Modules，多进程理模块）
+  - prefork MPM:预先fork一些进程,多进程,单线程
+  - worker MPM:多进程多线程,一个进程可以处理多个请求
+  - event: 更worker差不多,只不过由于长连接(keep-alive)会一直占用资源,会有专门线程来处理这些长连接,允许释放这些长连接,以提高并发. 
+
+- nginx与Apache运行方式的区别?
+  - nginx是多进程单线程,他是异步I/O非阻塞的,采用epoll    
+  - Apache是多进程单线程,每个连接都要一个进程,所有很难有大的并发
+
+## nginx和php-fpm动态状态实时监视
+[参考](https://blog.csdn.net/keyunq/article/details/53410569?depth_1-utm_source=distribute.pc_relevant.none-task&utm_source=distribute.pc_relevant.none-task)
+
+## ab(http)和abs(https)性能压测工具
+[参考](https://www.cnblogs.com/weizhxa/p/8427708.html)
     
 ## **linux上php不需要重新编译php添加扩展?**
  0. 如果你之前编译安装php的源码还在则忽略; 否则从官网下载当前安装php版本的源码
@@ -265,4 +302,8 @@
  3. make && make install
  4. php.ini引入刚生成的.so扩展文件
     
-### redis     
+## Linux上进程崩溃或被杀退出了,能自动重启(崩溃自启动)?
+使用systemd.[参考](https://www.zybuluo.com/xtccc/note/1070028)
+    
+### redis   
+

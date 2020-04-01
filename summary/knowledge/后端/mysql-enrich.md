@@ -224,5 +224,5 @@
 
 #### 14.17.2 Enabling InnoDB Monitors  
 - **当innoDB监视器被开启时,innoDB大约每15秒会将结果写入mysql服务器的标准错误输出(stderr)中.开启的方式如下2种**
-  - 创建一个名为innodb_monitor的innoDB表.
+  - .创建一个名为innodb_monitor的innoDB表
   - **开启innodb_status_output或innodb_status_output_locks系统变量,前者变量为InnoDB Standard Monitor out,后者为Lock Monitor Output,区别就是后者比前者多了关于lock的信息**

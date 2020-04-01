@@ -2444,7 +2444,6 @@ b字段有索引时能用到索引,mysql能快速定位要更新的位置速度�
     id NOT in (SELECT min(id) FROM `ls_article_new` GROUP BY  out_article_id HAVING COUNT(out_article_id) > 1)
     ) as a)`
     
-- Foreign Keys: InnoDB表才支持
 - 字符串搜索是否大小敏感? 
   [Case Sensitivity in String Searches](https://dev.mysql.com/doc/refman/5.6/en/case-sensitivity.html)
   - 以下2种情况大小写敏感
@@ -2461,8 +2460,15 @@ b字段有索引时能用到索引,mysql能快速定位要更新的位置速度�
   在输入查询语句时按下esc为
   智能提示 
   
-- mysql5.6和mysql5.7区别
+- mysql5.6和mysql5.7区别?
   - 5.7以前使用mysql_install_d初始化数据目录, 5.7起使用mysqld的initialize
+  
+- mysql是怎么保证binlog顺序性和redo log的一致性在崩溃时间?
+[参考](https://blog.csdn.net/staforn/article/details/80423137)
+[binlog和redo log](https://www.cnblogs.com/wy123/p/8365234.html)  
+对于redo log在事务中更改数据时就开始记录了,不过他是记录在缓冲中log_buffer
+- binlog
+ binlog_cache_size:对于事务,所有未提交的二进制日志会被记录到一个缓冲中去,等该事务提交后直接将缓存中的二进制日志写入到二进制文件中,而这个缓冲大小由binlog_cache_size控制,且该值是基于会话的,即没个会话都能分配到这么多值,因此该值设置需要小心.sync_binlog=[N]控制N个事务提交后将该缓存刷新到磁盘上,N为0则是靠该系统不时的刷新到磁盘.如果有用于复制,那么建议还是设置为1.不过虽然设置1,也会有一些问题,比如在事务提交前会将二进制日志写入磁盘中,如果在写入完成后事务提交前发生宕机,那么在下次启动时,由于事务没有提交,那么事务会回滚,而二进制日志已经记录了该信息,不能被回滚.这个问题可通过设置innodb_support_xa=1来解决,它保证了二进制日志和innodb存储引擎数据文件的同步,这个使数据一致的技术也称为二阶段提交(2pc,two-phase commit)[二阶段提交解释参考](https://blog.csdn.net/zbszhangbosen/article/details/9132833)
   
 ## mysql实战语句
  - 分组并获取每组的最大值, 最小值,前N行,后N行? 
