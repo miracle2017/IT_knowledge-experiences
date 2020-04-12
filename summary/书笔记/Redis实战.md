@@ -5,7 +5,7 @@
   - 1 快照(snapshot)
   - 2 只追加文件(AOP, append-only file)
     - 将被执行命令追加到文件尾, Redis执行一遍这些命令就能恢复数据
-    - 用户可以考虑使用 appendfsync everysec 选项，让 Redis以每秒一次的频率对 AOF 文件进行同步。
+    - 用户可以考虑使用 appendfsync everysec 选项(appendfsync还可以是always和no,但是always比较影响性能)，让 Redis以每秒一次的频率对 AOF 文件进行同步。
       Redis 每秒同步一次 AOF 文件时的性能和不使用任何持久化特性时的性能相差无几，当硬盘忙于执行
       写入操作的时候，Redis 还会优雅地放慢自己的速度以便适应硬盘的最大写入速度。
 - 拓展: [10分钟彻底理解Redis的持久化机制：RDB和AOF](https://juejin.im/post/5d09a9ff51882577eb133aa9)

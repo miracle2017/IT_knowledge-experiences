@@ -52,7 +52,7 @@
    - **平均值组的大小与表基数有关,表基数就是值数的数目.show index语句显示的基数值字段(cardinality)基于N/S, N为表的所有行数, S为值组的平均大小, 该比率指示着表中大约多少个值组.**
    - 对于基于<=>的join, null与其他任何值都一样: null<=>null(为true), 就像N<=>N(为true)一样.(**`<=>`操作符为比较两个变量,相同返回1不同返回0,其中对于null:只有当两个都是null才返回1,只有一个为null时返回0,而平常的`=`操作符null于其它任何值相比都是返回null**)
    
-   
+ 
  ### 8.4 Optimizing Database Structure
   #### **8.4.1 Optimizing Data Size**
    - Table Columns
@@ -168,7 +168,7 @@
     - NDB: HASH/BTREE
 - Table Options
   - **ENGINE**
-    - innoDB:具有行锁和外键的事务安全表
+    - innoDB:具有行锁和外键的事务安全表 
     - MyISAM:
     - MEMORY:
     - CSV:以逗号分隔值格式存储行的表

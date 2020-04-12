@@ -454,8 +454,19 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
   WATCH key [key ...]: 监视某几个键是否发生变化,如果发生变化则事务不会执行
   UNWATCH: 取消所有键的监视  
   EXPIRE key seconds: 键过期时间
+- bitmap
+bitmap实际上不是一种数据类型,而在String类型上定义了一组面向位(bit)的操作.由于string最多支持512M,所以一个bitmap最多可以容纳2^32个不同的位(bits).
+  - 常用的操作: SETBIT key offset value; GETBIT key offset ; 
+  - [快速认识bitmap及其应用场景](https://blog.csdn.net/u011957758/article/details/74783347)
+    - 活跃用户数量统计, 用户签到统计等等
+    
+- Redis是单进程单线程的(所以不会有并发的问题,语句都是一个接一个执行,不会有两条命令被同时执行);Memcache是单进程多线程模型(所以用到多核的优势).
+- Redis是单线程为什么会很快呢?
+  - redis是基于内存的，内存的读写速度非常快；
+  - redis是单线程的，省去了很多上下文切换线程的时间；
+  - redis使用多路复用技术，可以处理并发的连接。非阻塞IO 内部实现采用epoll，采用了epoll+自己实现的简单的事件框架。epoll中的读、写、关闭、连接都转化成了事件，然后利用epoll的多路复用特性，绝不在io上浪费一点时间。但是语句还是一个个执行的,不会有两个语句同时执行.
+
   
-- Redis是单进程单线程的(所以不会有并发的问题,语句都是一个接一个执行);Memcache是单进程多线程模型(所以用到多核的优势)
   
 ## redis、memcached和mongodb的对比
 [参考](https://github.com/bingbo/blog/wiki/redis%E3%80%81memcached%E5%92%8Cmongodb%E7%9A%84%E5%AF%B9%E6%AF%94)  
@@ -554,7 +565,7 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
     - proc_open 开启异步子进程
       >与popen()一样, 只是该函数有更强的控制程序执行的能力, 可以双向(读又写)
       >参考例子(https://my.oschina.net/eechen/blog/745504)
-    - pcntl_fork:(需要扩展支持较麻烦)创建多进程
+    - pcntl_fork:(需要扩展支持较麻烦)创建多进程 
      
   - 4.借助框架如swoole等 
   

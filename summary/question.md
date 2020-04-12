@@ -44,4 +44,4 @@
   path/to/php-cgi.exe -b 127.0.0.1:90001 -c path/to/php.ini
 
 - php存储session的格式是长什么样的,和cookie是怎么配合运行流程? 怎么具体实现session共享? session是怎么回收的?  
-
+session的文件名字为一个md5串,内容为经过序列化的。cookie上的存着session id其实也就是对应服务端上session的文件名。

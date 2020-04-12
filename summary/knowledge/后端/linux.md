@@ -305,5 +305,4 @@
 ## Linux上进程崩溃或被杀退出了,能自动重启(崩溃自启动)?
 使用systemd.[参考](https://www.zybuluo.com/xtccc/note/1070028)
     
-### redis   
 
