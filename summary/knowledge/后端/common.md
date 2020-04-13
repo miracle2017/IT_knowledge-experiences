@@ -9,3 +9,7 @@
     POST    添加一个资源 
     PUT     修改一个资源 
     DELETE  删除一个资源
+    
+- 什么是堆和栈?
+[参考](https://zhuanlan.zhihu.com/p/72007079)    
+    
