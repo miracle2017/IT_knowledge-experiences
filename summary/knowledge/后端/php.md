@@ -465,7 +465,9 @@ bitmap实际上不是一种数据类型,而在String类型上定义了一组面�
   - redis是基于内存的，内存的读写速度非常快；
   - redis是单线程的，省去了很多上下文切换线程的时间；
   - redis使用多路复用技术，可以处理并发的连接。非阻塞IO 内部实现采用epoll，采用了epoll+自己实现的简单的事件框架。epoll中的读、写、关闭、连接都转化成了事件，然后利用epoll的多路复用特性，绝不在io上浪费一点时间。但是语句还是一个个执行的,不会有两个语句同时执行.
-
+- 小技巧
+  - 大数据量下查找键名不阻塞：KEYS pattern和SCAN cursor [MATCH pattern] [COUNT count]连个命令。在大数据量下使用scan,利用游标分成多部分查找,而如果用keys那么是整个查找一遍会阻塞其它操作(因为redis是单线程的)
+  
   
   
 ## redis、memcached和mongodb的对比

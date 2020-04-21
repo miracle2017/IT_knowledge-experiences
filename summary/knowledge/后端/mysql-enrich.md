@@ -79,7 +79,6 @@
      - 自己扩展:
        - 一个表可以建多少个索引取`决存储引擎.,mysiam最多64个索引,innoDB最多64个二级索引  
        - **innoDB: 最多创建1017列,最多64个二级索引,单个索引最多16列,索引长度767字节,行大小最大65536字节**
-       - **mysiam: 最多4096列,最多64个二级索引,单个索引最多16列,索引长度1000字节,行大小最大65536字节**      
    - Row Size Limits
      - **mysql表内部表示形式最大行大小限制为65536字节(bytes),即使是存储引擎能提供更大的值也是如此.BLOB和TEXT列仅对行大小贡献9-12字节,因为它们的内容与行的其余部分分开存储**
    - Row Size Limit Examples    
@@ -120,7 +119,7 @@
      (or key buffer)的特殊结构维护**
      - **对于数据块(data block),myslq没使用特殊的缓存.相反,它们依赖于本机操作系统文件系统缓存.**
    - **通常的mysql服务器遵循LRU(Least Recently Used)策略(最近最少
-   使用),当选择一块作为替换对象时,它选择最近最少使用的索引块.为了使选择变得简单, key cache module维护着所有使用过的块在一个由使用的次数排序的特殊列表(LRU chain).当一个块访问时,它是最近访问所以放置到列表底部;当需要一个块被替换时,最经常使用的块置于该列表的底部,而该列表的开头成为第一个驱逐的候选者.**
+   使用),当选择一块作为替换对象时,它选择最近最少使用的索引块.为了使选择变得简单, key cache module维护着所有使用过的块在一个由使用的次数排序的特殊列表(LRU chain).当一个块访问时,它是最近访问所以放置到列表底部;当需要一个块被替换时,最经常使用的块置于该列表的底部,而该列表的开头成为第一个驱逐的候选者.**  
 
   ##### **8.10.2.2 Multiple Key Caches**
    - **对于key cache的共享访问并不能消除会话间的竞争关系.为了减少这种key cache访问的竞争,mysql提供了多个key caches,即允许将不同的表索引分配到不同的key caches.默认的,所有myisam表的indexs都被缓存(cache)在同一个key cache上.你可以使用cache index table_name[,table_name] in key_cache_name语句为表索引分配到指定名字的key cache上,同时还可以设置其大小.(ps:load index into cache tab_index_list则是将表索引预先加载到刚cache index语句指定的key_cache_name上).当有一个key cache被销毁时,所有分配到这上的所有索引都将被重新分配到默认的key cache上.**
@@ -164,7 +163,7 @@
   - **每个存储引擎支持的索引类型**
     - innoDB: BTREE
     - MYISAM：BTREE
-    - MEMORY/HEAP:HASH,BTREE
+    - MEMORY/HEAP: HASH,BTREE
     - NDB: HASH/BTREE
 - Table Options
   - **ENGINE**
