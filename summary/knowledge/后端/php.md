@@ -81,9 +81,9 @@
 
 - array_combine(array $keys, array $values);	将一数组作为一个键,另一数组作值返回新数组
 
-- array_column($array, $column_key  [, $index_key]);	 从多维数组中取出指定的一列值
+- array_column($array, $column_key  [, $index_key]); 从多维数组中取出指定的一列值; 将多维数组的某个值提为键值 array($array, null, 'name');
 
-- array_keys($array [, $search_value [, bool $strict]]);		返回数组的键值
+- array_keys($array [, $search_value [, bool $strict]]); 返回数组的键值
 
 - array_values($array);	返回数组所有的值
 
@@ -342,7 +342,15 @@ final 修饰;
          ;在每次请求带上?XDEBUG_SESSION_START=PHPSTORM即可触发, 或者使用谷歌xdebug插件(他做的就是在每次请求时cookie带上XDEBUG_SESSION_START参数,比较省事), 又或者开启remote_autostart=1(每次请求都会触发)
          xdebug.idekey="PHPSTORM"
          xdebug.remote_log="/usr/local/php/var/log/xdebug_remote.log"
- 
+- docker上配置
+
+
+- note:
+  - nginx超时导致调试自动跳出结束: 
+    如果该台nginx是作为proxy_pass的那么nginx配置的http块中加入 `proxy_read_timeout 3600s;`
+    如果该台nginx是作为fastcgi_pass的那么nginx配置的http块中加入 `fastcgi_read_timeout 3600s;`
+    当然也可以加上对应的send_timeout和connect_timeout,不过一般send和connect不会超时,最关键的还是read_timeout配置
+  
  
 ##【Composer】
  - ###安装
