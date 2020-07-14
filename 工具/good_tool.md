@@ -7,7 +7,7 @@
 
 # mysql
 - Navicat 
-- mysql workbench
+- mysql workbench(免费)
 
 # git代码提交
 - sourcetree 2
