@@ -172,4 +172,23 @@ foreach ($tree as $item) {
 //还可以转化为数组
 $array = iterator_to_array($iterator);
 
+######获取客户ip#######
 
+public static function getClientIp()
+{
+    //IP V4
+    $ip = '';
+    $unknown = 'unknown';
+    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']) && strcasecmp($_SERVER['HTTP_X_FORWARDED_FOR'], $unknown)) {
+        $ipList = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        $clientIp = trim(current($ipList));
+        if (ip2long($clientIp) !== false) {
+            $ip = $clientIp;
+        }
+    }
+    if (!$ip && !empty($_SERVER['REMOTE_ADDR']) && strcasecmp($_SERVER['REMOTE_ADDR'], $unknown)) {
+        $ip = trim($_SERVER['REMOTE_ADDR']);
+    }
+
+    return $ip;
+}
