@@ -16,3 +16,8 @@
 - charles 
 - fiddler(无mac版)
 
+# mac上好用的终端
+- zsh
+ - zsh好用的插件: 
+   - zsh-autosuggestion, autojump, zsh-syntax-highlighting[安装指导](https://juejin.im/post/6844903939121348616)
+
