@@ -2,7 +2,11 @@
 - 程序员修炼之道
 - 代码大全
 - PHP程序员面试笔试宝典
-- 
+- 编码(Code: The Hidden Language of Computer Hardware and Software)
+- 编程珠玑
+- 大教堂与集市
+- 程序设计实践
+- 计算机科学概论
 
 # 非技术
 - 大问题
