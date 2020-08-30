@@ -33,3 +33,10 @@
 ([资料来源](https://www.w3cschool.cn/shejimoshi/design-pattern-intro.html))    ([书链接](https://book.douban.com/subject/1052241/))
 
 ###1.工厂模式
+
+# 常用的几个规范
+PSR(PHP Standards Recommendations) (http://www.php-fig.org/psr ,中文: https://learnku.com/docs/psr)
+- psr-1	Basic Coding Standard
+- psr-3	Logger Interface
+- psr-4	Autoloading Standard
+- psr-12 Extended Coding Style Guide
