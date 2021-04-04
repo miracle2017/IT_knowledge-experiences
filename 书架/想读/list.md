@@ -21,4 +21,5 @@
 - 如何学习(What Smart Students Know: MaximumGrades. Optimum Learning. Minimum Time)
 - 学习之道（第2版）
 - 远见 : 如何规划职业生涯3大阶段
+- 巨人工具
 

@@ -460,7 +460,12 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
   - Memcached是一种基于内存的key-value存储，用来存储小块的任意数据（字符串、对象）。这些数据可以是数据库调用、API调用或者是页面渲染的结果。
   - 一般的使用目的是，通过缓存数据库查询结果，减少数据库访问次数，以提高动态Web应用的速度、提高可扩展性。
   - 单进程多线程
-  - memcache的php客户端扩展有两个:memcache和memcached,其中memcached功能更丰富,
+  - memcache的php客户端扩展有两个:memcache和memcached,其中memcached功能更丰富,一般memcache已被弃用
+- 总结
+  - 过期时间(支持两种格式)
+    - unix时间戳(距离1970.1.1开始的秒数)
+    - 秒数, 距离当前时间. 最大60*60*24*30(即30天), 如果超过这个数字,这会认为是unix time  
+    - 默认值0. 表示永不过期, 不过可能会被驱逐以便为其他数据滕出空间.
 ### window下安装memcache服务
 - 下载安装包
 - 路径\memcache.exe -d start [-p 端口号 -m 分配的内存(兆)] 开启服务(默认11211端口)
