@@ -13,6 +13,8 @@
 - 图解HTTP
 - TCP/IP详解 卷1：协议
 - 代码整洁之道(clean code)
+- Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems 
+- The Google Résumé : How to Prepare
 
 # 非技术
 - 大问题
