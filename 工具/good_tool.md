@@ -27,3 +27,5 @@
      - [博文https://zhile.io/2020/11/18/jetbrains-eval-reset-da33a93d.html](https://zhile.io/2020/11/18/jetbrains-eval-reset-da33a93d.html)
      - [地址https://gitee.com/pengzhile/ide-eval-resetter](https://gitee.com/pengzhile/ide-eval-resetter)
 
+# 笔记
+  - note
