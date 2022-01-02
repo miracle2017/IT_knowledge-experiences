@@ -453,7 +453,9 @@ WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器�
   [mongodbzaiwindow安装参考](https://www.mongodb.org.cn/tutorial/55.html)
   [phpmongodb驱动参考](https://www.php.net/manual/zh/mongodb.installation.windows.php)
 - linux上
-  //todo    
+  [完整的教程](https://docs.mongodb.com/drivers/php/)
+  - libmongoc, libbson, extension: mongodb, php Library: mongodb之间的关系. [MongoDB架构图](https://www.php.net/manual/en/mongodb.overview.php)
+  
 
 ##【memcache】
 - 简介:

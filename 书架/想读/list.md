@@ -17,6 +17,8 @@
 - The Google Résumé : How to Prepare
 
 # 非技术
+- 被讨厌的勇气
+- 你的灯还亮着吗?
 - 大问题
 - 发展心理学
 - 社会心理学
