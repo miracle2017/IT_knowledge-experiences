@@ -621,7 +621,12 @@ bitmap实际上不是一种数据类型,而在String类型上定义了一组面�
         echo <<<'GOOG'
         there are nowdoc content
         GOOD
-  
+
+## PEAR和PECL区别
+- PECL(PHP Extension Community Library): 扩展是用c写的.pecl命令即为包安装管理命令
+- PEAR(PHP Extension and Application Repository): 扩展是用php写的.pear命令即为包安装管理命令.PEAR库数量比较多,有人说
+composer是PEAR的继承者.PEAR和PECL已经被慢慢弃用,composer作为替代.[PEAR命令详尽解释,看官网,解释的很好易懂](https://pear.php.net/manual/en/guide.users.commandline.cli.php)
+
 #**收藏问题整理**
 
 ###PHP7下的协程实现 
