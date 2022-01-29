@@ -133,6 +133,12 @@ HTML文档选择器:
     document.querySelectorAll("css selecter")  返回所有的  document.querySelectorAll("#add *") 全部子元素,返回数组形式
     document.querySelector("css selecter")  返回所有选择元素的第一个
 
+- Template literals(模板字面量)
+  >[官网文档](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
+
+  基础用法: `${varName} is ${1 + 2}` ${}中可以放变量名或者任何js表达式都可;最外层(`)包裹
+  
+
 ##前端面试题
 
 代码规范:
