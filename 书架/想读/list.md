@@ -1,3 +1,5 @@
+# 技术
+- 代码整洁之道(clean code)
 - 深入PHP：面向对象、模式与实践（第3版）
 - 程序员修炼之道
 - 代码大全
@@ -12,7 +14,6 @@
 - HTTP权威指南
 - 图解HTTP
 - TCP/IP详解 卷1：协议
-- 代码整洁之道(clean code)
 - Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems 
 - The Google Résumé : How to Prepare
 
