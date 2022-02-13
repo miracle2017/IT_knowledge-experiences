@@ -1,16 +1,16 @@
-# I the interview  process
+# I. the interview  process
 - 手写代码让你更专注于重要的部分(whiteboard)
 很多人会说现实开发中根本不在纸上写代码,为什么面试要手写代码. 手写代码让你专注于全局,哪部分是重要逻辑.不过不是伪代码,当然错误越少越好.有的面试者
 被给电脑写代码时交流明显就减少了.
 
-# behind the scenes
+# II. behind the scenes
 什么决定你是否被录用? 
 是否被录用,其实更多的不是看你们分数, 而实际上是你与其他候选人的对比.你能否比其他候选表现得更好.
 
 书中建议点: 
 - 你要表现出对公司很兴趣.要对公司有所了解.
 
-# V  Behavioral Questions
+# V. Behavioral Questions
 - 确保你能详细讲解简历中的每个方面(如项目,工作,活动),以下表格的问题应该会有助于你思考你的项目.
 ![img.png](img.png)
 - 你的弱点是什么?
@@ -55,7 +55,7 @@
   - 爱好是技术的.
   - 你的爱好表现出你的积极人格特质.
 
-# IV before interview
+# IV. before interview
 - 获得正确的经验
   - 和领导表示你想做更多更有挑战的工作,越多越好.使用相关的技术让这些成为简历中的亮点.
   - **使用你的晚上和周末的空闲时间.搭建a mobile app, a web app, or a piece of desktop software.这也是一种很好的获得

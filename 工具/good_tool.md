@@ -28,7 +28,7 @@
      - [地址https://gitee.com/pengzhile/ide-eval-resetter](https://gitee.com/pengzhile/ide-eval-resetter)
 
 # 笔记
-  - note
+  - note (目前接触最好用的)
 
 # 翻译
   - 沙拉查词(开启全局查词, 电脑所有地方都可以用到, 目前感觉最顺手的)
