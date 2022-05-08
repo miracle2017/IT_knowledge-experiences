@@ -37,6 +37,10 @@
 - cp [-r] /home/a/目标文件  /home/b   带-r为复制目录; 递归合并目录只有目标目录没有才添加: cp -rui /source_dir /target_dir
 
 - scp 安全复制,可以跨服务器
+    - 本地上传到服务器: scp ./本地文件 root@服务器ip:/path
+    - 服务端文件传到本地: scp root@服务器ip:/path ./本地接收路径
+    - 指定服务器端口(使用-P): scp -P 20000 ./本地文件 root@服务器ip:/path
+    - 使用你预定的好别名也可(myServer名称可以用 ssh myServer直接登录服务器): scp myServer:/path ./本地接收路径
 
 - mv ./a.txt ../b/    复制文件也用于重命名
 
