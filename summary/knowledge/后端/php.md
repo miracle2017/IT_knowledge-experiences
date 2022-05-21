@@ -73,7 +73,7 @@
 
 - array_splice(&$input, $offset, [$length, $replacement]);  去除数组某一部分并用其他代替,变种出$replacement为空就是**删除某部分元素**, $length为空就是**单纯的向数组中增加元素**
 
-- array_merge($array1, ...$array2); 合并数组,相同键值后面的覆盖前面的,相同键如果为数字则不会覆盖而是会附上.数字索引会从0重新排序.
+- array_merge($array1, ...$array2); 合并数组,相同键值后面的覆盖前面的,相同键**如果为数字则不会覆盖而是会附上**.数字索引会从0重新排序.
   - 使用`+`也可合并数组,不过如果有键重复时则后面不会覆盖前面的.数字索引保留原来的
 - array_merge_recursive():如果是相同
 
