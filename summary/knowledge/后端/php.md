@@ -367,14 +367,34 @@ final 修饰;
          xdebug.idekey="PHPSTORM"
          xdebug.remote_log="/usr/local/php/var/log/xdebug_remote.log"
 - docker上配置
-    见自己博客
+  - 1.xdebug配置
+    - 1.1 xdebug扩展安装(xdebug3). 直接使用pecl命令安装是最快便捷的.
+      `pecl install xdebug`
+    - 1.2 xdebug配置(xdebug3).以下为几个必需常规配置.在php.ini中加入如下配置,然后记得重启服务.
+      ```
+      zend_extension=/usr/local/php7/lib/php/20170718/xdebug.so
+      xdebug.mode=develop,debug,profile
+      xdebug.client_host=host.docker.internal
+      xdebug.client_port=9050#其实,你有多个项目(在不同docker里),都使用同个端口也是可以的,不同时使用即可
+      xdebug.start_with_request=yes
+      #以下为可选,配置了比较好看报错
+      xdebug.log=/www/user.meiyan.com/logs/xdebug.log
+      xdebug.output_dir=/www/user.meiyan.com/logs/xdebug_profiling_dir
+      ```
+  - 2.phpstorm配置
+    - 2.1 在Preferences->PHP->Debug的xdebug部分的debug port填写第一步指定的端口,此例子为9050
+    - 2.2 将docker中的文件和本地文件路径做好映射.
+      - 一般在第一次请求进来时,就会弹出窗口让你配置映射.按提示配置好即可
+      - 或者自行手动配置,路径在Preferences->PHP->Servers,添加一个服务端.主要填好host字段,还有目录映射(**注意:映射好根目录的映射后,
+      可能还需要具体配置下入口文件index.php映射关系.若映射关系有问题,在debug弹窗面板中的xdebug的tab会有具体提示,按提示做好映射即可**)
+  至此,即完成所有配置,能正常调试
 
 - note:
   - nginx超时导致调试自动跳出结束: 
     如果该台nginx是作为proxy_pass的那么nginx配置的http块中加入 `proxy_read_timeout 3600s;`
     如果该台nginx是作为fastcgi_pass的那么nginx配置的http块中加入 `fastcgi_read_timeout 3600s;`
     当然也可以加上对应的send_timeout和connect_timeout,不过一般send和connect不会超时,最关键的还是read_timeout配置
-  
+- [php使用xdebug常见的故障排除](https://www.jetbrains.com/help/phpstorm/troubleshooting-php-debugging.html#debugger-cannot-connect)
  
 ##【Composer】
  - ###安装
