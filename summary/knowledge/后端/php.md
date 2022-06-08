@@ -14,6 +14,22 @@
   8. resource(资源)
   9. NULL(无类型)
 
+##语法
+- 异常处理
+[官方手册](https://www.php.net/manual/en/language.exceptions.php)
+```
+    try {
+        return $value;
+    } catch (\Exception $e) {
+        #没有cache语句,会冒泡向上传递错误
+        return $value
+    } finally {
+        #1.无论是否抛异常,finally都会在执行,即使try或catch中有return了;在try或catch执行完后执行;
+        #2.如果finally也有return,那么则使用finally的. try或catch中return不会生效.
+        return $value;
+    }
+```
+
 #常用核心函数
 ##变量处理
 - isset($var, [...$_]); 检测变量是否已设置并且非 NULL
