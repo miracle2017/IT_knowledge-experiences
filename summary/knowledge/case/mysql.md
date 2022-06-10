@@ -14,5 +14,4 @@ UPDATE temporary_table SET Event_ID="120";
 ALTER TABLE temporary_table MODIFY <auto_inc_not_null_field> INT;//更改主键为普通int类型
 UPDATE temporary_table SET ID=NULL;
 INSERT INTO original_table SELECT * FROM temporary_table;
-
 ```
