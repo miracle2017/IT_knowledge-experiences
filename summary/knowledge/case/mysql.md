@@ -9,9 +9,10 @@ select (@var := @var + 1) as num, name where id > 100;
 
 - mysql怎么复制表中某些行到同张中或其他表? 其中只更改几个字段, 最省事的方法,不用写出所有字段? [answer](https://blog.nice100.net/mysql/171.html)
 ```
-CREATE table temporary_table AS SELECT * FROM original_table WHERE Event_ID="155";
+CREATE TEMPORARY table temporary_table AS SELECT * FROM original_table WHERE Event_ID="155";
 UPDATE temporary_table SET Event_ID="120";
 ALTER TABLE temporary_table MODIFY <auto_inc_not_null_field> INT;//更改主键为普通int类型
 UPDATE temporary_table SET ID=NULL;
 INSERT INTO original_table SELECT * FROM temporary_table;
+
 ```
