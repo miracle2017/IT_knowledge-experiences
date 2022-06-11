@@ -15,3 +15,8 @@ ALTER TABLE temporary_table MODIFY <auto_inc_not_null_field> INT;//更改主键�
 UPDATE temporary_table SET ID=NULL;
 INSERT INTO original_table SELECT * FROM temporary_table;
 ```
+
+- 常用查询表结构语句?
+`desc table_name`; 表字段信息,较简短
+`SHOW FULL COLUMNS FROM table_name` 表字段信息,最全
+`show table status where name = 'table_name'` 显示表信息
