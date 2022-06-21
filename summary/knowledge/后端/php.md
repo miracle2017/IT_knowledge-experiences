@@ -388,7 +388,7 @@ final 修饰;
       `pecl install xdebug`
     - 1.2 xdebug配置(xdebug3).以下为几个必需常规配置.在php.ini中加入如下配置,然后记得重启服务.
       ```
-      zend_extension=/usr/local/php7/lib/php/20170718/xdebug.so
+      zend_extension=/usr/local/php7/lib/php/20170718/xdebug.so`
       xdebug.mode=develop,debug,profile
       xdebug.client_host=host.docker.internal
       xdebug.client_port=9050#其实,你有多个项目(在不同docker里),都使用同个端口也是可以的,不同时使用即可
