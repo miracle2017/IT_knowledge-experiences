@@ -711,3 +711,8 @@ node.js 是单进程单线程应用程序，但是通过事件和回调支持并
   
 ## chrome谷歌扩展开发
 - [参考地址](https://github.com/sxei/chrome-plugin-demo)
+
+## js文件命名约定?(搜索关键字:naming-conventions;word separator)
+[参考](https://stackoverflow.com/a/7273431/8714749)
+[参考](https://stackoverflow.com/a/7273448/8714749)
+`product-name.plugin-ver.sion.filetype.js` 例如`jquery-1.4.2.min.js`
