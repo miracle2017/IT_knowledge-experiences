@@ -41,3 +41,6 @@ git --work-tree=/home/wwwroot/your_project_path checkout -f
   
 # git切换分支时强制丢弃所有更改?
 git checkout -f newBranchName
+
+# git怎么在一个文件的所有历史中搜索某个字符串?[answer](https://stackoverflow.com/questions/10215197/git-search-for-string-in-a-single-files-history)
+[answer](https://stackoverflow.com/questions/4468361/search-all-of-git-history-for-a-string/4472267#4472267)
