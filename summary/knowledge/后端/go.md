@@ -10,6 +10,7 @@
 
 - go语言泛型详细介绍入门? [比较详细入门介绍answer](https://segmentfault.com/a/1190000041634906) ;[官方介绍](https://go.dev/blog/intro-generics)
 
+- 值为nil的slice和空slice,两者的length都为0,他们具体有什么区别?[answer](https://stackoverflow.com/questions/29164375/correct-way-to-initialize-empty-slice)
 
 ### 经验trick
 - 结构体中,一个bool值属性变量foo, 想做成getFoo
