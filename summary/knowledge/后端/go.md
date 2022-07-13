@@ -10,7 +10,11 @@
 
 - go语言泛型详细介绍入门? [比较详细入门介绍answer](https://segmentfault.com/a/1190000041634906) ;[官方介绍](https://go.dev/blog/intro-generics)
 
-- 值为nil的slice和空slice,两者的length都为0,他们具体有什么区别?[answer](https://stackoverflow.com/questions/29164375/correct-way-to-initialize-empty-slice)
+- nil slice和empty slice,两者的length都为0,他们具体有什么区别?[answer](https://stackoverflow.com/questions/29164375/correct-way-to-initialize-empty-slice)
+所有指向零长度(zero-length)的指针,都指向内存中同一块地址.
+
+- 什么nil? [answer](https://stackoverflow.com/questions/35983118/what-does-nil-mean-in-golang#:~:text=nil%20in%20Go%20means%20a,means%20the%20value%20is%20uninitialized)
+nil is the zero value for pointers, interfaces, maps, slices, channels and function types, representing an uninitialized value.
 
 ### 经验trick
 - 结构体中,一个bool值属性变量foo, 想做成getFoo
