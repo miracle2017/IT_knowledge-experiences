@@ -16,5 +16,15 @@
 - 什么nil? [answer](https://stackoverflow.com/questions/35983118/what-does-nil-mean-in-golang#:~:text=nil%20in%20Go%20means%20a,means%20the%20value%20is%20uninitialized)
 nil is the zero value for pointers, interfaces, maps, slices, channels and function types, representing an uninitialized value.
 
+- slice用法, 怎么赋值? [answer](https://stackoverflow.com/questions/48700907/how-to-assign-a-value-to-the-empty-slice-after-the-declaration)
+对于一个空slice,其实如果要赋值只能append, 像数组一样赋值a[0] = val是不行的.
+
+- 计算函数执行时间比较好的实现?[answer](https://stackoverflow.com/a/45766707/8714749)
+
+- 并发的用法?
+  - 怎么等所有并发线程处理完,在继续?[answer](https://stackoverflow.com/questions/18207772/how-to-wait-for-all-goroutines-to-finish-without-using-time-sleep)
+  - 最佳并发数? [answer](https://stackoverflow.com/questions/25306073/always-have-x-number-of-goroutines-running-at-any-time)
+      [answer待验证](https://stackoverflow.com/questions/44771078/most-efficient-number-of-goroutines-on-this-machine)
+
 ### 经验trick
 - 结构体中,一个bool值属性变量foo, 想做成getFoo
