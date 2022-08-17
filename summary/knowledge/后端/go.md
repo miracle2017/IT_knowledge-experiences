@@ -1,5 +1,8 @@
-- 结构体标签的使用(Struct tags). [引用](https://www.digitalocean.com/community/tutorials/how-to-use-struct-tags-in-go) 
-[参考2](https://stackoverflow.com/a/30889373/8714749)
+## 语法
+ - (*Book)(nil)语法作用? [answer](https://stackoverflow.com/questions/60443193/what-does-a-pair-of-round-brackets-syntax-expression-mean-in-go)
+
+ - 结构体标签的使用(Struct tags). [引用](https://www.digitalocean.com/community/tutorials/how-to-use-struct-tags-in-go)
+ [参考2](https://stackoverflow.com/a/30889373/8714749)
 
 - 单引号,双引号和反引号用法? [参考](https://golangbyexample.com/double-single-back-quotes-go/)
 
@@ -25,6 +28,14 @@ nil is the zero value for pointers, interfaces, maps, slices, channels and funct
   - 怎么等所有并发线程处理完,在继续?[answer](https://stackoverflow.com/questions/18207772/how-to-wait-for-all-goroutines-to-finish-without-using-time-sleep)
   - 最佳并发数? [answer](https://stackoverflow.com/questions/25306073/always-have-x-number-of-goroutines-running-at-any-time)
       [answer待验证](https://stackoverflow.com/questions/44771078/most-efficient-number-of-goroutines-on-this-machine)
+  - 实现并发读写map的方式[answer](https://gobyexample.com/mutexes)
+  - 并发append不安全?[answer](https://stackoverflow.com/questions/44152988/append-not-thread-safe)
+  
+- init()函数? [answer](https://stackoverflow.com/a/24790378/8714749) [answer](https://stackoverflow.com/a/49831018/8714749)
+
+- 怎么并发安全的读写一个变量?[answer](https://stackoverflow.com/a/52882045/8714749)
+
+- 用Channel实现广播模式?[answer](https://stackoverflow.com/a/49877632/8714749)
 
 ### 经验trick
 - 结构体中,一个bool值属性变量foo, 想做成getFoo
