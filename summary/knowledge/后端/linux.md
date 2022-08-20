@@ -153,7 +153,7 @@
   - wq保存并退出
   - **u： 撤销**
   - **ctrl + r： 反撤销**
-  - 搜索:(https://docs.oracle.com/cd/E19253-01/806-7612/editorvi-62/index.html)
+  - 搜索与替换:(https://docs.oracle.com/cd/E19253-01/806-7612/editorvi-62/index.html)
     - `/`向前搜, `?`向后搜. 
     - `n`下一个, `N`上一个.(当然在向后搜时,方向刚好相反)
 
