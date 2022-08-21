@@ -312,4 +312,17 @@
 ## Linux上进程崩溃或被杀退出了,能自动重启(崩溃自启动)?
 使用systemd.[参考](https://www.zybuluo.com/xtccc/note/1070028)
     
-
+## curl
+- curl获取请求响应各个阶段耗时?[answer](https://stackoverflow.com/a/22625150/8714749)
+`
+  time_namelookup:  %{time_namelookup}s\n
+  time_connect:  %{time_connect}s\n
+  time_appconnect:  %{time_appconnect}s\n
+  time_pretransfer:  %{time_pretransfer}s\n
+  time_redirect:  %{time_redirect}s\n
+  time_starttransfer:  %{time_starttransfer}s\n
+  ----------\n
+  time_total:  %{time_total}s\n
+`
+建个文件curl-format.txt, 并输入以上内容;
+curl -w "@curl-format.txt" -o /dev/null -s "http://wordpress.com/"
