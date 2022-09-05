@@ -39,3 +39,7 @@ nil is the zero value for pointers, interfaces, maps, slices, channels and funct
 
 ### 经验trick
 - 结构体中,一个bool值属性变量foo, 想做成getFoo
+
+
+### 笔记
+- json的omitempt对于json.Unmarshal和json.Marshal都起作用,即是转成接口转成json或者json转成接口,字段为空时该字段都会省略掉.
