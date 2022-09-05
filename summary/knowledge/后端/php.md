@@ -546,7 +546,7 @@ bitmap实际上不是一种数据类型,而在String类型上定义了一组面�
   
   
   
-## redis、memcached和mongodb的对比
+## redis、memcached和mongodb的对比`
 [参考](https://github.com/bingbo/blog/wiki/redis%E3%80%81memcached%E5%92%8Cmongodb%E7%9A%84%E5%AF%B9%E6%AF%94)  
   
 ## 实现session分布式
