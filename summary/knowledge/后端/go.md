@@ -1,7 +1,8 @@
 ## 语法
- - (*Book)(nil)语法作用? [answer](https://stackoverflow.com/questions/60443193/what-does-a-pair-of-round-brackets-syntax-expression-mean-in-go)
 
- - 结构体标签的使用(Struct tags). [引用](https://www.digitalocean.com/community/tutorials/how-to-use-struct-tags-in-go)
+- (*Book)(nil)语法作用? [answer](https://stackoverflow.com/questions/60443193/what-does-a-pair-of-round-brackets-syntax-expression-mean-in-go)
+
+- 结构体标签的使用(Struct tags). [引用](https://www.digitalocean.com/community/tutorials/how-to-use-struct-tags-in-go)
  [参考2](https://stackoverflow.com/a/30889373/8714749)
 
 - 单引号,双引号和反引号用法? [参考](https://golangbyexample.com/double-single-back-quotes-go/)
@@ -24,6 +25,11 @@ nil is the zero value for pointers, interfaces, maps, slices, channels and funct
 
 - 计算函数执行时间比较好的实现?[answer](https://stackoverflow.com/a/45766707/8714749)
 
+- 结构体中嵌入字段是什么?[answer](https://go.dev/ref/spec#Struct_types)
+EmbeddedField即是在结构体没有明确指定字段名的.
+
+- json.marshal怎么保持本身map的结构?[answer](https://stackoverflow.com/a/48301733/8714749)
+
 - 并发的用法?
   - 怎么等所有并发线程处理完,在继续?[answer](https://stackoverflow.com/questions/18207772/how-to-wait-for-all-goroutines-to-finish-without-using-time-sleep)
   - 最佳并发数? [answer](https://stackoverflow.com/questions/25306073/always-have-x-number-of-goroutines-running-at-any-time)
@@ -36,6 +42,8 @@ nil is the zero value for pointers, interfaces, maps, slices, channels and funct
 - 怎么并发安全的读写一个变量?[answer](https://stackoverflow.com/a/52882045/8714749)
 
 - 用Channel实现广播模式?[answer](https://stackoverflow.com/a/49877632/8714749)
+
+- 
 
 ### 经验trick
 - 结构体中,一个bool值属性变量foo, 想做成getFoo
