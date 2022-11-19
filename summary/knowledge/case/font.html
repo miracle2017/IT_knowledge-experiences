@@ -1,0 +1,9 @@
+<!--前端js将json数据格式化,美化显示-->
+<div>
+    <pre id='pre'></pre>
+</div>
+<script>
+    json = {a: 1, b: 2};//要美化的json数据
+    string = JSON.stringify(json, null, 2)
+    $("#pre").append(string)
+</script>

@@ -51,3 +51,5 @@ EmbeddedField即是在结构体没有明确指定字段名的.
 
 ### 笔记
 - json的omitempt对于json.Unmarshal和json.Marshal都起作用,即是转成接口转成json或者json转成接口,字段为空时该字段都会省略掉.
+
+- json.Unmarshal(str, &v)执行多次, 如果都用同个v去接收, 结果会有问题, 不会变化!维持第一次的赋值.(bool类型会这样,但是string字段好像能正常改变)

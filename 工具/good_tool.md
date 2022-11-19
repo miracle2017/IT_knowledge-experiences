@@ -13,8 +13,7 @@
 - sourcetree 2
 
 # 抓包
-- charles 
-- fiddler(无mac版)
+- charles
 
 # mac上好用的终端
 - zsh

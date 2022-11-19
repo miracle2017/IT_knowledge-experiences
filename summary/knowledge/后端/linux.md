@@ -313,6 +313,8 @@
 使用systemd.[参考](https://www.zybuluo.com/xtccc/note/1070028)
     
 ## curl
+- 用法详解: [自己博客](https://blog.nice100.net/default/113.html)
+- 
 - curl获取请求响应各个阶段耗时?[answer](https://stackoverflow.com/a/22625150/8714749)
 `
   time_namelookup:  %{time_namelookup}s\n
