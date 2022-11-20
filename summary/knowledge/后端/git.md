@@ -1,8 +1,11 @@
+## 基础
+- HEAD: 表示指向当前分支最新的一次提交.
+- origin, master: 通常的我们会将远端仓库命名为origin(通过git remote 自定义名 地址);而新仓库第一次提交时git就会自动为你创建个master分支,通常人们会将master作为主分支.
+
 #git 工作流程：
-
 [教程参考](https://backlog.com/git-tutorial/cn/)
-
 ![](../../../images/git/git_flow.jpg)
+
 ##git裸仓:
 >就是没有工作目录的仓库; 即是没有实际源文件,只是包含版本历史记录的仓库.
 git init --bare myproject mybare.git    //获取myproject项目的版本历史记录即不包含实际源码生成一个mybare.git裸仓.(该命令
@@ -44,3 +47,4 @@ git checkout -f newBranchName
 
 # git怎么在一个文件的所有历史中搜索某个字符串?[answer](https://stackoverflow.com/questions/10215197/git-search-for-string-in-a-single-files-history)
 [answer](https://stackoverflow.com/questions/4468361/search-all-of-git-history-for-a-string/4472267#4472267)
+
