@@ -48,3 +48,6 @@ git checkout -f newBranchName
 # git怎么在一个文件的所有历史中搜索某个字符串?[answer](https://stackoverflow.com/questions/10215197/git-search-for-string-in-a-single-files-history)
 [answer](https://stackoverflow.com/questions/4468361/search-all-of-git-history-for-a-string/4472267#4472267)
 
+# 什么是pull request(PR)?提PR流程是怎么样的?
+你对一个开源项目提交代码,希望项目作者能采纳你的代码,这个动作就叫你提了PR,即请求项目作者能拉取(pull)和合并你提交的代码.
+一般地想对一个开源项目AA做出代码贡献,流程大致如下: fork一份AA项目代码 -> 起个分支 -> 实现些功能 -> 向项目作者提交一个pull request -> PR通过,作者pull你的代码并合入主分支
