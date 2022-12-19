@@ -2198,12 +2198,9 @@ s)不能相互使用.
        2. 先进入mysql
           use datebase
           source /root/import.sql
-    
 
 - 添加一个mysql用户并授权:   grant all privileges on *.* to 创建的用户名@"%" identified by "密码"; // % 表示所有地方都可登录
   flush privileges; //刷新后才生效
-
-ASC升序 / DESC 降序
 
 mysqli_multi_query()   :执行多条语句
 
