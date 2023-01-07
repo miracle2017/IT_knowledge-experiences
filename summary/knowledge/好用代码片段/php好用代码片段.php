@@ -174,7 +174,7 @@ $array = iterator_to_array($iterator);
 
 ######获取客户ip#######
 
-public static function getClientIp()
+function getClientIp()
 {
     //IP V4
     $ip = '';

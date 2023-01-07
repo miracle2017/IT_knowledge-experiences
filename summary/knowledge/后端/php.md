@@ -310,7 +310,10 @@ private 表示的是私有，只能够是在当前的类中可以被访问到
 
 trait关键字: 同class相似, 一种代码复用的方法,但不用像class要继承.
 
-static 类中的static变量常驻内存, 属于类不属于对象, 所以new出多个对象用的static变量都是同一个
+- static 
+   类中的static属性变量常驻内存, 属于这个class而不属于任何一个对象/实例(), 所以new出多个对象用的static变量都是同一个, static变量就像全局变量一样(global $var),
+有个实例改了,其他实例也会看到这个更改.
+  (参考)[https://stackoverflow.com/a/14930195/8714749]
 
 final 修饰;
    1. 只能用于类或方法前·

@@ -30,7 +30,7 @@ git init --bare myproject mybare.git    //获取myproject项目的版本历史�
 ##删除远端origin关联：
 git remote rm origin
 
-##自动化部署
+##自动化部署~
 在裸仓目录下/hooks/post-receive 文件写入如下代码
 #!/bin/bash
 git --work-tree=/home/wwwroot/your_project_path checkout -f
