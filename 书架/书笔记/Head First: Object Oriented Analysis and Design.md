@@ -6,7 +6,7 @@
    2.2 一般地,用例中的动词就是这些类的方法.
 3. 
 
-重点: p179(why didnn't Maria create a dog class?)
+重点: p179(why didn't Maria create a dog class?)
 
 # chapter 5: good design = flexible software
 Whenever you find common behavior in two or more places, look to abstract that behavior into a class, and 
@@ -30,3 +30,7 @@ then reuse that behavior in the common classes.
   - 封装变化的内容
   - 面向接口而非实现编程
   - 系统中的每个类应该只能有一个理由可以更改它(Each class in your application should have only one reason to change.)
+
+- 当你不知道怎么解决一个设计(design)问题时,只要浏览一遍你所学的OO原则,逐条原则看下是否有可以提升你代码的? ![使用OOA原则拯救你的代码](../../images/OOAandD/使用OOA原则拯救你的代码.png)
+
+- 在任何OO设计中一个关键原则即是将变化内容封装起来.
