@@ -20,3 +20,6 @@ INSERT INTO original_table SELECT * FROM temporary_table;
 `desc table_name`; 表字段信息,较简短
 `SHOW FULL COLUMNS FROM table_name` 表字段信息,最全
 `show table status where name = 'table_name'` 显示表信息
+
+- 怎么获取每组的最大一条?
+[参考:思路为先获取最大一条的id,然后再查一次](https://stackoverflow.com/a/1313140/8714749)
