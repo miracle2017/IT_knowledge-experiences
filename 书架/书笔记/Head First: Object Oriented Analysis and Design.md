@@ -58,3 +58,6 @@ you will remove losts of methods from your classes, and avoid having to change y
   - 高内聚的软件是否更易于复用,还有改变?
     你的系统内聚性越高,每个对象做的任务定义得越好; 一个对象定义得越好(对象做的事), 这个对象越容易从他的上下文中抽取出来, 然后能将这个对象放在其他上下文
     中去做同样的事. **对象非常乐于只做它很专职的事,而不管被应用于哪里**
+
+# chapter 6: solving big problems
+- 从顾客中获取需要的功能(features), 然后理解为了实现这些功能的需求(requirements). (feature和requirement的关系)
