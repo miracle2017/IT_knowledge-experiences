@@ -1,4 +1,5 @@
 ## 语法
+- go文件命令规范? [answer](https://medium.com/@kdnotes/golang-naming-rules-and-conventions-8efeecd23b68)
 
 - (*Book)(nil)语法作用? [answer](https://stackoverflow.com/questions/60443193/what-does-a-pair-of-round-brackets-syntax-expression-mean-in-go)
 
