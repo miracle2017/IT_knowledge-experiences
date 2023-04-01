@@ -61,3 +61,18 @@ you will remove losts of methods from your classes, and avoid having to change y
 
 # chapter 6: solving big problems
 - 从顾客中获取需要的功能(features), 然后理解为了实现这些功能的需求(requirements). (feature和requirement的关系)
+
+- features和requirements有什么不同? 有的认为:一个功能包含若干个需求,这些需求一起满足了这个功能; 有的人认为功能和需求有重叠部分,经常相互交替使用.
+所以他们可能都对,或者都错.重要的是你不要你浪费时间去与别人争论功能和需求的定义.
+
+- 总是尽可能延迟细节. 当你刚开始面对一个系统, 特别是大的工程.过早地开始写use case会让陷入很细节的东西,而失去big picture视角, 没有真正知道
+系统需要做什么.为了让能持有big picture视角,不太陷入细节, 这时需要用到use case diagram.
+
+- use case diagram: 让你知道系统需要做什么, 但不陷入所有user case需要做的细节. ![user case diagram.png](../../images/OOAandD/user-case-diagram.png)
+  - 在user case diagram中actor是游戏设计者,而不是游戏玩家.
+  - 椭圆形表示每个use case.
+  
+- 所以actor是使用系统的人吗?
+  参与者(actor)实际是一个与我们开发的系统交互的外部实体(不一定是人).举个例子: 取款机,很明显要有一个人作为参与者,他与系统交互,但此外银行也可能
+  作为参与者, 因为他将钱存入该系统, 但不是系统的一部分,而是作用于系统.
+- 
