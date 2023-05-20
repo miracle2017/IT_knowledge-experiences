@@ -2205,7 +2205,7 @@ s)不能相互使用.
 mysqli_multi_query()   :执行多条语句
 
 ## 函数:
-- FROM_UNIXTIME('时间戳字段', '%Y-%m-%d');     格式化时间戳为时间格式 
+- FROM_UNIXTIME('时间戳字段', '%Y-%m-%d %H:%i:%s');     格式化时间戳为时间格式 
 - UNIX_TIMESTAMP([date]);   转换为时间戳,不传入参数为当前时间戳, 给定date(格式为正常日期时间格式如 2019-6-6 10:10:10)时则返回当时的时间戳
 - UNIX_TIMESTAMP(NOW()) / NOW()/ current_time() / current_date() 获取当前的时间戳/ 完整的日期加时间/ 时间(10:10:01)/ 日期(2019-12-01)
 - TIMESTAMPDIFF(unit, datetime_expr1, datetime_expr2): datetime_expr2, datetime_expr1可以是date或datetime, 返回datetime_expr2 − datetime_expr1的值, unit控制结果的单位. 例: TIMESTAMPDIFF(MONTH,'2002-02-01 12:12:12','2003-05-01'); 结果15

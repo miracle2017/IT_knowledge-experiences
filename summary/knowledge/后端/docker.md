@@ -10,3 +10,6 @@ docker有2种网络:
 列出已有的network: docker network list
 查看network下接入了哪些容器: docker network inspect 网络名
 **怎么看容器的ip**: docker inspect <container_id> | grep IPAddress
+
+docker容器内访问宿主机ip?
+- 在容器内,该host.docker.internal域名指向的是宿主机的ip
