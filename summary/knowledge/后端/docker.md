@@ -13,3 +13,6 @@ docker有2种网络:
 
 docker容器内访问宿主机ip?
 - 在容器内,该host.docker.internal域名指向的是宿主机的ip
+
+docker怎么查看最近实时日志? 不要输出过去全部的旧日志.
+- docker logs --tail 100  -f nginx-proxy // --tail表示只输出尾部日志,这很重要,不然docker会从头开始输出历史日志, -f表示follow实时日志.
