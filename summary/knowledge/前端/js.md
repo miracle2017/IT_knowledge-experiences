@@ -137,6 +137,9 @@ HTML文档选择器:
   >[官网文档](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
 
   基础用法: `${varName} is ${1 + 2}` ${}中可以放变量名或者任何js表达式都可;最外层(`)包裹
+
+- ??(null值合并符号): 为null时用后面值,例子 `var.name ?? "default"`
+- 可选链运算(?.): 例子`var?.a?.[3]?.name`, 如果不存在则会返回undefined
   
 
 ##前端面试题
